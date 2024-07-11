@@ -39,11 +39,10 @@ export default function Navbar() {
         }
     ]
     
-
     return (
         <>
             <nav className="fixed-top bg-white d-flex justify-content-between p-3 shadow">
-                <a className="fw-bold fs-2 text-primary pe-auto text-decoration-none hover-underline" href="#"><Icon className="mb-1 me-2" path={mdiVolleyball} size={1.5} />Fantasy Volleyball</a>
+                <a className="fw-bold fs-2 text-primary pe-auto text-decoration-none hover-underline hover-pointer" onClick={() => {navigate('/')}}><Icon className="mb-1 me-2" path={mdiVolleyball} size={1.5} />Fantasy Volleyball</a>
 
                 <div id="nav-links-md" className="d-none d-md-flex gap-3 justify-content-around align-items-center fs-5">
                     {navLinks.map((navLink : NavLink) => (
@@ -69,6 +68,10 @@ export default function Navbar() {
                     </div>
                 </Offcanvas.Body>
             </Offcanvas>
+
+            <div style={{height:"70px", backgroundColor:"#FFFFFF"}}>
+                    {/* move the rest of the content below the sticky header */}
+            </div>
         </>
     )
 }
