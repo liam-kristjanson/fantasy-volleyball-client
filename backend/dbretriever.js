@@ -1,17 +1,15 @@
 const { MongoClient } = require("mongodb");
 const { ObjectId } = require("mongodb");
 
-const password = process.env.cwvb_database_pw;
-const user = process.env.cwvb_database_user;
 const uri =
   "mongodb+srv://" +
-  process.env.MONGODB_USER +
+  process.env.DATABASE_USER +
   ":" +
-  process.env.MONGODB_PASSWORD +
-  "@cluster0.akkbhp7.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
+  process.env.DATABASE_PASSWORD +
+  process.env.MONGO_CONNECTION_STRING;
 
 const client = new MongoClient(uri);
-const database = client.db("st-bonni-lwc");
+const database = client.db("cw-fantasy-volleyball");
 
 async function fetchDocuments(collectionName, criteriaObj, projectObj) {
   let collection = database.collection(collectionName);

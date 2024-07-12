@@ -42,11 +42,11 @@ export default function Navbar() {
     return (
         <>
             <nav className="fixed-top bg-white d-flex justify-content-between p-3 shadow">
-                <a className="fw-bold fs-2 text-primary pe-auto text-decoration-none hover-underline hover-pointer" onClick={() => {navigate('/')}}><Icon className="mb-1 me-2" path={mdiVolleyball} size={1.5} />Fantasy Volleyball</a>
+                <a key="home" className="fw-bold fs-2 text-primary pe-auto text-decoration-none hover-underline hover-pointer" onClick={() => {navigate('/')}}><Icon className="mb-1 me-2" path={mdiVolleyball} size={1.5} />Fantasy Volleyball</a>
 
-                <div id="nav-links-md" className="d-none d-md-flex gap-3 justify-content-around align-items-center fs-5">
+                <div key="nav-links" id="nav-links-md" className="d-none d-md-flex gap-3 justify-content-around align-items-center fs-5">
                     {navLinks.map((navLink : NavLink) => (
-                        <a className="text-primary text-decoration-none hover-underline hover-pointer" onClick={() => {navigate(navLink.route)}}>{navLink.text}<Icon path={navLink.iconPath} size={1}/></a>  
+                        <a key={navLink.route} className="text-primary text-decoration-none hover-underline hover-pointer" onClick={() => {navigate(navLink.route)}}>{navLink.text}<Icon path={navLink.iconPath} size={1}/></a>  
                     ))}
                 </div>
 
@@ -63,7 +63,7 @@ export default function Navbar() {
                 <Offcanvas.Body>
                     <div className="d-flex flex-column gap-4">
                         {navLinks.map((navLink : NavLink) => (
-                            <Button className="text-white btn-lg" variant="primary" onClick={() => {navigate(navLink.route)}}>{navLink.text} <Icon path={navLink.iconPath} size={1}/> </Button>
+                            <Button key={navLink.route} className="text-white btn-lg" variant="primary" onClick={() => {navigate(navLink.route)}}>{navLink.text} <Icon path={navLink.iconPath} size={1}/> </Button>
                         ))}
                     </div>
                 </Offcanvas.Body>

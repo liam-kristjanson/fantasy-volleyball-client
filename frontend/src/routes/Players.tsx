@@ -1,21 +1,42 @@
-import { Card, Col, Container, Row, Table } from "react-bootstrap";
+import { Col, Container, Row } from "react-bootstrap";
 import Navbar from "../components/Navbar";
 import { useEffect, useState } from "react";
+import { PlayerRanking, ServerMessageType } from "../types";
+import PlayerRankingsTable from "../components/PlayerRankingsTable";
+import ServerMessageContainer from "../components/ServerMessageContainer";
 
 export default function Players() {
 
     const [isLoading, setIsLoading] = useState<boolean>(false);
+    const [serverMessage, setServerMessage] = useState<string>("");
+    const [responseType, setResponseType] = useState<ServerMessageType>("info");
+    const [playerRankings, setPlayerRankings] = useState<PlayerRanking[]>([]);
 
+    //load player rankings from server
     useEffect(() => {
         setIsLoading(true);
 
-        fetch(import.meta.env.VITE_SERVER + "/api/statsobject")
+        fetch(import.meta.env.VITE_SERVER + "/players")
         .then(response => {
-            setIsLoading(false);
-            if (response.ok) return response.json();
+            if (response.ok) {
+                setResponseType('success');
+            } else {
+                setResponseType('danger');
+            }
+            return response.json();
         })
         .then(responseJson => {
-            console.log(responseJson);
+            setIsLoading(false);
+            if (responseJson.error) {
+                setServerMessage(responseJson.error)
+            } else {
+                setPlayerRankings(responseJson);
+            }
+        })
+        .catch(error => {
+            console.error(error);
+            setResponseType("danger");
+            setServerMessage("An unexpected error occured while fetching player rankings (see console)")
         })
     }, [])
 
@@ -33,83 +54,21 @@ export default function Players() {
 
                 <Row>
                     <Col>
-                        <Card className="shadow">
-                            <Card.Header className="text-primary fw-bold">
-                                Top Players
-                            </Card.Header>
-
-                            <Card.Body>
-                                <Table striped bordered hover>
-                                    <thead>
-                                        <th>#</th>
-                                        <th>Name</th>
-                                        <th>Points</th>
-                                    </thead>
-
-                                    <tbody>
-                                        <tr>
-                                            <td>
-                                                1
-                                            </td>
-
-                                            <td>
-                                                Liam Kristjanson
-                                            </td>
-
-                                            <td>
-                                                123.4
-                                            </td>
-                                        </tr>
-
-                                        <tr>
-                                            <td>
-                                                1
-                                            </td>
-
-                                            <td>
-                                                Liam Kristjanson
-                                            </td>
-
-                                            <td>
-                                                123.4
-                                            </td>
-                                        </tr>
-
-                                        <tr>
-                                            <td>
-                                                1
-                                            </td>
-
-                                            <td>
-                                                Liam Kristjanson
-                                            </td>
-
-                                            <td>
-                                                123.4
-                                            </td>
-                                        </tr>
-
-                                        <tr>
-                                            <td>
-                                                1
-                                            </td>
-
-                                            <td>
-                                                Liam Kristjanson
-                                            </td>
-
-                                            <td>
-                                                123.4
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </Table>
-                            </Card.Body>
-                        </Card>
+                        <PlayerRankingsTable
+                            playerRankings={playerRankings}
+                            isLoading={isLoading}
+                        />
                     </Col>
                 </Row>
 
-                {isLoading && <p>Loading...</p>}
+                <Row>
+                    <Col>
+                        <ServerMessageContainer
+                            message={serverMessage}
+                            variant={responseType}
+                        />
+                    </Col>
+                </Row>
             </Container>
         </>
     )
