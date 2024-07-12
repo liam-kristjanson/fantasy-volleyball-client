@@ -20,6 +20,7 @@ export default function PlayerRankingsTable(props: PlayerRankingsTableProps) {
                         <tr>
                             <th>#</th>
                             <th>Name</th>
+                            <th>Position</th>
                             <th>Points</th>
                         </tr>
                     </thead>
@@ -27,7 +28,7 @@ export default function PlayerRankingsTable(props: PlayerRankingsTableProps) {
                     <tbody>
                         {props.isLoading ? (
                             <tr>
-                                <td colSpan={3}>
+                                <td colSpan={4}>
                                     Loading... <Spinner variant="primary"/>
                                 </td>
                             </tr>
@@ -43,8 +44,13 @@ export default function PlayerRankingsTable(props: PlayerRankingsTableProps) {
                                     </td>
 
                                     <td>
+                                        {player.position ?? "N/A"}
+                                    </td>
+
+                                    <td>
                                         {player.prevSeasonPoints}
                                     </td>
+
                                 </tr>
                             ))
                         )}
