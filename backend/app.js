@@ -24,6 +24,7 @@ app.get("/", (req, res) => {
 })
 
 app.get("/players", playerController.getRankedPlayers);
+app.get("/player-matches", playerController.getPlayerMatches);
 
 app.listen(PORT, () => {
     console.log("Process running on http://localhost:" + PORT + " ...");

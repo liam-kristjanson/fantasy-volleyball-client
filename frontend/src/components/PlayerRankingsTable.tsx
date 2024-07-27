@@ -1,5 +1,6 @@
 import { Card, Spinner, Table } from "react-bootstrap";
 import { PlayerRanking } from "../types"
+import { useNavigate } from "react-router-dom";
 
 interface PlayerRankingsTableProps {
     playerRankings: PlayerRanking[];
@@ -7,6 +8,8 @@ interface PlayerRankingsTableProps {
 }
 
 export default function PlayerRankingsTable(props: PlayerRankingsTableProps) {
+
+    const navigate = useNavigate();
 
     return (
         <Card className="shadow mb-5">
@@ -38,9 +41,10 @@ export default function PlayerRankingsTable(props: PlayerRankingsTableProps) {
                                     <td>
                                         {idx + 1}
                                     </td>
-
                                     <td>
-                                        {player.playerName}
+                                        <a onClick={() => navigate("/player-info", {state: {player: player}})} className="text-black text-decoration-underline hover-pointer">
+                                            {player.playerName}
+                                        </a>
                                     </td>
 
                                     <td>
