@@ -5,24 +5,25 @@ export interface PlayerRanking {
     position?: string;
 }
 
-export interface Match {
+export interface PlayerMatch {
     _id: string;
     gameTitle: string;
     season: string;
     weekNum: number;
-    stats: object;
+    stats: PlayerMatchStats;
 }
 
 export interface PlayerMatchStats {
-    jerseyNumber: string;
-    kills: string;
-    errors: string;
-    attempts: string;
-    assists: string;
-    aces: string;
-    digs: string;
-    soloBlocks: string;
-    blockAssists: string;
+    jerseyNumber: number;
+    kills: number;
+    errors: number;
+    attempts: number;
+    assists: number;
+    aces: number;
+    digs: number;
+    soloBlocks: number;
+    blockAssists: number;
+    fantasyPoints?: number;
 }
 
 export type ServerMessageType = "success" | "info" | "warning" | "danger"

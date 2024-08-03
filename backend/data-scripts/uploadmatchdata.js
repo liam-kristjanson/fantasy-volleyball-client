@@ -4,8 +4,8 @@ const {MongoClient} = require('mongodb');
 const fs = require('fs');
 const path = require('path');
 
-const directoryPath = path.resolve('C:/Users/crazy/Documents/CWVB-Stats-2023-2024/Week14');
-const weekNum = 14;
+const directoryPath = path.resolve('C:/Users/crazy/Documents/CWVB-Stats-2023-2024/Week3');
+const weekNum = 3;
 const season = "2023-2024";
 const databaseName = 'cw-fantasy-volleyball'
 const collectionName = 'matches';

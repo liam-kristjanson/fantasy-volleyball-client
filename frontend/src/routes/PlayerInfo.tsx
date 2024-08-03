@@ -2,14 +2,14 @@ import { Card, Col, Container, Row, Spinner, Table } from "react-bootstrap";
 import Navbar from "../components/Navbar";
 import { useLocation } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { Match, PlayerRanking, ServerMessageType } from "../types";
+import { PlayerMatch, PlayerRanking, ServerMessageType } from "../types";
 import ServerMessageContainer from "../components/ServerMessageContainer";
 
 export default function PlayerInfo() {
 
     const { state } = useLocation();
     const [selectedPlayer] = useState<PlayerRanking>(state.player);
-    const [playerMatches, setPlayerMatches] = useState<Match[]>([]);
+    const [playerMatches, setPlayerMatches] = useState<PlayerMatch[]>([]);
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [serverMessageType, setServerMessageType] = useState<ServerMessageType>("info");
     const [serverMessage, setServerMessage] = useState<string>("");
@@ -71,7 +71,43 @@ export default function PlayerInfo() {
                                             </th>
 
                                             <th>
-                                                Season
+                                                Kills
+                                            </th>
+
+                                            <th>
+                                                Errors
+                                            </th>
+
+                                            <th>
+                                                Attempts
+                                            </th>
+
+                                            <th>
+                                                EFF
+                                            </th>
+
+                                            <th>
+                                                Assists
+                                            </th>
+
+                                            <th>
+                                                Aces
+                                            </th>
+
+                                            <th>
+                                                Digs
+                                            </th>
+
+                                            <th>
+                                                BS
+                                            </th>
+
+                                            <th>
+                                                BA
+                                            </th>
+
+                                            <th>
+                                                PTS
                                             </th>
                                         </tr>
                                     </thead>
@@ -79,9 +115,9 @@ export default function PlayerInfo() {
                                     <tbody>
                                         {isLoading ? (
                                             <tr>
-                                                <td colSpan={3}>
-                                                    <Spinner variant="primary"/>
+                                                <td colSpan={12}>
                                                     Player matches loading...
+                                                    <Spinner variant="primary"/>
                                                 </td>
                                             </tr>
                                         ) : (
@@ -96,7 +132,43 @@ export default function PlayerInfo() {
                                                     </td>
 
                                                     <td>
-                                                        {match.season}
+                                                        {match.stats.kills}
+                                                    </td>
+
+                                                    <td>
+                                                        {match.stats.errors}
+                                                    </td>
+
+                                                    <td>
+                                                        {match.stats.attempts}
+                                                    </td>
+
+                                                    <td>
+                                                        {(match.stats.attempts > 0) ? ((match.stats.kills - match.stats.errors) / match.stats.attempts).toFixed(3) : "0.000"}
+                                                    </td>
+
+                                                    <td>
+                                                        {match.stats.assists}
+                                                    </td>
+
+                                                    <td>
+                                                        {match.stats.aces}
+                                                    </td>
+
+                                                    <td>
+                                                        {match.stats.digs}
+                                                    </td>
+
+                                                    <td>
+                                                        {match.stats.soloBlocks}
+                                                    </td>
+
+                                                    <td>
+                                                        {match.stats.blockAssists}
+                                                    </td>
+
+                                                    <td className="fw-bold">
+                                                        {match.stats.fantasyPoints?.toFixed(1) ?? "N/A"}
                                                     </td>
                                                 </tr>
                                             ))

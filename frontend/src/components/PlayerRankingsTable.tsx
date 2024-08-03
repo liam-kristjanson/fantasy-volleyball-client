@@ -32,7 +32,7 @@ export default function PlayerRankingsTable(props: PlayerRankingsTableProps) {
                         {props.isLoading ? (
                             <tr>
                                 <td colSpan={4}>
-                                    Loading... <Spinner variant="primary"/>
+                                    Loading Players... <Spinner variant="primary"/>
                                 </td>
                             </tr>
                         ) : (
