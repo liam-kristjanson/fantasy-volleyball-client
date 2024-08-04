@@ -27,3 +27,10 @@ export interface PlayerMatchStats {
 }
 
 export type ServerMessageType = "success" | "info" | "warning" | "danger"
+
+export interface User {
+    username: string;
+    role: "user" | "admin";
+    leagueId: string;
+    authToken: string;
+}

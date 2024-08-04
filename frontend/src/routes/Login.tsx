@@ -1,10 +1,15 @@
 import { Button, Card, Col, Container, Form, Row, Spinner } from "react-bootstrap";
 import Navbar from "../components/Navbar";
-import { useState } from "react";
+import { act, useState } from "react";
 import ServerMessageContainer from "../components/ServerMessageContainer";
 import { ServerMessageType } from "../types";
+import { useAuthContext } from "../hooks/useAuthContext";
+import { useNavigate } from "react-router-dom";
 
 export default function Login() {
+
+    const {dispatch} = useAuthContext();
+    const navigate = useNavigate();
 
     const [username, setUsername] = useState<string>('');
     const [password, setPassword] = useState<string>('');
@@ -37,8 +42,11 @@ export default function Login() {
         })
         .then(responseJson => {
             setIsLoading(false);
-            //alert(responseJson.error ?? responseJson.message ?? "Nothing");
-            setServerMessage(responseJson.error ?? responseJson.message ?? "")
+            setServerMessage(responseJson.error ?? responseJson.message ?? "");
+            if (responseJson.user) {
+                dispatch({type: "LOGIN", payload: responseJson.user});
+                navigate('/my-account');
+            }
         })
     }
 

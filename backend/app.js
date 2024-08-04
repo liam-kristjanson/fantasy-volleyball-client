@@ -18,8 +18,10 @@ const corsOptions = {
 
 const app = express();
 
+//middleware
 app.use(cors(corsOptions));
 app.use(bodyParser.json());
+app.use(authController.parseAuthToken);
 
 app.get("/", (req, res) => {
     res.send("Service is running...");

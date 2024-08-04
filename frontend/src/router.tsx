@@ -3,6 +3,7 @@ import Home from "./routes/Home";
 import Players from "./routes/Players";
 import PlayerInfo from "./routes/PlayerInfo";
 import Login from "./routes/Login";
+import MyAccount from "./routes/MyAccount";
 
 export const router = createBrowserRouter([
     {
@@ -20,5 +21,9 @@ export const router = createBrowserRouter([
     {
         path: "/login",
         element: <Login />
+    },
+    {
+        path:"/my-account",
+        element: <MyAccount />
     }
 ])

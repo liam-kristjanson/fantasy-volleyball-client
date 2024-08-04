@@ -1,5 +1,7 @@
+require('dotenv').config();
 const dbretriever = require('../dbretriever');
 const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
 
 module.exports.login = (req, res) => {
     //validation
@@ -19,10 +21,38 @@ module.exports.login = (req, res) => {
         bcrypt.compare(req.body.password, matchedAccount.password)
         .then(compareResult => {
             if (compareResult === true) {
-                return res.status(200).json({message: "Logged in successfuly"});
+                //login is successful, create auth token and return to client
+                const userData = {
+                    username: matchedAccount.username,
+                    role: matchedAccount.role,
+                    leagueId: matchedAccount.leagueId,
+                    authToken: jwt.sign(matchedAccount, process.env.JWT_SECRET)
+                }
+                return res.status(200).json({message: "Logged in successfuly", user: userData});
             } else {
                 return res.status(401).json({error: "Invalid username or password"});
             }
         })
     })
+    .catch(error => {
+        console.error(error);
+        return res.status(500).json({error: "500: Internal server error"});
+    })
 }
+
+module.exports.parseAuthToken = (req, res, next) => {
+    //if no claim token is presented, skip this step.
+    if (!req.headers.authorization) return next();
+
+    try {
+        console.log("Claim token: " + req.headers.authorization);
+        req.authData = jwt.verify(req.headers.authorization, process.env.JWT_SECRET);
+        console.log("Verified auth data: ");
+        console.log(req.authData);
+    } catch (e) {
+        console.error("Error parsing jwt token:", e);
+    } finally {
+        next();
+    }
+}
+
