@@ -29,8 +29,25 @@ export interface PlayerMatchStats {
 export type ServerMessageType = "success" | "info" | "warning" | "danger"
 
 export interface User {
+    userId: string;
     username: string;
     role: "user" | "admin";
     leagueId: string;
     authToken: string;
+}
+
+export interface Player {
+    matches: string[],
+    playerName: string,
+    position: string,
+    prevSeasonPoints: number,
+    _id: string,
+}
+
+export interface Roster {
+    _id: string,
+    leagueId: string,
+    userId: string,
+    playerIds: string[],
+    players: Player[]
 }

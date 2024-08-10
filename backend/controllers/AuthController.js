@@ -23,6 +23,7 @@ module.exports.login = (req, res) => {
             if (compareResult === true) {
                 //login is successful, create auth token and return to client
                 const userData = {
+                    userId: matchedAccount._id,
                     username: matchedAccount.username,
                     role: matchedAccount.role,
                     leagueId: matchedAccount.leagueId,
