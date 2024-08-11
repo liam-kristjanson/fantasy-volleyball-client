@@ -8,7 +8,8 @@ const dbretriever = require('./dbretriever');
 
 const playerController = require('./controllers/PlayerController');
 const authController = require('./controllers/AuthController');
-const rosterController = require('./controllers/RosterController')
+const rosterController = require('./controllers/RosterController');
+const lineupController = require('./controllers/LineupController');
 
 const PORT = process.env.PORT || 8080;
 const corsOptions = {
@@ -32,6 +33,7 @@ app.get("/players", playerController.getRankedPlayers);
 app.get("/player-matches", playerController.getPlayerMatches);
 app.post("/login", authController.login);
 app.get("/roster", rosterController.getRoster);
+app.get("/lineup", lineupController.getLineup);
 
 app.listen(PORT, () => {
     console.log("Process running on http://localhost:" + PORT + " ...");

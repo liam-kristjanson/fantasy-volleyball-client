@@ -2,7 +2,7 @@ import { Card, Col, Container, Row, Spinner, Table } from "react-bootstrap";
 import Navbar from "../components/Navbar";
 import { useAuthContext } from "../hooks/useAuthContext";
 import { useEffect, useState } from "react";
-import { Roster } from "../types";
+import { LineupDocument, Roster } from "../types";
 import { useNavigate } from "react-router-dom";
 
 export default function MyAccount() {
@@ -11,11 +11,15 @@ export default function MyAccount() {
     const navigate = useNavigate();
 
     const [roster, setRoster] = useState<Roster>();
-    const [isLoading, setIsLoading] = useState<boolean>(false);
+    const [isRosterLoading, setIsRosterLoading] = useState<boolean>(false);
 
+    const [lineup, setLineup] = useState<LineupDocument>();
+    const [isLineupLoading, setIsLineupLoading] = useState<boolean>(false);
 
     useEffect(() => {
-        setIsLoading(true);
+        setIsRosterLoading(true);
+        setIsLineupLoading(true);
+
         const QUERY_PARAMS = new URLSearchParams({
             leagueId: user?.leagueId ?? "",
             userId: user?.userId ?? ""
@@ -29,7 +33,18 @@ export default function MyAccount() {
             console.log("ROSTER: ");
             console.log(responseJson);
             setRoster(responseJson);
-            setIsLoading(false);
+            setIsRosterLoading(false);
+        })
+
+        fetch(import.meta.env.VITE_SERVER + "/lineup?" + QUERY_PARAMS.toString())
+        .then(response => {
+            return response.json()
+        })
+        .then(responseJson => {
+            console.log("LINEUP: ");
+            console.log(responseJson);
+            setLineup(responseJson);
+            setIsLineupLoading(false);
         })
     }, [user])
 
@@ -41,6 +56,80 @@ export default function MyAccount() {
                 <Row>
                     <Col>
                         <h1 className="text-center pt-5 mb-3">My Account</h1>
+                    </Col>
+                </Row>
+
+                <Row>
+                    <Col>
+                        <Card className="shadow">
+                            <Card.Header className="text-primary fw-bold">
+                                Active Lineup
+                            </Card.Header>
+
+                            <Card.Body>
+                                <Table striped bordered hover>
+
+                                    <thead>
+                                        <tr>
+                                            <th>
+                                                Position
+                                            </th>
+
+                                            <th>
+                                                Name
+                                            </th>
+                                        </tr>
+                                    </thead>
+
+                                    <tbody>
+                                        {isLineupLoading ? (
+                                            <tr>
+                                                <td>
+                                                    <Spinner variant="primary"/> Lineup loading...
+                                                </td>
+                                            </tr>
+                                        ) : (
+                                            <>
+                                                <tr>
+                                                    <td className="">S</td>
+                                                    <td className="">{lineup?.lineup.S?.playerName ?? "N/A"}</td>
+                                                </tr>
+
+                                                <tr>
+                                                    <td className="">OH1</td>
+                                                    <td>{lineup?.lineup.OH1?.playerName ?? "N/A"}</td>
+                                                </tr>
+
+                                                <tr>
+                                                    <td className="">OH2</td>
+                                                    <td>{lineup?.lineup.OH2?.playerName ?? "N/A"}</td>
+                                                </tr>
+ 
+                                                <tr>
+                                                    <td className="">OH3</td>
+                                                    <td>{lineup?.lineup.S?.playerName ?? "N/A"}</td>
+                                                </tr>
+
+                                                <tr>
+                                                    <td className="">M1</td>
+                                                    <td>{lineup?.lineup.M1?.playerName ?? "N/A"}</td>
+                                                </tr>
+
+                                                <tr>
+                                                    <td className="">M2</td>
+                                                    <td>{lineup?.lineup.M2?.playerName ?? "N/A"}</td>
+                                                </tr>
+
+                                                <tr>
+                                                    <td className="">L</td>
+                                                    <td>{lineup?.lineup.L?.playerName ?? "N/A"}</td>
+                                                </tr>
+                                            </>
+                                        )}
+                                    </tbody>
+                                </Table>
+                            </Card.Body>
+                        </Card>
                     </Col>
                 </Row>
 
@@ -72,7 +161,7 @@ export default function MyAccount() {
                                     </thead>
 
                                     <tbody>
-                                        {isLoading ? (
+                                        {isRosterLoading ? (
                                             <tr>
                                                 <td colSpan={3}>
                                                     <Spinner variant="primary"/> Roster loading...

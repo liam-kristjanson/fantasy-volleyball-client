@@ -51,3 +51,24 @@ export interface Roster {
     playerIds: string[],
     players: Player[]
 }
+
+export interface Lineup {
+    S: Player | null,
+    OH1: Player | null,
+    OH2: Player | null,
+    OH3: Player | null,
+    M1: Player | null,
+    M2: Player | null,
+    L: Player | null
+}
+
+export interface LineupDocument {
+    _id: string,
+    leagueId: string,
+    userId: string,
+    lineupIds: string,
+    weekNum: number,
+    lineup: Lineup
+}
+
+
