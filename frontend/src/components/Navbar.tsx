@@ -3,6 +3,7 @@ import Icon from "@mdi/react";
 import { useState } from "react";
 import { Button, Offcanvas } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
+import { useAuthContext } from "../hooks/useAuthContext";
 
 interface NavLink {
     route: string,
@@ -13,10 +14,36 @@ interface NavLink {
 export default function Navbar() {
 
     const navigate = useNavigate();
+    const user = useAuthContext().state.user;
 
     const [showMenu, setShowMenu] = useState<boolean>(false);
 
-    const navLinks : NavLink[] = [
+    let navLinks : NavLink[] = []
+    
+    if (user) navLinks = [
+        {
+            route: "/players",
+            text: "Players",
+            iconPath: mdiHandball
+        },
+        {
+            route: "/standings",
+            text: "Standings",
+            iconPath: mdiMedal
+        },
+        {
+            route: "/matchups",
+            text: "Matchups",
+            iconPath: mdiSwordCross
+        },
+        {
+            route: "/my-account",
+            text: "My Account",
+            iconPath: mdiAccount
+        }
+    ]
+
+    else  navLinks = [
         {
             route: "/players",
             text: "Players",

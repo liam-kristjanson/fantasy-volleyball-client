@@ -1,4 +1,4 @@
-import { Card, Col, Container, Row, Spinner, Table } from "react-bootstrap";
+import { Button, Card, Col, Container, Row, Spinner, Table } from "react-bootstrap";
 import Navbar from "../components/Navbar";
 import { useAuthContext } from "../hooks/useAuthContext";
 import { useEffect, useState } from "react";
@@ -7,7 +7,8 @@ import { useNavigate } from "react-router-dom";
 
 export default function MyAccount() {
 
-    const { user } = useAuthContext().state;
+    const { dispatch, state} = useAuthContext();
+    const user = state.user;
     const navigate = useNavigate();
 
     const [roster, setRoster] = useState<Roster>();
@@ -48,6 +49,11 @@ export default function MyAccount() {
         })
     }, [user])
 
+    function handleLogout() {
+        dispatch({type: "LOGOUT", payload: null});
+        navigate('/')
+    }
+
     return (
         <>
             <Navbar/>
@@ -61,7 +67,7 @@ export default function MyAccount() {
 
                 <Row>
                     <Col>
-                        <Card className="shadow">
+                        <Card className="shadow mb-5">
                             <Card.Header className="text-primary fw-bold">
                                 Active Lineup
                             </Card.Header>
@@ -192,7 +198,12 @@ export default function MyAccount() {
                             </Card.Body>
                         </Card>
 
+                    </Col>
+                </Row>
 
+                <Row>
+                    <Col>
+                        <Button className="w-100 btn-lg mb-5 fw-bold" variant="primary" onClick={() => {handleLogout()}}>Log Out</Button>
                         <p>Current auth context: {JSON.stringify(user) ?? "Not found"}</p>
                     </Col>
                 </Row>
