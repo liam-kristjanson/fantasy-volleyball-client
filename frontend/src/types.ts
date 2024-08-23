@@ -71,4 +71,8 @@ export interface LineupDocument {
     lineup: Lineup
 }
 
+export interface PlayerWeekStats extends Player {
+    points: number;
+    matchesPlayed: number;
+}
 

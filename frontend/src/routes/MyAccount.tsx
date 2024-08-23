@@ -135,7 +135,7 @@ export default function MyAccount() {
                                     </tbody>
                                 </Table>
 
-                                <Button className="btn-primary fw-bold">View Performance</Button>
+                                <Button className="btn-primary fw-bold" onClick={() => {navigate('/team-performance')}}>View Performance</Button>
                             </Card.Body>
                         </Card>
                     </Col>

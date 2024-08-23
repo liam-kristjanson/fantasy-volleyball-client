@@ -7,6 +7,8 @@ import ServerMessageContainer from "../components/ServerMessageContainer";
 
 export default function PlayerInfo() {
 
+    //TODO: Fix this table for mobile layout
+
     const { state } = useLocation();
     const [selectedPlayer] = useState<PlayerRanking>(state.player);
     const [playerMatches, setPlayerMatches] = useState<PlayerMatch[]>([]);

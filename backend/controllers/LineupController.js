@@ -82,10 +82,12 @@ function getPlayerStatsFromMatches(players, matches) {
     for (let playerIdx = 0; playerIdx<players.length; playerIdx++) {
         const playerName = players[playerIdx].playerName;
         players[playerIdx].points = 0;
+        players[playerIdx].matchesPlayed = 0;
 
         for (let matchIdx = 0; matchIdx<matches.length; matchIdx++) {
             if (matches[matchIdx].stats[playerName]) {
                 players[playerIdx].points += fantasyUtilities.calculateFantasyPoints(matches[matchIdx].stats[playerName]);
+                players[playerIdx].matchesPlayed++;
             }
         }
     }

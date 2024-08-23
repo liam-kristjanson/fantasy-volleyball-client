@@ -4,6 +4,7 @@ import Players from "./routes/Players";
 import PlayerInfo from "./routes/PlayerInfo";
 import Login from "./routes/Login";
 import MyAccount from "./routes/MyAccount";
+import TeamPerformance from "./routes/TeamPerformance";
 
 export const router = createBrowserRouter([
     {
@@ -25,5 +26,9 @@ export const router = createBrowserRouter([
     {
         path:"/my-account",
         element: <MyAccount />
+    },
+    {
+        path:"/team-performance",
+        element: <TeamPerformance />
     }
 ])
