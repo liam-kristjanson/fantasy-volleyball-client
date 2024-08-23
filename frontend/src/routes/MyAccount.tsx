@@ -14,7 +14,7 @@ export default function MyAccount() {
     const [roster, setRoster] = useState<Roster>();
     const [isRosterLoading, setIsRosterLoading] = useState<boolean>(false);
 
-    const [lineup, setLineup] = useState<LineupDocument>();
+    const [lineup, setLineup] = useState<LineupDocument | undefined>();
     const [isLineupLoading, setIsLineupLoading] = useState<boolean>(false);
 
     useEffect(() => {
@@ -88,7 +88,7 @@ export default function MyAccount() {
                                     </thead>
 
                                     <tbody>
-                                        {isLineupLoading ? (
+                                        {isLineupLoading || !lineup ? (
                                             <tr>
                                                 <td>
                                                     <Spinner variant="primary"/> Lineup loading...
@@ -98,42 +98,44 @@ export default function MyAccount() {
                                             <>
                                                 <tr>
                                                     <td className="">S</td>
-                                                    <td className="">{lineup?.lineup.S?.playerName ?? "N/A"}</td>
+                                                    <td className="">{lineup?.lineup?.S?.playerName ?? "N/A"}</td>
                                                 </tr>
 
                                                 <tr>
                                                     <td className="">OH1</td>
-                                                    <td>{lineup?.lineup.OH1?.playerName ?? "N/A"}</td>
+                                                    <td>{lineup?.lineup?.OH1?.playerName ?? "N/A"}</td>
                                                 </tr>
 
                                                 <tr>
                                                     <td className="">OH2</td>
-                                                    <td>{lineup?.lineup.OH2?.playerName ?? "N/A"}</td>
+                                                    <td>{lineup?.lineup?.OH2?.playerName ?? "N/A"}</td>
                                                 </tr>
  
                                                 <tr>
                                                     <td className="">OH3</td>
-                                                    <td>{lineup?.lineup.S?.playerName ?? "N/A"}</td>
+                                                    <td>{lineup?.lineup?.S?.playerName ?? "N/A"}</td>
                                                 </tr>
 
                                                 <tr>
                                                     <td className="">M1</td>
-                                                    <td>{lineup?.lineup.M1?.playerName ?? "N/A"}</td>
+                                                    <td>{lineup?.lineup?.M1?.playerName ?? "N/A"}</td>
                                                 </tr>
 
                                                 <tr>
                                                     <td className="">M2</td>
-                                                    <td>{lineup?.lineup.M2?.playerName ?? "N/A"}</td>
+                                                    <td>{lineup?.lineup?.M2?.playerName ?? "N/A"}</td>
                                                 </tr>
 
                                                 <tr>
                                                     <td className="">L</td>
-                                                    <td>{lineup?.lineup.L?.playerName ?? "N/A"}</td>
+                                                    <td>{lineup?.lineup?.L?.playerName ?? "N/A"}</td>
                                                 </tr>
                                             </>
                                         )}
                                     </tbody>
                                 </Table>
+
+                                <Button className="btn-primary fw-bold">View Performance</Button>
                             </Card.Body>
                         </Card>
                     </Col>
@@ -167,7 +169,7 @@ export default function MyAccount() {
                                     </thead>
 
                                     <tbody>
-                                        {isRosterLoading ? (
+                                        {isRosterLoading || !roster ? (
                                             <tr>
                                                 <td colSpan={3}>
                                                     <Spinner variant="primary"/> Roster loading...
