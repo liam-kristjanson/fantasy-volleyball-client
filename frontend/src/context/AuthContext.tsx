@@ -7,7 +7,7 @@ export interface AuthState {
 
 export interface AuthAction {
     type: "LOGIN" | "LOGOUT";
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    
     payload: User | null;
 }
 

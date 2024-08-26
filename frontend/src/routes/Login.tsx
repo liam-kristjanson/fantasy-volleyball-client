@@ -1,6 +1,6 @@
 import { Button, Card, Col, Container, Form, Row, Spinner } from "react-bootstrap";
 import Navbar from "../components/Navbar";
-import { act, useState } from "react";
+import { useState } from "react";
 import ServerMessageContainer from "../components/ServerMessageContainer";
 import { ServerMessageType } from "../types";
 import { useAuthContext } from "../hooks/useAuthContext";
