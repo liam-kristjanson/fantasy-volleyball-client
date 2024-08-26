@@ -1,10 +1,11 @@
-import { Col, Container, Row } from "react-bootstrap";
+import { Col, Container, Dropdown, DropdownButton, Row } from "react-bootstrap";
 import Navbar from "../components/Navbar";
 import { useEffect, useState } from "react";
 import { useAuthContext } from "../hooks/useAuthContext";
 import { PlayerWeekStats, ServerMessageType } from "../types";
 import LineupWeekStatsTable from "../components/LineupWeekStatsTable";
 import ServerMessageContainer from "../components/ServerMessageContainer";
+import LineupWeekDropdown from "../components/LineupWeekDropdown";
 
 export default function TeamPerformacne() {
 
@@ -12,13 +13,18 @@ export default function TeamPerformacne() {
 
     const [lineupWeekStats, setLineupWeekStats] = useState<PlayerWeekStats[]>([]);
 
+    const [lineupWeeks, setLineupWeeks] = useState<number[]>([])
+
     const [weekNum, setWeekNum] = useState<number>(1);
 
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [serverMessage, setServerMessage] = useState<string>("");
     const [serverMessageType, setServerMessageType] = useState<ServerMessageType>("info");
 
+    //synchronization for lineup weeks dropdown
+    
 
+    //synchronization for lineup stats table
     useEffect(() => {
         setIsLoading(true);
 
@@ -49,7 +55,7 @@ export default function TeamPerformacne() {
             }
         })
         
-    }, [weekNum])
+    }, [weekNum, user])
 
     return (
         <>
@@ -60,6 +66,27 @@ export default function TeamPerformacne() {
                 <Row>
                     <Col>
                         <h1 className="text-center pt-5 mb-3">Team Performance</h1>
+                    </Col>
+                </Row>
+
+                <Row>
+                    <Col className="mb-3" sm={2} xl={1}>
+                        <DropdownButton className="w-100" title={"Team 1"}>
+                            <Dropdown.Item>Team 1</Dropdown.Item>
+                            <Dropdown.Item>Team 2</Dropdown.Item>
+                            <Dropdown.Item>Team 3</Dropdown.Item>
+                        </DropdownButton>
+                    </Col>
+
+                    <Col className="mb-3" sm={2} xl={1}>
+                        <LineupWeekDropdown
+                            weekNum={weekNum}
+                            setWeekNum={setWeekNum}
+                            lineupWeeks={lineupWeeks}
+                            setLineupWeeks={setLineupWeeks}
+                            leagueId={user?.leagueId ?? ""}
+                            userId={user?.userId ?? ""}
+                        />
                     </Col>
                 </Row>
 

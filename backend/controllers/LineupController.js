@@ -22,11 +22,11 @@ module.exports.getLineup = async (req, res) => {
         const lineup = {}
         const playerPromises = []
         for (let position in lineupDocument.lineupIds) {
-            console.log("Searching for player in position " + position + "...");
+            //console.log("Searching for player in position " + position + "...");
             let playerPromise = dbretriever.fetchOneDocument('players', {_id: new ObjectId(lineupDocument.lineupIds[position])})
             playerPromises.push(playerPromise);
             playerPromise.then(retrievedPlayer => {
-                console.log("Found player for position " + position + " with name: " + retrievedPlayer.playerName)
+                //console.log("Found player for position " + position + " with name: " + retrievedPlayer.playerName)
                 lineup[position] = retrievedPlayer
             })
         }
@@ -50,10 +50,12 @@ module.exports.getLineupScore = async (req, res) => {
             return res.status(400).json({error: "userId, leagueId, and weekNum must be specified in querystring"})
         }
 
+        if (isNaN(parseInt(req.query.weekNum))) return res.status(400).json({error: "WeekNum must be an integer"});
+
         const lineupDocument = await dbretriever.fetchOneDocument('lineups', {
             userId: req.query.userId,
             leagueId: req.query.leagueId,
-            weekNum: req.query.weekNum
+            weekNum: parseInt(req.query.weekNum)
         });
 
         if (!lineupDocument) {
@@ -93,4 +95,22 @@ function getPlayerStatsFromMatches(players, matches) {
     }
 
     return players;
+}
+
+module.exports.lineupWeeks = async (req, res) => {
+    try {
+        if (!req.query.leagueId || !req.query.userId) {
+            return res.status(400).json({error: "leagueId and userId must be specified in querystring"})
+        }
+
+        const maxLineupWeek = await dbretriever.fetchOrdered('lineups', {leagueId: req.query.leagueId, userId: req.query.userId}, {weekNum: -1}, 1, {weekNum: 1});
+
+        console.log("Max lineup week: ", maxLineupWeek);
+
+        return res.status(200).json(maxLineupWeek)
+    } catch (e) {
+        console.error(e);
+
+        return res.status(500).json({error: "500: Internal server error"})
+    }
 }

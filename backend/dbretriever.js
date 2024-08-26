@@ -33,11 +33,11 @@ async function fetchOneDocument(collectionName, criteriaObj) {
   return await collection.findOne(criteriaObj);
 }
 
-async function fetchOrdered(collectionName, criteriaObj, sortObj, count) {
+async function fetchOrdered(collectionName, criteriaObj, sortObj, count, projectObj) {
   let collection = database.collection(collectionName);
   let returnDocs;
 
-  let cursor = collection.find(criteriaObj).sort(sortObj);
+  let cursor = collection.find(criteriaObj).sort(sortObj).project(projectObj);
 
   //if count is specified, return that number of documents, if not defined, return all matches.
   if (!count) {

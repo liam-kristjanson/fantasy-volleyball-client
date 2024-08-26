@@ -35,6 +35,7 @@ app.post("/login", authController.login);
 app.get("/roster", rosterController.getRoster);
 app.get("/lineup", lineupController.getLineup);
 app.get("/lineup/score", lineupController.getLineupScore);
+app.get("/lineup/max-week", lineupController.lineupWeeks)
 
 app.listen(PORT, () => {
     console.log("Process running on http://localhost:" + PORT + " ...");
