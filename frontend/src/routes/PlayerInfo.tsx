@@ -64,7 +64,7 @@ export default function PlayerInfo() {
                                 <Table striped bordered hover>
                                     <thead>
                                         <tr>
-                                            <th>
+                                            <th className="d-none d-sm-table-cell">
                                                 Week
                                             </th>
 
@@ -72,39 +72,39 @@ export default function PlayerInfo() {
                                                 Title
                                             </th>
 
-                                            <th>
+                                            <th className="d-none d-lg-table-cell">
                                                 Kills
                                             </th>
 
-                                            <th>
+                                            <th className="d-none d-lg-table-cell">
                                                 Errors
                                             </th>
 
-                                            <th>
+                                            <th className="d-none d-lg-table-cell">
                                                 Attempts
                                             </th>
 
-                                            <th>
+                                            <th className="d-none d-sm-table-cell">
                                                 EFF
                                             </th>
 
-                                            <th>
+                                            <th className="d-none d-lg-table-cell">
                                                 Assists
                                             </th>
 
-                                            <th>
+                                            <th className="d-none d-lg-table-cell">
                                                 Aces
                                             </th>
 
-                                            <th>
+                                            <th className="d-none d-lg-table-cell">
                                                 Digs
                                             </th>
 
-                                            <th>
+                                            <th className="d-none d-lg-table-cell">
                                                 BS
                                             </th>
 
-                                            <th>
+                                            <th className="d-none d-lg-table-cell">
                                                 BA
                                             </th>
 
@@ -125,47 +125,51 @@ export default function PlayerInfo() {
                                         ) : (
                                             playerMatches.map(match => (
                                                 <tr>
-                                                    <td>
+                                                    <td className="d-none d-sm-table-cell">
                                                         {match.weekNum}
                                                     </td>
 
                                                     <td>
-                                                        {match.gameTitle}
+                                                        {match.gameTitle.length > 25 ? (
+                                                            match.gameTitle.substring(0,25) + " " + match.gameTitle.substring(25)
+                                                        ) : (
+                                                            match.gameTitle
+                                                        )}
                                                     </td>
 
-                                                    <td>
+                                                    <td className="d-none d-lg-table-cell">
                                                         {match.stats.kills}
                                                     </td>
 
-                                                    <td>
+                                                    <td className="d-none d-lg-table-cell">
                                                         {match.stats.errors}
                                                     </td>
 
-                                                    <td>
+                                                    <td className="d-none d-lg-table-cell">
                                                         {match.stats.attempts}
                                                     </td>
 
-                                                    <td>
+                                                    <td className="d-none d-sm-table-cell">
                                                         {(match.stats.attempts > 0) ? ((match.stats.kills - match.stats.errors) / match.stats.attempts).toFixed(3) : "0.000"}
                                                     </td>
 
-                                                    <td>
+                                                    <td className="d-none d-lg-table-cell">
                                                         {match.stats.assists}
                                                     </td>
 
-                                                    <td>
+                                                    <td className="d-none d-lg-table-cell">
                                                         {match.stats.aces}
                                                     </td>
 
-                                                    <td>
+                                                    <td className="d-none d-lg-table-cell">
                                                         {match.stats.digs}
                                                     </td>
 
-                                                    <td>
+                                                    <td className="d-none d-lg-table-cell">
                                                         {match.stats.soloBlocks}
                                                     </td>
 
-                                                    <td>
+                                                    <td className="d-none d-lg-table-cell">
                                                         {match.stats.blockAssists}
                                                     </td>
 
