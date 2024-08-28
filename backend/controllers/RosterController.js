@@ -29,3 +29,14 @@ module.exports.getRoster = async (req, res) => {
     }
     
 }
+
+module.exports.getTeams = async (req, res) => {
+
+    if (!req.query.leagueId) {
+        return res.status(400).json({error: 'leagueId must be specified in querystring'})
+    }
+
+    const rosters = await dbretriever.fetchDocuments('rosters', {leagueId: req.query.leagueId});
+
+    return res.status(200).json(rosters);
+}

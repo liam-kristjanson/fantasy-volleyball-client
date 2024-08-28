@@ -76,3 +76,9 @@ export interface PlayerWeekStats extends Player {
     matchesPlayed: number;
 }
 
+export interface Team {
+    userId: string;
+    leagueId: string;
+    teamName: string;
+}
+

@@ -10,6 +10,7 @@ const playerController = require('./controllers/PlayerController');
 const authController = require('./controllers/AuthController');
 const rosterController = require('./controllers/RosterController');
 const lineupController = require('./controllers/LineupController');
+const settingsController = require('./controllers/SettingsController');
 
 const PORT = process.env.PORT || 8080;
 const corsOptions = {
@@ -35,7 +36,16 @@ app.post("/login", authController.login);
 app.get("/roster", rosterController.getRoster);
 app.get("/lineup", lineupController.getLineup);
 app.get("/lineup/score", lineupController.getLineupScore);
-app.get("/lineup/max-week", lineupController.lineupWeeks)
+app.get("/lineup/max-week", lineupController.lineupWeeks);
+app.get("/app-settings", settingsController.getAppSettings);
+app.get("/teams", rosterController.getTeams);
+
+//default error handler
+app.use((err, req, res, next) => {
+    console.error(err.stack);
+
+    res.status(500).json({error: "500: Internal server error dh"})
+})
 
 app.listen(PORT, () => {
     console.log("Process running on http://localhost:" + PORT + " ...");

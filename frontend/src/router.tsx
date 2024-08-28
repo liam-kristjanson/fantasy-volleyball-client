@@ -5,6 +5,7 @@ import PlayerInfo from "./routes/PlayerInfo";
 import Login from "./routes/Login";
 import MyAccount from "./routes/MyAccount";
 import TeamPerformance from "./routes/TeamPerformance";
+import ProtectedRoute from "./components/ProtectedRoute";
 
 export const router = createBrowserRouter([
     {
@@ -25,10 +26,10 @@ export const router = createBrowserRouter([
     },
     {
         path:"/my-account",
-        element: <MyAccount />
+        element: <ProtectedRoute validRoles={['user', 'admin']}> <MyAccount /> </ProtectedRoute>
     },
     {
         path:"/team-performance",
-        element: <TeamPerformance />
+        element: <ProtectedRoute validRoles={['user', 'admin']}> <TeamPerformance /> </ProtectedRoute>
     }
 ])

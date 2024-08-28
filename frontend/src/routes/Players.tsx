@@ -27,6 +27,7 @@ export default function Players() {
         })
         .then(responseJson => {
             setIsLoading(false);
+            console.log(responseJson);
             if (responseJson.error) {
                 setServerMessage(responseJson.error)
             } else {

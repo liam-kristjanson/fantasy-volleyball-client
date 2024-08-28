@@ -1,11 +1,11 @@
 require('dotenv').config();
 const { ObjectId } = require('mongodb');
-const dbretriever = require('../dbretriever')
-const fantasyUtilities = require('../FantasyUtilities')
+const dbretriever = require('../dbretriever');
+const fantasyUtilities = require('../FantasyUtilities');
 
 module.exports.getLineup = async (req, res) => {
 
-    //TODO: make the database fetch into a standalone function so that the code can be reused.
+    //TODO: make the database fetch into a standalone function in FantasyUtilities so that the code can be reused.
 
     try {
         if (!req.query.userId || !req.query.leagueId) {
@@ -46,8 +46,13 @@ module.exports.getLineup = async (req, res) => {
 
 module.exports.getLineupScore = async (req, res) => {
     try {
-        if (!req.query.userId || !req.query.leagueId || !req.query.weekNum) {
-            return res.status(400).json({error: "userId, leagueId, and weekNum must be specified in querystring"})
+        //if no weekNum is specified, try to find the lineup for the current week.
+        if (!req.query.weekNum) {
+            req.query.weekNum = await fantasyUtilities.getAppSettings().currentWeekNum ?? 1;
+        }
+
+        if (!req.query.userId || !req.query.leagueId) {
+            return res.status(400).json({error: "userId and leagueId must be specified in querystring"})
         }
 
         if (isNaN(parseInt(req.query.weekNum))) return res.status(400).json({error: "WeekNum must be an integer"});
@@ -71,30 +76,13 @@ module.exports.getLineupScore = async (req, res) => {
         weekMatchDocuments = await dbretriever.fetchDocuments('matches', {weekNum: parseInt(req.query.weekNum)});
         playerDocuments = await Promise.all(promisedPlayerDocuments);
 
-        const playerMatchStats = getPlayerStatsFromMatches(playerDocuments, weekMatchDocuments);
+        const playerMatchStats = fantasyUtilities.getPlayerStatsFromMatches(playerDocuments, weekMatchDocuments);
 
         return res.status(200).json(playerMatchStats);
     } catch (e) {
         console.error(e);
         return res.status(500).json({error: "500: Internal server error"});
     }
-}
-
-function getPlayerStatsFromMatches(players, matches) {
-    for (let playerIdx = 0; playerIdx<players.length; playerIdx++) {
-        const playerName = players[playerIdx].playerName;
-        players[playerIdx].points = 0;
-        players[playerIdx].matchesPlayed = 0;
-
-        for (let matchIdx = 0; matchIdx<matches.length; matchIdx++) {
-            if (matches[matchIdx].stats[playerName]) {
-                players[playerIdx].points += fantasyUtilities.calculateFantasyPoints(matches[matchIdx].stats[playerName]);
-                players[playerIdx].matchesPlayed++;
-            }
-        }
-    }
-
-    return players;
 }
 
 module.exports.lineupWeeks = async (req, res) => {

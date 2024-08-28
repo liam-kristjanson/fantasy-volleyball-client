@@ -1,11 +1,12 @@
-import { Col, Container, Dropdown, DropdownButton, Row } from "react-bootstrap";
+import { Col, Container, Row } from "react-bootstrap";
 import Navbar from "../components/Navbar";
 import { useEffect, useState } from "react";
 import { useAuthContext } from "../hooks/useAuthContext";
-import { PlayerWeekStats, ServerMessageType } from "../types";
+import { PlayerWeekStats, ServerMessageType, Team } from "../types";
 import LineupWeekStatsTable from "../components/LineupWeekStatsTable";
 import ServerMessageContainer from "../components/ServerMessageContainer";
 import LineupWeekDropdown from "../components/LineupWeekDropdown";
+import TeamSelectionDropdown from "../components/TeamSelectionDropdown";
 
 export default function TeamPerformacne() {
 
@@ -16,6 +17,7 @@ export default function TeamPerformacne() {
     const [lineupWeeks, setLineupWeeks] = useState<number[]>([])
 
     const [weekNum, setWeekNum] = useState<number>(1);
+    const [selectedTeam, setSelectedTeam] = useState<Team | undefined>(undefined);
 
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [serverMessage, setServerMessage] = useState<string>("");
@@ -27,9 +29,10 @@ export default function TeamPerformacne() {
     //synchronization for lineup stats table
     useEffect(() => {
         setIsLoading(true);
+        setServerMessage("");
 
         const QUERY_PARAMS = new URLSearchParams({
-            userId: user?.userId ?? "",
+            userId: selectedTeam?.userId ?? user?.userId ?? "",
             leagueId: user?.leagueId ?? "",
             weekNum: weekNum.toString()
         })
@@ -55,7 +58,7 @@ export default function TeamPerformacne() {
             }
         })
         
-    }, [weekNum, user])
+    }, [selectedTeam, weekNum, user])
 
     return (
         <>
@@ -70,12 +73,12 @@ export default function TeamPerformacne() {
                 </Row>
 
                 <Row>
-                    <Col className="mb-3" sm={2} xl={1}>
-                        <DropdownButton className="w-100" title={"Team 1"}>
-                            <Dropdown.Item>Team 1</Dropdown.Item>
-                            <Dropdown.Item>Team 2</Dropdown.Item>
-                            <Dropdown.Item>Team 3</Dropdown.Item>
-                        </DropdownButton>
+                    <Col className="mb-3" sm={3} xl={3}>
+                        <TeamSelectionDropdown
+                            selectedTeam={selectedTeam}
+                            setSelectedTeam={setSelectedTeam}
+                            leagueId={user?.leagueId ?? ""}
+                        />
                     </Col>
 
                     <Col className="mb-3" sm={2} xl={1}>
@@ -85,7 +88,7 @@ export default function TeamPerformacne() {
                             lineupWeeks={lineupWeeks}
                             setLineupWeeks={setLineupWeeks}
                             leagueId={user?.leagueId ?? ""}
-                            userId={user?.userId ?? ""}
+                            userId={selectedTeam?.userId ?? user?.userId ?? ""}
                         />
                     </Col>
                 </Row>
