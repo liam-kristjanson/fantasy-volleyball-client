@@ -21,14 +21,17 @@ module.exports.login = (req, res) => {
         bcrypt.compare(req.body.password, matchedAccount.password)
         .then(compareResult => {
             if (compareResult === true) {
-                //login is successful, create auth token and return to client
+                //login is successful, generate auth data for client
                 const userData = {
                     userId: matchedAccount._id,
                     username: matchedAccount.username,
                     role: matchedAccount.role,
                     leagueId: matchedAccount.leagueId,
-                    authToken: jwt.sign(matchedAccount, process.env.JWT_SECRET)
                 }
+
+                //generate auth token for session validation
+                userData.authToken = jwt.sign(userData, process.env.JWT_SECRET)
+
                 return res.status(200).json({message: "Logged in successfuly", user: userData});
             } else {
                 return res.status(401).json({error: "Invalid username or password"});

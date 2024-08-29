@@ -1,5 +1,6 @@
 require('dotenv').config();
 const dbretriever = require('../dbretriever');
+const fantasyUtilities = require("../FantasyUtilities")
 
 module.exports.getRoster = async (req, res) => {
 
@@ -39,4 +40,45 @@ module.exports.getTeams = async (req, res) => {
     const rosters = await dbretriever.fetchDocuments('rosters', {leagueId: req.query.leagueId});
 
     return res.status(200).json(rosters);
+}
+
+module.exports.getFreeAgents = async (req, res) => {
+    if (!req.query.leagueId) {
+        return res.status(400).json({error: "leagueId must be specified in querystring"});
+    }
+
+    const freeAgentDocuments = await fantasyUtilities.getFreeAgents(req.query.leagueId);
+
+    return res.status(200).json(freeAgentDocuments);
+}
+
+module.exports.signFreeAgent = async (req, res) => {
+
+    if (!req.authData?.leagueId || !req.authData?.userId) {
+        return res.status(401).json({error: "Unauthorized"});
+    }
+
+    if (!req.query.playerId) {
+        return res.status(400).json({error: "playerId must be specified in querystring"});
+    }
+
+    //if the player is not available, reject the request as forbidden
+    if (!await fantasyUtilities.isFreeAgent(req.query.playerId, req.authData.leagueId)) {
+        return res.status(403).json({error: "Requested player is not a free agent."});
+    }
+
+    //if we successfully validate that the player is available, add him to the roster.
+    const currentRoster = await dbretriever.fetchOneDocument('rosters', {leagueId: req.authData.leagueId, userId: req.authData.userId});
+
+    if (!Array.isArray(currentRoster.playerIds)) {
+        return res.status(404).json({error: "Unable to fetch your current roster."});
+    }
+
+    //update the fetched roster, pushing the requested player id to the array of playerIds.
+    currentRoster.playerIds.push(req.query.playerId);
+
+    //write the updated roster to the database
+    await dbretriever.updateOne('rosters', {userId: req.authData.userId, leagueId: req.authData.leagueId}, {$set: {playerIds: currentRoster.playerIds}});
+
+    return res.status(200).json({message: "Free agent signed successfuly"});
 }

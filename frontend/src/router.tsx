@@ -6,6 +6,7 @@ import Login from "./routes/Login";
 import MyAccount from "./routes/MyAccount";
 import TeamPerformance from "./routes/TeamPerformance";
 import ProtectedRoute from "./components/ProtectedRoute";
+import FreeAgents from "./routes/FreeAgents";
 
 export const router = createBrowserRouter([
     {
@@ -31,5 +32,9 @@ export const router = createBrowserRouter([
     {
         path:"/team-performance",
         element: <ProtectedRoute validRoles={['user', 'admin']}> <TeamPerformance /> </ProtectedRoute>
+    },
+    {
+        path:"/free-agents",
+        element: <ProtectedRoute validRoles={['user', 'admin']}> <FreeAgents /> </ProtectedRoute>
     }
 ])

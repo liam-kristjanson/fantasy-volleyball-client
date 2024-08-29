@@ -39,6 +39,8 @@ app.get("/lineup/score", lineupController.getLineupScore);
 app.get("/lineup/max-week", lineupController.lineupWeeks);
 app.get("/app-settings", settingsController.getAppSettings);
 app.get("/teams", rosterController.getTeams);
+app.get("/free-agents", rosterController.getFreeAgents);
+app.post("/free-agents/sign", rosterController.signFreeAgent);
 
 //default error handler
 app.use((err, req, res, next) => {

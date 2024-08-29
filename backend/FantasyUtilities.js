@@ -1,5 +1,6 @@
 require('dotenv').config();
 const dbretriever = require('./dbretriever');
+const { ObjectId } = require('mongodb');
 
 const calculateFantasyPoints = (statsObject) => {
     const POINTS_PER_KILL = 1;
@@ -34,6 +35,36 @@ const getPlayerStatsFromMatches = (players, matches) => {
     return players;
 }
 
+const getFreeAgents = async (leagueId) => {
+    const rosters = await dbretriever.fetchDocuments('rosters', {leagueId: leagueId}, {playerIds: 1});
+
+    let rosteredPlayerIds = [];
+
+    //use the fetched rosters to populate an array of all rostered player ids
+    for (let rosterIdx = 0; rosterIdx<rosters.length; rosterIdx++) {
+        let rosterIds = rosters[rosterIdx].playerIds;
+        for (let playerIdx=0; playerIdx<rosterIds.length; playerIdx++) {
+            rosteredPlayerIds.push(new ObjectId(rosterIds[playerIdx]));
+        }
+    }
+
+    const freeAgentDocuments = await dbretriever.fetchOrdered('players', {_id: {$nin: rosteredPlayerIds}}, {prevSeasonPoints: -1}, undefined, {matches: 0});
+
+    return freeAgentDocuments;
+}
+
+const isFreeAgent = async (playerId, leagueId) => {
+    const leagueRosters = await dbretriever.fetchDocuments('rosters', {leagueId: leagueId}, {playerIds: 1});
+
+    for (let rosterIdx=0; rosterIdx<leagueRosters.length; rosterIdx++) {
+        if (leagueRosters[rosterIdx].playerIds.includes(playerId)) return false;
+    }
+
+    return true;
+}
+
+module.exports.isFreeAgent = isFreeAgent;
 module.exports.calculateFantasyPoints = calculateFantasyPoints;
 module.exports.getAppSettings = getAppSettings;
 module.exports.getPlayerStatsFromMatches = getPlayerStatsFromMatches;
+module.exports.getFreeAgents = getFreeAgents

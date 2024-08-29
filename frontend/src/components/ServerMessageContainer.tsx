@@ -7,6 +7,6 @@ interface ServerMessageContainerProps {
 
 export default function ServerMessageContainer(props: ServerMessageContainerProps) {
     return (
-        <p className={"text-" + props.variant}>{props.message}</p>
+        <p className={"text-" + props.variant + " fw-bold"}>{props.message}</p>
     )
 }

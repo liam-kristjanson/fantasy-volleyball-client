@@ -145,7 +145,7 @@ export default function MyAccount() {
                 <Row>
                     <Col>
 
-                        <Card className="shadow">
+                        <Card className="shadow mb-4">
 
                             <Card.Header className="text-primary fw-bold">
                                 My Roster
@@ -198,6 +198,8 @@ export default function MyAccount() {
                                         
                                     </tbody>
                                 </Table>
+
+                                <Button className="fw-bold btn-primary" onClick={() => {navigate('/free-agents')}}>Free agents</Button>
                             </Card.Body>
                         </Card>
 
