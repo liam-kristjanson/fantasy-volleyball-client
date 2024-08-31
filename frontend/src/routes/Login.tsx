@@ -19,6 +19,9 @@ export default function Login() {
 
     function handleLogin() {
         setIsLoading(true);
+        setServerMessage("");
+        setServerMessageType("info");
+        
         const requestBody = JSON.stringify({
             username: username,
             password: password

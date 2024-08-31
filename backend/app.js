@@ -30,15 +30,22 @@ app.get("/", (req, res) => {
     res.send("Service is running...");
 })
 
+app.get("/app-settings", settingsController.getAppSettings);
+
+app.post("/login", authController.login);
+
 app.get("/players", playerController.getRankedPlayers);
 app.get("/player-matches", playerController.getPlayerMatches);
-app.post("/login", authController.login);
+
 app.get("/roster", rosterController.getRoster);
+app.post("/roster/drop-player", rosterController.dropPlayer);
+
 app.get("/lineup", lineupController.getLineup);
 app.get("/lineup/score", lineupController.getLineupScore);
 app.get("/lineup/max-week", lineupController.lineupWeeks);
-app.get("/app-settings", settingsController.getAppSettings);
+
 app.get("/teams", rosterController.getTeams);
+
 app.get("/free-agents", rosterController.getFreeAgents);
 app.post("/free-agents/sign", rosterController.signFreeAgent);
 
@@ -46,7 +53,7 @@ app.post("/free-agents/sign", rosterController.signFreeAgent);
 app.use((err, req, res, next) => {
     console.error(err.stack);
 
-    res.status(500).json({error: "500: Internal server error dh"})
+    return res.status(500).json({error: "500: Internal server error dh"})
 })
 
 app.listen(PORT, () => {

@@ -63,8 +63,28 @@ const isFreeAgent = async (playerId, leagueId) => {
     return true;
 }
 
+const isPlayerRostered = async (playerId, userId, leagueId) => {
+    const roster = await dbretriever.fetchOneDocument('rosters', {leagueId: leagueId, userId: userId});
+
+    return Array.isArray(roster?.playerIds) && roster?.playerIds.includes(playerId);
+}
+
+const isPlayerInCurrentLineup = async(playerId, userId, leagueId) => {
+    const appSettings = await dbretriever.fetchOneDocument('app_settings', {});
+
+    const currentLineup = await dbretriever.fetchOneDocument('lineups', {userId: userId, leagueId: leagueId, weekNum:appSettings.currentWeekNum});
+
+    for (let position in currentLineup.lineupIds) {
+        if (currentLineup.lineupIds[position] == playerId) return true;
+    }
+
+    return false;
+}
+
 module.exports.isFreeAgent = isFreeAgent;
 module.exports.calculateFantasyPoints = calculateFantasyPoints;
 module.exports.getAppSettings = getAppSettings;
 module.exports.getPlayerStatsFromMatches = getPlayerStatsFromMatches;
 module.exports.getFreeAgents = getFreeAgents
+module.exports.isPlayerRostered = isPlayerRostered;
+module.exports.isPlayerInCurrentLineup = isPlayerInCurrentLineup;

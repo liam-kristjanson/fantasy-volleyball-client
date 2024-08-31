@@ -17,14 +17,57 @@ export default function MyAccount() {
     const [lineup, setLineup] = useState<LineupDocument | undefined>();
     const [isLineupLoading, setIsLineupLoading] = useState<boolean>(false);
 
-    useEffect(() => {
-        setIsRosterLoading(true);
-        setIsLineupLoading(true);
+    const QUERY_PARAMS = new URLSearchParams({
+        leagueId: user?.leagueId ?? "",
+        userId: user?.userId ?? ""
+    })
 
-        const QUERY_PARAMS = new URLSearchParams({
-            leagueId: user?.leagueId ?? "",
-            userId: user?.userId ?? ""
+    useEffect(() => {
+
+        fetchRoster();
+        fetchLineup();
+
+    }, [user])
+
+    function handleLogout() {
+        dispatch({type: "LOGOUT", payload: null});
+        navigate('/')
+    }
+
+    function handleDropPlayer(playerId : string) {
+        setIsRosterLoading(true);
+
+        const QUERY_PARAMS = new URLSearchParams({playerId});
+
+
+        fetch(import.meta.env.VITE_SERVER + "/roster/drop-player?" + QUERY_PARAMS.toString(), {
+            headers: {authorization: user?.authToken?? ""},
+            method: "POST"
         })
+        .then(response => {
+            if (response.ok) {
+                response.json().then(responseJson => {
+                    setIsRosterLoading(false);
+                    alert(responseJson.message ?? "Success");
+                    fetchRoster();
+                })
+            } else {
+                response.json().then(responseJson => {
+                    setIsRosterLoading(false);
+                    console.error(responseJson);
+                    alert(responseJson.error ?? "An unexpected error occured (see console)");
+                })
+            }
+        })
+        .catch(err => {
+            setIsRosterLoading(false);
+            console.error(err);
+            alert("An unexpected error occured (see console)");
+        })
+    }
+
+    function fetchRoster() {
+        setIsRosterLoading(true);
 
         fetch(import.meta.env.VITE_SERVER + "/roster?" + QUERY_PARAMS.toString())
         .then(response => {
@@ -36,7 +79,11 @@ export default function MyAccount() {
             setRoster(responseJson);
             setIsRosterLoading(false);
         })
+    }
 
+    function fetchLineup() {
+        setIsLineupLoading(true);
+        
         fetch(import.meta.env.VITE_SERVER + "/lineup?" + QUERY_PARAMS.toString())
         .then(response => {
             return response.json()
@@ -47,11 +94,6 @@ export default function MyAccount() {
             setLineup(responseJson);
             setIsLineupLoading(false);
         })
-    }, [user])
-
-    function handleLogout() {
-        dispatch({type: "LOGOUT", payload: null});
-        navigate('/')
     }
 
     return (
@@ -90,7 +132,7 @@ export default function MyAccount() {
                                     <tbody>
                                         {isLineupLoading || !lineup ? (
                                             <tr>
-                                                <td>
+                                                <td colSpan={2}>
                                                     <Spinner variant="primary"/> Lineup loading...
                                                 </td>
                                             </tr>
@@ -166,13 +208,17 @@ export default function MyAccount() {
                                             <th>
                                                 Total Points
                                             </th>
+
+                                            <th>
+                                                Actions
+                                            </th>
                                         </tr>
                                     </thead>
 
                                     <tbody>
                                         {isRosterLoading || !roster ? (
                                             <tr>
-                                                <td colSpan={3}>
+                                                <td colSpan={4}>
                                                     <Spinner variant="primary"/> Roster loading...
                                                 </td>
                                             </tr>
@@ -191,6 +237,10 @@ export default function MyAccount() {
     
                                                     <td>
                                                         {player.prevSeasonPoints}
+                                                    </td>
+
+                                                    <td>
+                                                        <Button className="btn-primary fw-bold" onClick={() => {handleDropPlayer(player._id)}}>Drop</Button>
                                                     </td>
                                                 </tr>
                                             ))

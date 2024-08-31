@@ -82,3 +82,28 @@ module.exports.signFreeAgent = async (req, res) => {
 
     return res.status(200).json({message: "Free agent signed successfuly"});
 }
+
+module.exports.dropPlayer = async (req, res) => {
+    if (!req.authData?.userId || !req.authData?.leagueId) {
+        return (res.status(401).json({error: "Unauthorized"}));
+    }
+
+    if (!req.query.playerId) {
+        return (res.status(400).json({error: "playerId must be specified in querystring"}));
+    }
+
+    //validate that the player exists on the user's current roster.
+    if (!await fantasyUtilities.isPlayerRostered(req.query.playerId, req.authData.userId, req.authData.leagueId)) {
+        return (res.status(403).json({error: "Player does not exist on your current roster"}));
+    }
+
+    //validate that the player is not in the user's current lineup
+    if (await fantasyUtilities.isPlayerInCurrentLineup(req.query.playerId, req.authData.userId, req.authData.leagueId)) {
+        return (res.status(403).json({error: "Player cannot be dropped while in your current lineup. Remove them from your lienup before dropping them."}))
+    }
+
+    //pull (remove) the requested player id from the user's roster
+    await dbretriever.updateOne('rosters', {userId: req.authData.userId, leagueId: req.authData.leagueId}, {$pull: {playerIds: req.query.playerId}})
+
+    return (res.status(200).json({message: "Player dropped successfuly"}));
+}
