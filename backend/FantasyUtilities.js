@@ -81,6 +81,28 @@ const isPlayerInCurrentLineup = async(playerId, userId, leagueId) => {
     return false;
 }
 
+const isValidPosition = (lineupSlot, playerPosition) => {
+    switch (lineupSlot) {
+        case "S":
+            return playerPosition.includes("S");
+
+        case "OH1":
+        case "OH2":
+        case "OH3":
+            return playerPosition.includes("OH");
+
+        case "M1":
+        case "M2":
+            return playerPosition.includes("M");
+        
+        case "L":
+            return playerPosition.includes("L");
+    }
+
+    return false;
+}
+
+module.exports.isValidPosition = isValidPosition;
 module.exports.isFreeAgent = isFreeAgent;
 module.exports.calculateFantasyPoints = calculateFantasyPoints;
 module.exports.getAppSettings = getAppSettings;

@@ -43,6 +43,7 @@ app.post("/roster/drop-player", rosterController.dropPlayer);
 app.get("/lineup", lineupController.getLineup);
 app.get("/lineup/score", lineupController.getLineupScore);
 app.get("/lineup/max-week", lineupController.lineupWeeks);
+app.post("/lineup/swap", lineupController.lineupSwap);
 
 app.get("/teams", rosterController.getTeams);
 
@@ -52,8 +53,7 @@ app.post("/free-agents/sign", rosterController.signFreeAgent);
 //default error handler
 app.use((err, req, res, next) => {
     console.error(err.stack);
-
-    return res.status(500).json({error: "500: Internal server error dh"})
+    return res.status(500).json({error: "500: Internal server error."})
 })
 
 app.listen(PORT, () => {

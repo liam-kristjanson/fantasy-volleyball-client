@@ -102,3 +102,57 @@ module.exports.lineupWeeks = async (req, res) => {
         return res.status(500).json({error: "500: Internal server error"})
     }
 }
+
+module.exports.lineupSwap = async (req, res, next) => {
+
+    try {
+        //input and authentication validation
+        if (!req.authData?.userId || !req.authData?.leagueId) {
+            return res.status(401).json({error: "Unauthorized"});
+        }
+
+        if (!req.query.playerId || !req.query.lineupSlot) {
+            return res.status(400).json({error: "playerId and lineupSlot must be specified in querystring"});
+        }
+
+        //validate position
+        if (!["S", "OH1", "OH2", "OH3", "M1", "M2", "L"].includes(req.query.lineupSlot)) {
+            return (res.status(400).json({error: "Invalid lineup slot requested"}));
+        }
+
+        //validate requested player id
+        if (!ObjectId.isValid(req.query.playerId)) {
+            return (res.status(400).json({error: "Invalid player id"}))
+        }
+
+        //fetch player document for further validation
+        const playerDocument = await dbretriever.fetchOneDocument('players', {_id: new ObjectId(req.query.playerId)});
+
+        //validate that requested player exists
+        if (!playerDocument) {
+            return res.status(404).json({error: "No player found with the requested id"});
+        }
+
+        //validate that the user has the requested player on their roster
+        if (!await fantasyUtilities.isPlayerRostered(req.query.playerId, req.authData.userId, req.authData.leagueId)) {
+            console.log('player is not rostered')
+            return res.status(400).json({error: "The requested player is not currently on your roster"});
+        }
+
+
+        if (!fantasyUtilities.isValidPosition(req.query.lineupSlot, playerDocument.position)) {
+            return res.status(403).json({error: "The player does not play the correct position to be assigned to the requested lineup slot."})
+        }
+
+        const appSettings = await dbretriever.fetchOneDocument('app_settings', {});
+
+        //update the lineup for the current week using computed property name
+        const lineupSlotFieldName = "lineupIds." + req.query.lineupSlot;
+        await dbretriever.updateOne('lineups', {userId: req.authData.userId, leagueId: req.authData.leagueId, weekNum: appSettings.currentWeekNum}, {$set: {[lineupSlotFieldName] : req.query.playerId}});
+
+        return (res.status(200).json({message: "Lineup has been changed successfully"}));
+
+    } catch (e) {
+        next(e);
+    }
+}
