@@ -12,7 +12,14 @@ module.exports.getLineup = async (req, res) => {
             return res.status(400).json({error: "userId and leagueId must be specified in querystring"});
         }
 
-        const lineupDocument = await dbretriever.fetchOrdered('lineups', {userId: req.query.userId, leagueId: req.query.leagueId}, {weekNum: -1}, 1);
+        let weekNum = req.query.weekNum
+
+        if (!weekNum) {
+            const APP_SETTINGS = await dbretriever.fetchOneDocument('app_settings');
+            weekNum = APP_SETTINGS.currentWeekNum;
+        }
+
+        const lineupDocument = await dbretriever.fetchOneDocument('lineups', {userId: req.query.userId, leagueId: req.query.leagueId, weekNum: weekNum});
 
         if (!lineupDocument) {
             return  res.status(404).json({error: "No lineup found for the given userId and leagueId"})
@@ -136,7 +143,11 @@ module.exports.lineupSwap = async (req, res, next) => {
         //validate that the user has the requested player on their roster
         if (!await fantasyUtilities.isPlayerRostered(req.query.playerId, req.authData.userId, req.authData.leagueId)) {
             console.log('player is not rostered')
-            return res.status(400).json({error: "The requested player is not currently on your roster"});
+            return res.status(403).json({error: "The requested player is not currently on your roster"});
+        }
+
+        if (await fantasyUtilities.isPlayerInCurrentLineup(req.query.playerId, req.authData.userId, req.authData.leagueId)) {
+            return res.status(403).json({error: "The requested player is already active in your lineup"});
         }
 
 

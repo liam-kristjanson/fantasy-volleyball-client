@@ -7,6 +7,7 @@ import MyAccount from "./routes/MyAccount";
 import TeamPerformance from "./routes/TeamPerformance";
 import ProtectedRoute from "./components/ProtectedRoute";
 import FreeAgents from "./routes/FreeAgents";
+import EditLineup from "./routes/EditLineup";
 
 export const router = createBrowserRouter([
     {
@@ -36,5 +37,8 @@ export const router = createBrowserRouter([
     {
         path:"/free-agents",
         element: <ProtectedRoute validRoles={['user', 'admin']}> <FreeAgents /> </ProtectedRoute>
+    }, {
+        path:"/edit-lineup",
+        element: <ProtectedRoute validRoles={['user', 'admin']}> <EditLineup/> </ProtectedRoute>
     }
 ])

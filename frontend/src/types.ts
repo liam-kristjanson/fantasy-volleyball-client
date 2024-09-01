@@ -82,3 +82,4 @@ export interface Team {
     teamName: string;
 }
 
+export type Position = "S" | "OH1" | "OH2" | "OH3" | "M1" | "M2" | "L";
