@@ -102,6 +102,41 @@ const isValidPosition = (lineupSlot, playerPosition) => {
     return false;
 }
 
+const getBench = async (userId, leagueId) => {
+    
+    const rosterPromise = dbretriever.fetchOneDocument('rosters', {userId: userId, leagueId: leagueId});
+    const APP_SETTINGS = await getAppSettings();
+    const lineupPromise = dbretriever.fetchOneDocument('lineups', {userId: userId, leagueId: leagueId, weekNum: APP_SETTINGS.currentWeekNum});
+
+    const [roster, lineup] = await Promise.all([rosterPromise, lineupPromise]);
+
+    roster.playerIds;
+    lineup.lineupIds;
+
+    const benchIds = roster.playerIds.filter(rosterPlayerId => {
+        return !Object.values(lineup.lineupIds).includes(rosterPlayerId);
+    })
+
+    console.log("BenchIDs:", benchIds);
+
+    let benchDocuments = [];
+    if (Array.isArray(benchIds) && benchIds.length > 0) {
+        benchDocuments = await fetchPlayersById(benchIds);
+    }
+
+    return benchDocuments;
+}
+
+const fetchPlayersById = (playerIds) => {
+    const playerObjectIds = playerIds.map(playerId => {
+        return new ObjectId(playerId);
+    });
+
+    const playerDocuments = dbretriever.fetchDocuments('players', {_id: {$in: playerObjectIds}});
+
+    return playerDocuments;
+}
+
 module.exports.isValidPosition = isValidPosition;
 module.exports.isFreeAgent = isFreeAgent;
 module.exports.calculateFantasyPoints = calculateFantasyPoints;
@@ -110,3 +145,4 @@ module.exports.getPlayerStatsFromMatches = getPlayerStatsFromMatches;
 module.exports.getFreeAgents = getFreeAgents
 module.exports.isPlayerRostered = isPlayerRostered;
 module.exports.isPlayerInCurrentLineup = isPlayerInCurrentLineup;
+module.exports.getBench = getBench;

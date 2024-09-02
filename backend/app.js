@@ -44,6 +44,7 @@ app.get("/lineup", lineupController.getLineup);
 app.get("/lineup/score", lineupController.getLineupScore);
 app.get("/lineup/max-week", lineupController.lineupWeeks);
 app.post("/lineup/swap", lineupController.lineupSwap);
+app.get("/lineup/bench", lineupController.getBench);
 
 app.get("/teams", rosterController.getTeams);
 

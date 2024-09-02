@@ -167,3 +167,13 @@ module.exports.lineupSwap = async (req, res, next) => {
         next(e);
     }
 }
+
+module.exports.getBench = async (req, res, next) => {
+    if (!req.query.userId || !req.query.leagueId) {
+        return res.status(400).json({error: "userId and leagueId must be specified in querystring"});
+    }
+
+    const currentBench = await fantasyUtilities.getBench(req.query.userId, req.query.leagueId);
+
+    return res.status(200).json(currentBench);
+}

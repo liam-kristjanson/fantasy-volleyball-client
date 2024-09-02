@@ -18,14 +18,14 @@ export default function EditLineup() {
 
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [lineup, setLineup] = useState<Lineup | undefined>(undefined);
-    const [rosterPlayers, setRosterPlayers] = useState<Player[] | undefined>(undefined);
+    const [benchPlayers, setBenchPlayers] = useState<Player[] | undefined>(undefined);
     const [swapInPlayers, setSwapInPlayers] = useState<Player[] | undefined>(undefined);
     const [selectedPosition, setSelectedPosition] = useState<Position | undefined>(undefined);
     
 
     useEffect(() => {
         getLineup(user);
-        getRoster(user);
+        getBenchPlayers(user);
     }, [user]);
 
     function getLineup(user : User) {
@@ -61,21 +61,21 @@ export default function EditLineup() {
         })
     }
 
-    function getRoster(user: User) {
+    function getBenchPlayers(user: User) {
         setIsLoading(true);
         // setServerMessage("");
         // setServerMessageType("info");
 
         const QUERY_PARAMS = new URLSearchParams({userId: user.userId, leagueId: user.leagueId});
 
-        fetch(import.meta.env.VITE_SERVER + "/roster?" + QUERY_PARAMS.toString())
+        fetch(import.meta.env.VITE_SERVER + "/lineup/bench?" + QUERY_PARAMS.toString())
         .then(response => {
             if (response.ok) {
                 response.json()
                 .then(responseJson => {
                     setIsLoading(false);
-                    setRosterPlayers(responseJson.players);
-                    console.log("Roster players: ", responseJson.players)
+                    setBenchPlayers(responseJson);
+                    console.log("Bench players ", responseJson)
                 })
             } else {
                 response.json()
@@ -99,9 +99,27 @@ export default function EditLineup() {
         setServerMessageType('info');
         setSelectedPosition(selectedPosition);
 
-        setSwapInPlayers(rosterPlayers?.filter(rosterPlayer => {
-            return rosterPlayer.position.includes(selectedPosition);
+        setSwapInPlayers(benchPlayers?.filter(benchPlayer => {
+            return isValidPosition(benchPlayer.position, selectedPosition);
         }));
+    }
+
+    function isValidPosition(playerPosition : string, lineupSlot: Position) : boolean {
+        switch (lineupSlot) {
+            case "S":
+                return playerPosition.includes("S");
+            case "OH1":
+            case "OH2":
+            case "OH3":
+                return playerPosition.includes("OH");
+            case "M1":
+            case "M2":
+                return playerPosition.includes("M");
+            case "L":
+                return playerPosition.includes("L");
+        }
+
+        return false;
     }
 
     function requestSwap(position: Position, player: Player) {
@@ -130,7 +148,7 @@ export default function EditLineup() {
                         setSwapInPlayers(undefined);
 
                         //refresh roster and lineup
-                        getRoster(user);
+                        getBenchPlayers(user);
                         getLineup(user);
                     })
                 } else {
@@ -144,7 +162,7 @@ export default function EditLineup() {
                         setSwapInPlayers(undefined);
 
                         //refresh roster and lineup
-                        getRoster(user);
+                        getBenchPlayers(user);
                         getLineup(user);
                     })
                 }
@@ -159,7 +177,7 @@ export default function EditLineup() {
                 setSwapInPlayers(undefined);
 
                 //refresh roster and lineup
-                getRoster(user);
+                getBenchPlayers(user);
                 getLineup(user);
             })
         } else {
