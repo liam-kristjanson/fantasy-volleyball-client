@@ -2,6 +2,7 @@ require('dotenv').config();
 const dbretriever = require('../dbretriever');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+const {ObjectId} = require('mongodb');
 
 module.exports.login = (req, res) => {
     //validation
@@ -57,6 +58,52 @@ module.exports.parseAuthToken = (req, res, next) => {
         console.error("Error parsing jwt token:", e);
     } finally {
         next();
+    }
+}
+
+module.exports.createAccount = async (req, res, next) => {
+
+    try {
+        //validation
+        if (!req.body.leagueId || !req.body.username || !req.body.password) {
+            return res.status(400).json({error: "leagueId, username, and password must be specified in request body"});
+        }
+
+        if (req.body.username.length < 6 || req.body.username.length > 30) {
+            return res.status(400).json({error: "Username must be between 6 and 30 characters"});
+        }
+
+        if (req.body.password.length < 6 || req.body.password.length > 30) {
+            return res.status(400).json({error: "Password must be between 6 and 30 characters"});
+        }
+
+        if (!ObjectId.isValid(req.body.leagueId)) {
+            return res.status(400).json({error: "Invalid league id"});
+        }
+
+        const league = await dbretriever.fetchOneDocument('leagues', {_id: new ObjectId(req.body.leagueId)});
+
+        if (!league) {
+            return res.status(400).json({error: "Invalid league id"});
+        }
+
+        const existingAccountWithSameUsername = await dbretriever.fetchOneDocument('users', {username: req.body.username});
+
+        if (existingAccountWithSameUsername) return res.status(403).json({error: "Another account already exists with the requested username"})
+
+        //create password hash
+        console.log("Salt rounds:", process.env.SALT_ROUNDS);
+
+        const hashedpassword = await bcrypt.hash(req.body.password, parseInt(process.env.SALT_ROUNDS))
+
+        console.log("Hashed password:", hashedpassword)
+        
+        //insert new account into database
+        const createAccountResult = await dbretriever.insertOne('users', {username: req.body.username, password: hashedpassword, role: "user", leagueId: req.body.leagueId});
+
+        return res.status(200).json({message: "Your account was created successfuly. You may now log in."});
+    } catch (err) {
+        return next(err);
     }
 }
 

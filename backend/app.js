@@ -33,6 +33,7 @@ app.get("/", (req, res) => {
 app.get("/app-settings", settingsController.getAppSettings);
 
 app.post("/login", authController.login);
+app.post("/account/create", authController.createAccount);
 
 app.get("/players", playerController.getRankedPlayers);
 app.get("/player-matches", playerController.getPlayerMatches);

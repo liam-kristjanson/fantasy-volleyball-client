@@ -117,7 +117,7 @@ const getBench = async (userId, leagueId) => {
         return !Object.values(lineup.lineupIds).includes(rosterPlayerId);
     })
 
-    console.log("BenchIDs:", benchIds);
+    //console.log("BenchIDs:", benchIds);
 
     let benchDocuments = [];
     if (Array.isArray(benchIds) && benchIds.length > 0) {
