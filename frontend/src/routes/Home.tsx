@@ -1,6 +1,6 @@
 import { Col, Container, Row } from "react-bootstrap";
 import Navbar from "../components/Navbar";
-import { useNavigate } from "react-router-dom";
+    import { useNavigate } from "react-router-dom";
 import AccountCreationForm from "../components/AccountCreationForm";
 
 export default function Home() {

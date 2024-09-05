@@ -1,12 +1,24 @@
-require('dotenv').config();
-const fantasyUtilities = require('../FantasyUtilities');
+//a singleton for app settings to reduce the number of database accesses required for this frequently accessed,
+//infrequently changed piece of data.
+const dbretriever = require('../dbretriever');
 
-module.exports.getAppSettings = async (req, res) => {
+let cachedAppSettings = undefined;
+
+module.exports.fetchAppSettings = async (req, res, next) => {
     try {
-        const appSettings = await fantasyUtilities.getAppSettings();
-        return res.status(200).json(appSettings);
-    } catch (e) {
-        console.error(e);
-        return res.status(500).json({error: "500: Internal server error"})
+        const appSettings = await getAppSettings();
+        return res.status(200).json(appSettings)
+    } catch (err) {
+        next(err);
     }
 }
+
+const getAppSettings = async () => {
+    if (!cachedAppSettings) {
+        cachedAppSettings = await dbretriever.fetchOneDocument('app_settings', {});
+    }
+
+    return cachedAppSettings;
+}
+
+module.exports.getAppSettings = getAppSettings;

@@ -30,7 +30,7 @@ app.get("/", (req, res) => {
     res.send("Service is running...");
 })
 
-app.get("/app-settings", settingsController.getAppSettings);
+app.get("/app-settings", settingsController.fetchAppSettings);
 
 app.post("/login", authController.login);
 app.post("/account/create", authController.createAccount);

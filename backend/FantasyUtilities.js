@@ -1,6 +1,17 @@
 require('dotenv').config();
 const dbretriever = require('./dbretriever');
 const { ObjectId } = require('mongodb');
+const settingsController = require('./controllers/SettingsController');
+
+const EMPTY_LINEUP = {
+    S: null,
+    OH1: null,
+    OH2: null,
+    OH3: null,
+    M1: null,
+    M2: null,
+    L: null
+}
 
 const calculateFantasyPoints = (statsObject) => {
     const POINTS_PER_KILL = 1;
@@ -12,10 +23,6 @@ const calculateFantasyPoints = (statsObject) => {
     const POINTS_PER_BLOCK_ASSIST = 1;
 
     return ((statsObject.kills * POINTS_PER_KILL) + (statsObject.errors * POINTS_PER_ERROR) + (statsObject.assists * POINTS_PER_ASSIST) + (statsObject.aces * POINTS_PER_ACE) + (statsObject.digs * POINTS_PER_DIG) + (statsObject.soloBlocks * POINTS_PER_SOLO_BLOCK) + (statsObject.blockAssists * POINTS_PER_BLOCK_ASSIST))
-}
-
-const getAppSettings = () => {
-    return dbretriever.fetchOneDocument('app_settings', {});
 }
 
 const getPlayerStatsFromMatches = (players, matches) => {
@@ -105,7 +112,7 @@ const isValidPosition = (lineupSlot, playerPosition) => {
 const getBench = async (userId, leagueId) => {
     
     const rosterPromise = dbretriever.fetchOneDocument('rosters', {userId: userId, leagueId: leagueId});
-    const APP_SETTINGS = await getAppSettings();
+    const APP_SETTINGS = await settingsController.getAppSettings();
     const lineupPromise = dbretriever.fetchOneDocument('lineups', {userId: userId, leagueId: leagueId, weekNum: APP_SETTINGS.currentWeekNum});
 
     const [roster, lineup] = await Promise.all([rosterPromise, lineupPromise]);
@@ -140,9 +147,9 @@ const fetchPlayersById = (playerIds) => {
 module.exports.isValidPosition = isValidPosition;
 module.exports.isFreeAgent = isFreeAgent;
 module.exports.calculateFantasyPoints = calculateFantasyPoints;
-module.exports.getAppSettings = getAppSettings;
 module.exports.getPlayerStatsFromMatches = getPlayerStatsFromMatches;
 module.exports.getFreeAgents = getFreeAgents
 module.exports.isPlayerRostered = isPlayerRostered;
 module.exports.isPlayerInCurrentLineup = isPlayerInCurrentLineup;
 module.exports.getBench = getBench;
+module.exports.EMPTY_LINEUP = EMPTY_LINEUP;

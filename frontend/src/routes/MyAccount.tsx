@@ -2,8 +2,9 @@ import { Button, Card, Col, Container, Row, Spinner, Table } from "react-bootstr
 import Navbar from "../components/Navbar";
 import { useAuthContext } from "../hooks/useAuthContext";
 import { useEffect, useState } from "react";
-import { LineupDocument, Roster } from "../types";
+import { LineupDocument, Roster, ServerMessageType } from "../types";
 import { useNavigate } from "react-router-dom";
+import ServerMessageContainer from "../components/ServerMessageContainer";
 
 export default function MyAccount() {
 
@@ -16,6 +17,9 @@ export default function MyAccount() {
 
     const [lineup, setLineup] = useState<LineupDocument | undefined>();
     const [isLineupLoading, setIsLineupLoading] = useState<boolean>(false);
+
+    const [lineupMessage, setLineupMessage] = useState<string>("");
+    const [lineupMessageType, setLineupMessageType] = useState<ServerMessageType>("info");
 
     const QUERY_PARAMS = new URLSearchParams({
         leagueId: user?.leagueId ?? "",
@@ -82,18 +86,35 @@ export default function MyAccount() {
     }
 
     function fetchLineup() {
+        setLineupMessage("");
+        setLineupMessageType("info");
         setIsLineupLoading(true);
         
         fetch(import.meta.env.VITE_SERVER + "/lineup?" + QUERY_PARAMS.toString())
         .then(response => {
-            return response.json()
+            if (response.ok) {
+                response.json().then(responseJson => {
+                    console.log("LINEUP: ");
+                    console.log(responseJson);
+                    setLineup(responseJson)
+                    setIsLineupLoading(false);
+                })
+            } else {
+                response.json().then(responseJson => {
+                    console.error(responseJson);
+                    setLineupMessage(responseJson.error ?? "An unexpected error occured (see console)");
+                    setLineupMessageType("danger");
+                    setIsLineupLoading(false);
+                })
+            }
         })
-        .then(responseJson => {
-            console.log("LINEUP: ");
-            console.log(responseJson);
-            setLineup(responseJson);
+        .catch(err => {
+            console.error(err);
             setIsLineupLoading(false);
+            setLineupMessageType("danger");
+            setLineupMessage(err);
         })
+
     }
 
     return (
@@ -109,6 +130,7 @@ export default function MyAccount() {
 
                 <Row>
                     <Col>
+                        <ServerMessageContainer message={lineupMessage} variant={lineupMessageType}/>
                         <Card className="shadow mb-5">
                             <Card.Header className="text-primary fw-bold">
                                 Active Lineup
@@ -216,34 +238,40 @@ export default function MyAccount() {
                                     </thead>
 
                                     <tbody>
-                                        {isRosterLoading || !roster ? (
+                                        {isRosterLoading ? (
                                             <tr>
                                                 <td colSpan={4}>
                                                     <Spinner variant="primary"/> Roster loading...
                                                 </td>
                                             </tr>
                                         ) : (
-                                            roster?.players.map(player => (
+                                            Array.isArray(roster?.players) && roster.players.length > 0 ? (
+                                                roster?.players.map(player => (
+                                                    <tr>
+                                                        <td>
+                                                        <a onClick={() => navigate("/player-info", {state: {player: player}})} className="text-black text-decoration-underline hover-pointer">
+                                                            {player.playerName}
+                                                        </a>
+                                                        </td>
+        
+                                                        <td>
+                                                            {player.position}
+                                                        </td>
+        
+                                                        <td>
+                                                            {player.prevSeasonPoints}
+                                                        </td>
+    
+                                                        <td>
+                                                            <Button className="btn-primary fw-bold" onClick={() => {handleDropPlayer(player._id)}}>Drop</Button>
+                                                        </td>
+                                                    </tr>
+                                                ))
+                                            ) : (
                                                 <tr>
-                                                    <td>
-                                                    <a onClick={() => navigate("/player-info", {state: {player: player}})} className="text-black text-decoration-underline hover-pointer">
-                                                        {player.playerName}
-                                                    </a>
-                                                    </td>
-    
-                                                    <td>
-                                                        {player.position}
-                                                    </td>
-    
-                                                    <td>
-                                                        {player.prevSeasonPoints}
-                                                    </td>
-
-                                                    <td>
-                                                        <Button className="btn-primary fw-bold" onClick={() => {handleDropPlayer(player._id)}}>Drop</Button>
-                                                    </td>
+                                                    <td className="fw-bold text-danger" colSpan={4}>Your roster is empty! Start by signing some free agents.</td>
                                                 </tr>
-                                            ))
+                                            )
                                         )}
                                         
                                     </tbody>

@@ -3,6 +3,8 @@ const dbretriever = require('../dbretriever');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const {ObjectId} = require('mongodb');
+const fantasyUtilities = require('../FantasyUtilities');
+const settingsController = require('./SettingsController');
 
 module.exports.login = (req, res) => {
     //validation
@@ -91,19 +93,35 @@ module.exports.createAccount = async (req, res, next) => {
 
         if (existingAccountWithSameUsername) return res.status(403).json({error: "Another account already exists with the requested username"})
 
+        const appSettings = await settingsController.getAppSettings();
+
         //create password hash
-        console.log("Salt rounds:", process.env.SALT_ROUNDS);
-
         const hashedpassword = await bcrypt.hash(req.body.password, parseInt(process.env.SALT_ROUNDS))
-
-        console.log("Hashed password:", hashedpassword)
         
         //insert new account into database
         const createAccountResult = await dbretriever.insertOne('users', {username: req.body.username, password: hashedpassword, role: "user", leagueId: req.body.leagueId});
+
+        const newUserId = createAccountResult.insertedId.toString();
+        console.log("New user id: " + newUserId);
+
+        const rosterPromise = createInitialRoster(newUserId, req.body.leagueId, req.body.username);
+        const lineupPromise = createInitialLineup(newUserId, req.body.leagueId, appSettings.currentSeason);
+
+        [rosterResult, lineupResult] = await Promise.all([rosterPromise, lineupPromise]);
 
         return res.status(200).json({message: "Your account was created successfuly. You may now log in."});
     } catch (err) {
         return next(err);
     }
+}
+
+const createInitialRoster = async (userId, leagueId, username) => {
+    const initialTeamName = username + "'s Team";
+
+    return dbretriever.insertOne('rosters', {userId: userId, leagueId: leagueId, teamName: initialTeamName, playerIds: []});
+}
+
+const createInitialLineup = async (userId, leagueId, season) => {
+    return dbretriever.insertOne('lineups', {userId: userId, leagueId: leagueId, season: season, weekNum: 1, lineupIds: fantasyUtilities.EMPTY_LINEUP});
 }
 

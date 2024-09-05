@@ -2,6 +2,7 @@ require('dotenv').config();
 const { ObjectId } = require('mongodb');
 const dbretriever = require('../dbretriever');
 const fantasyUtilities = require('../FantasyUtilities');
+const settingsController = require('./SettingsController');
 
 module.exports.getLineup = async (req, res) => {
 
@@ -55,7 +56,7 @@ module.exports.getLineupScore = async (req, res) => {
     try {
         //if no weekNum is specified, try to find the lineup for the current week.
         if (!req.query.weekNum) {
-            req.query.weekNum = await fantasyUtilities.getAppSettings().currentWeekNum ?? 1;
+            req.query.weekNum = await settingsController.getAppSettings().currentWeekNum ?? 1;
         }
 
         if (!req.query.userId || !req.query.leagueId) {
