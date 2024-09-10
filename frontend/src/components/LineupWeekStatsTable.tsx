@@ -11,6 +11,14 @@ interface LineupWeekStatsTableProps {
 export default function LineupWeekStatsTable(props: LineupWeekStatsTableProps) {
     const navigate = useNavigate();
 
+    let totalPoints = 0;
+
+    if (Array.isArray(props.lineupWeekStats)) {
+        for (let i = 0; i<props.lineupWeekStats.length; i++) {
+            totalPoints += props.lineupWeekStats[i].points ?? 0;
+        }
+    }
+
     return (
         <>
             <Card className="shadow">
@@ -52,25 +60,39 @@ export default function LineupWeekStatsTable(props: LineupWeekStatsTableProps) {
                                     <tr key={idx}>
                                         <td>
                                         <a onClick={() => navigate("/player-info", {state: {player: playerWeekStats}})} className="text-black text-decoration-underline hover-pointer">
-                                            {playerWeekStats.playerName}
+                                            {playerWeekStats.playerName ?? "N/A"}
                                         </a>
                                         </td>
 
                                         <td>
-                                            {playerWeekStats.position}
+                                            {playerWeekStats.position ?? "N/A"}
                                         </td>
 
                                         <td>
-                                            {playerWeekStats.matchesPlayed}
+                                            {playerWeekStats.matchesPlayed ?? "N/A"}
                                         </td>
 
                                         <td>
-                                            {playerWeekStats.points}
+                                            {playerWeekStats.points ?? "N/A"}
                                         </td>
                                     </tr>
                                 ))
                             )}
                         </tbody>
+
+                        {Array.isArray(props.lineupWeekStats) && (
+                            <tfoot>
+                                <tr>
+                                    <td className="fw-bold text-primary" colSpan={3}>
+                                        TOTAL:
+                                    </td>
+
+                                    <td className="fw-bold text-primary">
+                                        {totalPoints.toFixed(1)}
+                                    </td>
+                                </tr>
+                            </tfoot>
+                        )}
                     </Table>
                 </Card.Body>
             </Card>

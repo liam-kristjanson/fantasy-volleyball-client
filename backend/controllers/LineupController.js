@@ -78,13 +78,30 @@ module.exports.getLineupScore = async (req, res) => {
         let promisedPlayerDocuments = [];
 
         for (let position in lineupDocument.lineupIds) {
-            promisedPlayerDocuments.push(dbretriever.fetchDocumentById('players', lineupDocument.lineupIds[position]));
+            //lineupId is null in the case of an empty lineup slot
+            if (lineupDocument.lineupIds[position]) {
+                promisedPlayerDocuments.push(dbretriever.fetchDocumentById('players', lineupDocument.lineupIds[position]));
+            } else {
+                promisedPlayerDocuments.push({
+                    playerName: null,
+                    position: position,
+                    _id: null,
+                    prevSeasonPoints: null,
+                    matchesPlayed: null,
+                    points: null
+                })
+            }
         }
 
         weekMatchDocuments = await dbretriever.fetchDocuments('matches', {weekNum: parseInt(req.query.weekNum)});
         playerDocuments = await Promise.all(promisedPlayerDocuments);
 
+        //console.log("Week match documents: ", weekMatchDocuments)
+        //console.log("Player documents: ", playerDocuments); 
+
         const playerMatchStats = fantasyUtilities.getPlayerStatsFromMatches(playerDocuments, weekMatchDocuments);
+
+        //console.log("Lineup week stats:", playerMatchStats)
 
         return res.status(200).json(playerMatchStats);
     } catch (e) {

@@ -110,6 +110,10 @@ export default function FreeAgentsTable() {
                                     </th>
 
                                     <th>
+                                        Position
+                                    </th>
+
+                                    <th>
                                         Points (prev. season)
                                     </th>
 
@@ -124,6 +128,10 @@ export default function FreeAgentsTable() {
                                     <tr key={idx}>
                                         <td>
                                             {player.playerName}
+                                        </td>
+
+                                        <td>
+                                            {player.position}
                                         </td>
 
                                         <td>
