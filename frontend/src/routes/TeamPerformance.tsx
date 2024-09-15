@@ -2,7 +2,7 @@ import { Col, Container, Row } from "react-bootstrap";
 import Navbar from "../components/Navbar";
 import { useEffect, useState } from "react";
 import { useAuthContext } from "../hooks/useAuthContext";
-import { PlayerWeekStats, ServerMessageType, Team } from "../types";
+import { ServerMessageType, Team, TeamWeekStatsObject } from "../types";
 import LineupWeekStatsTable from "../components/LineupWeekStatsTable";
 import ServerMessageContainer from "../components/ServerMessageContainer";
 import LineupWeekDropdown from "../components/LineupWeekDropdown";
@@ -12,7 +12,7 @@ export default function TeamPerformacne() {
 
     const { user } = useAuthContext().state;
 
-    const [lineupWeekStats, setLineupWeekStats] = useState<PlayerWeekStats[]>([]);
+    const [teamWeekStats, setTeamWeekStats] = useState<TeamWeekStatsObject | undefined>(undefined);
 
     const [lineupWeeks, setLineupWeeks] = useState<number[]>([])
 
@@ -54,7 +54,7 @@ export default function TeamPerformacne() {
                 console.log(responseJson);
             } else {
                 console.log(responseJson);
-                setLineupWeekStats(responseJson);
+                setTeamWeekStats(responseJson);
             }
         })
         
@@ -98,7 +98,7 @@ export default function TeamPerformacne() {
                         <LineupWeekStatsTable
                             weekNum={weekNum}
                             isLoading={isLoading}
-                            lineupWeekStats={lineupWeekStats}
+                            teamWeekStats={teamWeekStats}
                         />
                     </Col>
                 </Row>

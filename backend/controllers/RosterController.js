@@ -1,6 +1,7 @@
 require('dotenv').config();
 const dbretriever = require('../dbretriever');
 const fantasyUtilities = require("../FantasyUtilities")
+const Roster = require("../models/Roster");
 
 module.exports.getRoster = async (req, res) => {
 
@@ -9,21 +10,13 @@ module.exports.getRoster = async (req, res) => {
             return res.status(400).json({error: "userId and leagueId must be specified in querystring"})
         }
 
-        const rosterDocument = await dbretriever.fetchOneDocument('rosters', {leagueId: req.query.leagueId, userId: req.query.userId})
+        const rosterDocument = await Roster.get(req.query.userId, req.query.leagueId);
         
-        if (!rosterDocument.playerIds) return res.status(400).json({error: "No roster found for the given userId and leagueId"});
+        if (!rosterDocument?.playerIds) return res.status(400).json({error: "No roster found for the given userId and leagueId"});
 
-        //fetch player documents for each playerId in the roster document
-        let playerDocuments = []
+        const populatedRoster = await Roster.populate(rosterDocument);
 
-        for (let i = 0; i<rosterDocument.playerIds.length; i++) {
-            playerDocuments.push(dbretriever.fetchDocumentById('players', rosterDocument.playerIds[i]));
-        }
-
-        //add retrieved player information to the roster document and send it to the client
-        rosterDocument.players = await Promise.all(playerDocuments);
-
-        return res.status(200).json(rosterDocument);
+        return res.status(200).json(populatedRoster);
     } catch (e) {
         console.error(e);
         return res.status(500).json({error: "Internal server error"});

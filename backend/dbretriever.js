@@ -1,13 +1,7 @@
 const { MongoClient } = require("mongodb");
 const { ObjectId } = require("mongodb");
 
-const uri =
-  "mongodb+srv://" +
-  process.env.DATABASE_USER +
-  ":" +
-  process.env.DATABASE_PASSWORD +
-  process.env.MONGO_CONNECTION_STRING;
-
+const uri = process.env.DB_CONNECTION_STRING;
 const client = new MongoClient(uri);
 const database = client.db("cw-fantasy-volleyball");
 
@@ -28,9 +22,9 @@ async function fetchDocuments(collectionName, criteriaObj, projectObj) {
   return retrievedDocs;
 }
 
-async function fetchOneDocument(collectionName, criteriaObj) {
+async function fetchOneDocument(collectionName, criteriaObj, projectObj) {
   let collection = database.collection(collectionName);
-  return await collection.findOne(criteriaObj);
+  return await collection.findOne(criteriaObj, projectObj);
 }
 
 async function fetchOrdered(collectionName, criteriaObj, sortObj, count, projectObj) {

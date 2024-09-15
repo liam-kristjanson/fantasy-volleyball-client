@@ -35,6 +35,22 @@ export default function PlayerInfo() {
         })
     }, [selectedPlayer])
 
+    function titleDisplayFormat(gameTitle: string) {
+        const inputArray = gameTitle.split("");
+        let outputString = ""
+
+        //add a space after uppercase letters 
+        for (let i = 0; i<gameTitle.length; i++) {
+            if (inputArray[i].toUpperCase() === inputArray[i]) {
+                outputString += " " + inputArray[i]
+            } else {
+                outputString += inputArray[i];
+            }
+        }
+
+        return outputString;
+    }
+
     return (
         <>
             <Navbar/>
@@ -130,11 +146,7 @@ export default function PlayerInfo() {
                                                     </td>
 
                                                     <td>
-                                                        {match.gameTitle.length > 25 ? (
-                                                            match.gameTitle.substring(0,25) + " " + match.gameTitle.substring(25)
-                                                        ) : (
-                                                            match.gameTitle
-                                                        )}
+                                                        {titleDisplayFormat(match.gameTitle)}
                                                     </td>
 
                                                     <td className="d-none d-lg-table-cell">

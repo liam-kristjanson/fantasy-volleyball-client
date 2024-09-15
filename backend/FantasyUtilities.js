@@ -25,24 +25,22 @@ const calculateFantasyPoints = (statsObject) => {
     return ((statsObject.kills * POINTS_PER_KILL) + (statsObject.errors * POINTS_PER_ERROR) + (statsObject.assists * POINTS_PER_ASSIST) + (statsObject.aces * POINTS_PER_ACE) + (statsObject.digs * POINTS_PER_DIG) + (statsObject.soloBlocks * POINTS_PER_SOLO_BLOCK) + (statsObject.blockAssists * POINTS_PER_BLOCK_ASSIST))
 }
 
-const getPlayerStatsFromMatches = (players, matches) => {
-    for (let playerIdx = 0; playerIdx<players.length; playerIdx++) {
+const getPlayerStatsFromMatches = (player, matches) => {
         //playerName is null in the case of an empty lineup slot.
-        if (players[playerIdx].playerName) {
-            const playerName = players[playerIdx].playerName;
-            players[playerIdx].points = 0;
-            players[playerIdx].matchesPlayed = 0;
+        if (player.playerName) {
+            const playerName = player.playerName;
+            player.points = 0;
+            player.matchesPlayed = 0;
 
             for (let matchIdx = 0; matchIdx<matches.length; matchIdx++) {
                 if (matches[matchIdx].stats[playerName]) {
-                    players[playerIdx].points += calculateFantasyPoints(matches[matchIdx].stats[playerName]);
-                    players[playerIdx].matchesPlayed++;
+                    player.points += calculateFantasyPoints(matches[matchIdx].stats[playerName]);
+                    player.matchesPlayed++;
                 }
             }
         }
-    }
 
-    return players;
+    return player;
 }
 
 const getFreeAgents = async (leagueId) => {

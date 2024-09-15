@@ -11,6 +11,7 @@ const authController = require('./controllers/AuthController');
 const rosterController = require('./controllers/RosterController');
 const lineupController = require('./controllers/LineupController');
 const settingsController = require('./controllers/SettingsController');
+const matchupController = require('./controllers/MatchupController')
 
 const PORT = process.env.PORT || 8080;
 const corsOptions = {
@@ -51,6 +52,8 @@ app.get("/teams", rosterController.getTeams);
 
 app.get("/free-agents", rosterController.getFreeAgents);
 app.post("/free-agents/sign", rosterController.signFreeAgent);
+
+app.get("/matchup/scores", matchupController.getMatchupScores);
 
 //default error handler
 app.use((err, req, res, next) => {

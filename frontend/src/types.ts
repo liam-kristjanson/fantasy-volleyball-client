@@ -76,6 +76,32 @@ export interface PlayerWeekStats extends Player {
     matchesPlayed: number;
 }
 
+export interface TeamWeekStatsObject {
+    lineupStats: LineupWeekStats;
+    totalScore: number;
+}
+
+export interface LineupWeekStats {
+    S: PlayerWeekStats;
+    OH1: PlayerWeekStats;
+    OH2: PlayerWeekStats;
+    OH3: PlayerWeekStats;
+    M1: PlayerWeekStats;
+    M2: PlayerWeekStats;
+    L: PlayerWeekStats;
+}
+
+export interface MatchupsObject {
+    leagueId: string;
+    weekNum: number;
+    matchupScores: MatchupScore[]
+}
+
+export interface MatchupScore {
+    homeTeam: TeamWeekStatsObject;
+    awayTeam: TeamWeekStatsObject;
+}
+
 export interface Team {
     userId: string;
     leagueId: string;

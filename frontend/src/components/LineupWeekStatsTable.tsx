@@ -1,23 +1,14 @@
 import { Card, Spinner, Table } from "react-bootstrap";
-import { PlayerWeekStats } from "../types";
-import { useNavigate } from "react-router-dom";
+import { TeamWeekStatsObject } from "../types";
 
 interface LineupWeekStatsTableProps {
     weekNum: number;
-    lineupWeekStats: PlayerWeekStats[];
+    teamWeekStats: TeamWeekStatsObject | undefined;
     isLoading: boolean;
 }
 
 export default function LineupWeekStatsTable(props: LineupWeekStatsTableProps) {
-    const navigate = useNavigate();
-
-    let totalPoints = 0;
-
-    if (Array.isArray(props.lineupWeekStats)) {
-        for (let i = 0; i<props.lineupWeekStats.length; i++) {
-            totalPoints += props.lineupWeekStats[i].points ?? 0;
-        }
-    }
+    //const navigate = useNavigate();
 
     return (
         <>
@@ -49,38 +40,145 @@ export default function LineupWeekStatsTable(props: LineupWeekStatsTableProps) {
                         </thead>
 
                         <tbody>
-                            {props.isLoading ? (
+                            {props.isLoading || !props.teamWeekStats ? (
                                 <tr>
                                     <td colSpan={4}>
                                         Weekly stats loading... <Spinner variant="primary"/>
                                     </td>
                                 </tr>
                             ) : (
-                                props.lineupWeekStats.map((playerWeekStats, idx) => (
-                                    <tr key={idx}>
+                                <>
+                                    <tr>
                                         <td>
-                                        <a onClick={() => navigate("/player-info", {state: {player: playerWeekStats}})} className="text-black text-decoration-underline hover-pointer">
-                                            {playerWeekStats.playerName ?? "N/A"}
-                                        </a>
+                                            {props.teamWeekStats?.lineupStats?.S?.playerName ?? "N/A"}
                                         </td>
 
                                         <td>
-                                            {playerWeekStats.position ?? "N/A"}
+                                            S
                                         </td>
 
                                         <td>
-                                            {playerWeekStats.matchesPlayed ?? "N/A"}
+                                            {props.teamWeekStats?.lineupStats?.S?.matchesPlayed ?? "N/A"}
                                         </td>
 
                                         <td>
-                                            {playerWeekStats.points ?? "N/A"}
+                                            {props.teamWeekStats?.lineupStats?.S?.points ?? "N/A"}
                                         </td>
                                     </tr>
-                                ))
+
+                                    <tr>
+                                        <td>
+                                            {props.teamWeekStats?.lineupStats?.OH1?.playerName ?? "N/A"}
+                                        </td>
+
+                                        <td>
+                                            OH1
+                                        </td>
+
+                                        <td>
+                                            {props.teamWeekStats?.lineupStats?.OH1?.matchesPlayed ?? "N/A"}
+                                        </td>
+
+                                        <td>
+                                            {props.teamWeekStats?.lineupStats?.OH1?.points ?? "N/A"}
+                                        </td>
+                                    </tr>
+
+                                    <tr>
+                                        <td>
+                                            {props.teamWeekStats?.lineupStats?.OH2?.playerName ?? "N/A"}
+                                        </td>
+
+                                        <td>
+                                            OH2
+                                        </td>
+
+                                        <td>
+                                            {props.teamWeekStats?.lineupStats?.OH2?.matchesPlayed ?? "N/A"}
+                                        </td>
+
+                                        <td>
+                                            {props.teamWeekStats?.lineupStats?.OH2?.points ?? "N/A"}
+                                        </td>
+                                    </tr>
+
+                                    <tr>
+                                        <td>
+                                            {props.teamWeekStats?.lineupStats?.OH3?.playerName ?? "N/A"}
+                                        </td>
+
+                                        <td>
+                                            OH3
+                                        </td>
+
+                                        <td>
+                                            {props.teamWeekStats?.lineupStats?.OH3?.matchesPlayed ?? "N/A"}
+                                        </td>
+
+                                        <td>
+                                            {props.teamWeekStats?.lineupStats?.OH3?.points ?? "N/A"}
+                                        </td>
+                                    </tr>
+
+                                    <tr>
+                                        <td>
+                                            {props.teamWeekStats?.lineupStats?.M1?.playerName ?? "N/A"}
+                                        </td>
+
+                                        <td>
+                                            M1
+                                        </td>
+
+                                        <td>
+                                            {props.teamWeekStats?.lineupStats?.M1?.matchesPlayed ?? "N/A"}
+                                        </td>
+
+                                        <td>
+                                            {props.teamWeekStats?.lineupStats?.M1?.points ?? "N/A"}
+                                        </td>
+                                    </tr>
+
+                                    <tr>
+                                        <td>
+                                            {props.teamWeekStats?.lineupStats?.M2?.playerName ?? "N/A"}
+                                        </td>
+
+                                        <td>
+                                            M2
+                                        </td>
+
+                                        <td>
+                                            {props.teamWeekStats?.lineupStats?.M2?.matchesPlayed ?? "N/A"}
+                                        </td>
+
+                                        <td>
+                                            {props.teamWeekStats?.lineupStats?.M2?.points ?? "N/A"}
+                                        </td>
+                                    </tr>
+
+                                    <tr>
+                                        <td>
+                                            {props.teamWeekStats?.lineupStats?.L?.playerName ?? "N/A"}
+                                        </td>
+
+                                        <td>
+                                            L
+                                        </td>
+
+                                        <td>
+                                            {props.teamWeekStats?.lineupStats?.L?.matchesPlayed ?? "N/A"}
+                                        </td>
+
+                                        <td>
+                                            {props.teamWeekStats?.lineupStats?.L?.points ?? "N/A"}
+                                        </td>
+                                    </tr>
+
+                                </>
                             )}
                         </tbody>
 
-                        {Array.isArray(props.lineupWeekStats) && (
+                        {!props.isLoading && props.teamWeekStats && (
                             <tfoot>
                                 <tr>
                                     <td className="fw-bold text-primary" colSpan={3}>
@@ -88,7 +186,7 @@ export default function LineupWeekStatsTable(props: LineupWeekStatsTableProps) {
                                     </td>
 
                                     <td className="fw-bold text-primary">
-                                        {totalPoints.toFixed(1)}
+                                        {props.teamWeekStats.totalScore.toFixed(1) ?? "N/A"}
                                     </td>
                                 </tr>
                             </tfoot>

@@ -3,6 +3,7 @@ const { ObjectId } = require('mongodb');
 const dbretriever = require('../dbretriever');
 const fantasyUtilities = require('../FantasyUtilities');
 const settingsController = require('./SettingsController');
+const Lineup = require('../models/Lineup');
 
 module.exports.getLineup = async (req, res) => {
 
@@ -65,45 +66,17 @@ module.exports.getLineupScore = async (req, res) => {
 
         if (isNaN(parseInt(req.query.weekNum))) return res.status(400).json({error: "WeekNum must be an integer"});
 
-        const lineupDocument = await dbretriever.fetchOneDocument('lineups', {
-            userId: req.query.userId,
-            leagueId: req.query.leagueId,
-            weekNum: parseInt(req.query.weekNum)
-        });
+        let lineupDocument = await Lineup.get(req.query.leagueId, req.query.userId, req.query.weekNum);
 
         if (!lineupDocument) {
             return res.status(400).json({error: "No lineup found for the specified userId, leagueId, and weekNum"})
         }
 
-        let promisedPlayerDocuments = [];
+        //populate the lineup and calculate each player's score
+        lineupDocument = await Lineup.populate(lineupDocument);
+        lineupDocument = await Lineup.calculateScore(lineupDocument);
 
-        for (let position in lineupDocument.lineupIds) {
-            //lineupId is null in the case of an empty lineup slot
-            if (lineupDocument.lineupIds[position]) {
-                promisedPlayerDocuments.push(dbretriever.fetchDocumentById('players', lineupDocument.lineupIds[position]));
-            } else {
-                promisedPlayerDocuments.push({
-                    playerName: null,
-                    position: position,
-                    _id: null,
-                    prevSeasonPoints: null,
-                    matchesPlayed: null,
-                    points: null
-                })
-            }
-        }
-
-        weekMatchDocuments = await dbretriever.fetchDocuments('matches', {weekNum: parseInt(req.query.weekNum)});
-        playerDocuments = await Promise.all(promisedPlayerDocuments);
-
-        //console.log("Week match documents: ", weekMatchDocuments)
-        //console.log("Player documents: ", playerDocuments); 
-
-        const playerMatchStats = fantasyUtilities.getPlayerStatsFromMatches(playerDocuments, weekMatchDocuments);
-
-        //console.log("Lineup week stats:", playerMatchStats)
-
-        return res.status(200).json(playerMatchStats);
+        return res.status(200).json(lineupDocument);
     } catch (e) {
         console.error(e);
         return res.status(500).json({error: "500: Internal server error"});
