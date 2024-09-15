@@ -2,11 +2,14 @@ const dbretriever = require('../dbretriever');
 const fantasyUtilities = require('../FantasyUtilities');
 
 module.exports.get = (leagueId, userId, weekNum) => {
+
     return dbretriever.fetchOneDocument('lineups', {leagueId, userId, weekNum: parseInt(weekNum)}, {matches: 0});
 }
 
 module.exports.populate = async (lineupDocument) => {
     let promisedPlayerDocuments = {};
+    const rosterPromise = dbretriever.fetchOneDocument('rosters', {userId: lineupDocument.userId, leagueId: lineupDocument.leagueId});
+
 
     for (let position in lineupDocument.lineupIds) {
         //lineupId is null in the case of an empty lineup slot
@@ -29,6 +32,9 @@ module.exports.populate = async (lineupDocument) => {
     for (let position in promisedPlayerDocuments) {
         lineupDocument.playerDocuments[position] = await promisedPlayerDocuments[position];
     }
+
+    const roster = await rosterPromise;
+    lineupDocument.teamName = roster.teamName;
 
     return lineupDocument;
 }

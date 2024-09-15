@@ -12,7 +12,7 @@ export default function MatchupScoreTable({matchupScore} : MatchupScoreTableProp
             <thead>
                 <tr>
                     <th>
-                        Home Team
+                        {matchupScore.homeTeam.teamName}
                     </th>
 
                     <th className="text-center">
@@ -20,7 +20,7 @@ export default function MatchupScoreTable({matchupScore} : MatchupScoreTableProp
                     </th>
 
                     <th>
-                        Away Team
+                        {matchupScore.awayTeam.teamName}
                     </th>
                 </tr>
             </thead>
@@ -71,6 +71,26 @@ export default function MatchupScoreTable({matchupScore} : MatchupScoreTableProp
 
                 
             </tbody>
+
+            <tfoot>
+                <tr>
+                    <td className="fw-bold text-center">
+                        Total: {matchupScore.homeTeam.totalScore}
+                    </td>
+
+                    <td className="fw-bold text-center">
+                        {matchupScore.homeTeam.totalScore > matchupScore.awayTeam.totalScore ? (
+                            matchupScore.homeTeam.teamName + " wins"
+                        ) : (
+                            matchupScore.awayTeam.teamName + " wins"
+                        )}
+                    </td>
+
+                    <td className="fw-bold text-center">
+                        Total: {matchupScore.awayTeam.totalScore}
+                    </td>
+                </tr>
+            </tfoot>
         </Table>
     )
 }
@@ -90,8 +110,8 @@ function MatchupTableRow({position, homePlayer, awayPlayer} : MatchupTableRowPro
             <td>
                 <div className="d-flex flex-row justify-content-between">
                     <div>
-                        {homePlayer ? (
-                            <a onClick={() => {navigate('/player-info', {state:{player: homePlayer}})}}>
+                        {homePlayer?.playerName ? (
+                            <a className="td-underline hover-pointer text-dark" onClick={() => {navigate('/player-info', {state:{player: homePlayer}})}}>
                                 {homePlayer.playerName}
                             </a>
                         ) : (
@@ -116,8 +136,8 @@ function MatchupTableRow({position, homePlayer, awayPlayer} : MatchupTableRowPro
                     </div>
 
                     <div>
-                        {awayPlayer ? (
-                            <a onClick={() => {navigate('/player-info', {state:{player: awayPlayer}})}}>
+                        {awayPlayer?.playerName ? (
+                            <a className="td-underline hover-pointer text-dark" onClick={() => {navigate('/player-info', {state:{player: awayPlayer}})}}>
                                 {awayPlayer.playerName}
                             </a>
                         ) : (

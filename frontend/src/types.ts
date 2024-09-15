@@ -77,6 +77,7 @@ export interface PlayerWeekStats extends Player {
 }
 
 export interface TeamWeekStatsObject {
+    teamName: string;
     lineupStats: LineupWeekStats;
     totalScore: number;
 }
