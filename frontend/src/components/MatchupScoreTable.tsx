@@ -87,7 +87,7 @@ export default function MatchupScoreTable({matchupScore} : MatchupScoreTableProp
                     </td>
 
                     <td className="fw-bold text-center">
-                        Total: {matchupScore.awayTeam.totalScore}
+                        Total: {matchupScore.awayTeam.totalScore.toFixed(1)}
                     </td>
                 </tr>
             </tfoot>
@@ -120,7 +120,7 @@ function MatchupTableRow({position, homePlayer, awayPlayer} : MatchupTableRowPro
                     </div>
 
                     <div>
-                        {homePlayer?.points ?? 0}
+                        {(homePlayer?.points ?? 0).toFixed(1)}
                     </div>
                 </div>                    
             </td>
@@ -132,7 +132,7 @@ function MatchupTableRow({position, homePlayer, awayPlayer} : MatchupTableRowPro
             <td>
                 <div className="d-flex flex-row justify-content-between">
                     <div>
-                        {awayPlayer?.points ?? 0}
+                        {(awayPlayer?.points ?? 0).toFixed(1)}
                     </div>
 
                     <div>

@@ -2,6 +2,7 @@ require('dotenv').config();
 const dbretriever = require('./dbretriever');
 const { ObjectId } = require('mongodb');
 const settingsController = require('./controllers/SettingsController');
+const Settings = require('./models/Settings')
 
 const EMPTY_LINEUP = {
     S: null,
@@ -113,7 +114,7 @@ const isValidPosition = (lineupSlot, playerPosition) => {
 const getBench = async (userId, leagueId) => {
     
     const rosterPromise = dbretriever.fetchOneDocument('rosters', {userId: userId, leagueId: leagueId});
-    const APP_SETTINGS = await settingsController.getAppSettings();
+    const APP_SETTINGS = await Settings.get();
     const lineupPromise = dbretriever.fetchOneDocument('lineups', {userId: userId, leagueId: leagueId, weekNum: APP_SETTINGS.currentWeekNum});
 
     const [roster, lineup] = await Promise.all([rosterPromise, lineupPromise]);

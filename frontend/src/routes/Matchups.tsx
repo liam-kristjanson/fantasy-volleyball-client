@@ -7,20 +7,24 @@ import ServerMessageContainer from "../components/ServerMessageContainer";
 import useServerMessage from "../hooks/useServerMessage";
 import {MatchupsObject } from "../types";
 import MatchupScoreTable from "../components/MatchupScoreTable";
+import { useSettingsContext } from "../hooks/useSettingsContext";
 
 export default function Matchups() {
     
     const {user} = useAuthContext().state;
+    const {settings} = useSettingsContext();
+
     const navigate = useNavigate();
 
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const {serverMessage, setServerMessage, serverMessageType, setServerMessageType} = useServerMessage();
 
 
-    const [weekNum, setWeekNum] = useState<number>(1);
+    const [weekNum, setWeekNum] = useState<number>(settings.currentWeekNum);
     const [matchups, setMatchups] = useState<MatchupsObject | undefined>(undefined);
     
 
+    //Fetch matchup data
     useEffect(() => {
         if (user) {
             setIsLoading(true);
@@ -58,8 +62,10 @@ export default function Matchups() {
         } else {
             navigate('/login');
         }
-    }, [])
-    
+    }, []);
+
+    //Fetch current week num
+
     return (
         <>
             <Navbar />
@@ -67,7 +73,7 @@ export default function Matchups() {
             <Container>
                 <Row className="pt-5">
                     <Col>
-                        <h1 className="text-center">Matchups</h1>
+                        <h1 className="text-center">Matchups: Week {weekNum}</h1>
                     </Col>
                 </Row>
 
@@ -81,7 +87,11 @@ export default function Matchups() {
                             <>
                                 {Array.isArray(matchups?.matchupScores) && matchups.matchupScores.map(matchupScore => (
                                     <>
-                                        <MatchupScoreTable matchupScore={matchupScore} />
+                                        <Row className="mb-5">
+                                            <Col>
+                                                <MatchupScoreTable matchupScore={matchupScore} />
+                                            </Col>
+                                        </Row>
                                     </>
                                 ))}
                                 <ServerMessageContainer message={serverMessage} variant={serverMessageType}/>

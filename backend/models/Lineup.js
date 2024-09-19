@@ -1,5 +1,7 @@
 const dbretriever = require('../dbretriever');
 const fantasyUtilities = require('../FantasyUtilities');
+const settingsController = require('../controllers/SettingsController')
+const Settings = require('./Settings')
 
 module.exports.get = (leagueId, userId, weekNum) => {
 
@@ -66,4 +68,36 @@ module.exports.calculateTotalScore = (playerDocuments) => {
     }
 
     return pointsTotal;
+}
+
+module.exports.createNextWeekLineups = async () => {
+    const settings = await Settings.get();
+
+    const currentWeekNum = settings.currentWeekNum;
+
+    const currentLineups = await dbretriever.fetchDocuments('lineups', {weekNum: currentWeekNum});
+
+    let newLineupPromises = [];
+
+    for (let i = 0; i<currentLineups.length; i++) {
+        const newLineup = {
+            userId: currentLineups[i].userId,
+            leagueId: currentLineups[i].leagueId,
+            season: currentLineups[i].season,
+            weekNum: currentLineups[i].weekNum + 1,
+            lineupIds: currentLineups[i].lineupIds
+        }
+
+        newLineupPromises.push(dbretriever.insertOne('lineups', newLineup));
+    }
+
+    const lineupInsertionResults = await Promise.all(newLineupPromises)
+
+    let lineupsCreatedSuccessfuly = true;
+    
+    for (let i = 0; i<lineupInsertionResults.length; i++) {
+        lineupsCreatedSuccessfuly = lineupInsertionResults[i].acknowledged && lineupsCreatedSuccessfuly;
+    }
+
+    if (!lineupsCreatedSuccessfuly) throw new Error('At least one new lineup failed to be created');
 }

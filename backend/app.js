@@ -12,6 +12,7 @@ const rosterController = require('./controllers/RosterController');
 const lineupController = require('./controllers/LineupController');
 const settingsController = require('./controllers/SettingsController');
 const matchupController = require('./controllers/MatchupController')
+const adminController = require('./controllers/AdminController')
 
 const PORT = process.env.PORT || 8080;
 const corsOptions = {
@@ -26,11 +27,14 @@ const app = express();
 app.use(cors(corsOptions));
 app.use(bodyParser.json());
 app.use(authController.parseAuthToken);
+app.use('/admin', authController.verifyAdmin);
 
+//wakeup or status check route
 app.get("/", (req, res) => {
     res.send("Service is running...");
 })
 
+//api routes
 app.get("/app-settings", settingsController.fetchAppSettings);
 
 app.post("/login", authController.login);
@@ -54,6 +58,9 @@ app.get("/free-agents", rosterController.getFreeAgents);
 app.post("/free-agents/sign", rosterController.signFreeAgent);
 
 app.get("/matchup/scores", matchupController.getMatchupScores);
+
+app.post("/admin/create-next-week-lineups", adminController.createNextWeekLineups);
+app.post("/admin/start-next-week", adminController.startNextWeek);
 
 //default error handler
 app.use((err, req, res, next) => {

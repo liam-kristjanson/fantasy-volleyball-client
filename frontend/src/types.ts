@@ -110,3 +110,14 @@ export interface Team {
 }
 
 export type Position = "S" | "OH1" | "OH2" | "OH3" | "M1" | "M2" | "L";
+
+export interface AppSettings {
+    lineupsLocked: boolean;
+    currentWeekNum: number;
+    currentSeason: string;
+}
+
+export interface SettingsContextState {
+    settings: AppSettings;
+    updateSettings : (newSettings: AppSettings) => void;
+}

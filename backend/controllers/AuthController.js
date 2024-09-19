@@ -5,6 +5,7 @@ const jwt = require('jsonwebtoken');
 const {ObjectId} = require('mongodb');
 const fantasyUtilities = require('../FantasyUtilities');
 const settingsController = require('./SettingsController');
+const Settings = require('../models/Settings')
 
 module.exports.login = (req, res) => {
     //validation
@@ -93,7 +94,7 @@ module.exports.createAccount = async (req, res, next) => {
 
         if (existingAccountWithSameUsername) return res.status(403).json({error: "Another account already exists with the requested username"})
 
-        const appSettings = await settingsController.getAppSettings();
+        const appSettings = await Settings.get();
 
         //create password hash
         const hashedpassword = await bcrypt.hash(req.body.password, parseInt(process.env.SALT_ROUNDS))
@@ -123,5 +124,13 @@ const createInitialRoster = async (userId, leagueId, username) => {
 
 const createInitialLineup = async (userId, leagueId, season) => {
     return dbretriever.insertOne('lineups', {userId: userId, leagueId: leagueId, season: season, weekNum: 1, lineupIds: fantasyUtilities.EMPTY_LINEUP});
+}
+
+module.exports.verifyAdmin = (req, res, next) => {
+    if (req.authData.role === "admin") {
+        next();
+    } else {
+        return res.status(401).json({error: "Unauthorized"});
+    }
 }
 

@@ -48,7 +48,11 @@ export default function Login() {
             setServerMessage(responseJson.error ?? responseJson.message ?? "");
             if (responseJson.user) {
                 dispatch({type: "LOGIN", payload: responseJson.user});
-                navigate('/my-account');
+                if (responseJson.user.role === "admin") {
+                    navigate('/admin/dashboard');
+                } else {
+                    navigate('/my-account');
+                }
             }
         })
     }

@@ -5,11 +5,13 @@ import { useEffect, useState } from "react";
 import { LineupDocument, Roster, ServerMessageType } from "../types";
 import { useNavigate } from "react-router-dom";
 import ServerMessageContainer from "../components/ServerMessageContainer";
+import { useSettingsContext } from "../hooks/useSettingsContext";
 
 export default function MyAccount() {
 
     const { dispatch, state} = useAuthContext();
     const user = state.user;
+    const {settings} = useSettingsContext();
     const navigate = useNavigate();
 
     const [roster, setRoster] = useState<Roster>();
@@ -287,7 +289,9 @@ export default function MyAccount() {
                 <Row>
                     <Col>
                         <Button className="w-100 btn-lg mb-5 fw-bold" variant="primary" onClick={() => {handleLogout()}}>Log Out</Button>
-                        <p>Current auth context: {JSON.stringify(user) ?? "Not found"}</p>
+                        <p className="mb-4">Current auth context: {JSON.stringify(user) ?? "Not found"}</p>
+
+                        <p>Current settings context: {JSON.stringify(settings)}</p>
                     </Col>
                 </Row>
             </Container>

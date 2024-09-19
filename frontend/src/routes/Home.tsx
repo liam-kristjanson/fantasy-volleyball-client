@@ -2,10 +2,12 @@ import { Col, Container, Row } from "react-bootstrap";
 import Navbar from "../components/Navbar";
     import { useNavigate } from "react-router-dom";
 import AccountCreationForm from "../components/AccountCreationForm";
+import { useSettingsContext } from "../hooks/useSettingsContext";
 
 export default function Home() {
 
     const navigate = useNavigate();
+    const settings = useSettingsContext().settings;
     
     return (
         <>
@@ -40,6 +42,10 @@ export default function Home() {
                     </Col>
                 </Row>
             </Container>
+
+            <p>
+                Current settings: {JSON.stringify(settings)}
+            </p>
         </>
     )
 }
