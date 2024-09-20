@@ -4,11 +4,13 @@ const League = require('./League')
 const Matchup = require('./Matchup')
 const {ObjectId} = require('mongodb')
 
-module.exports.get = async () => {
-    return []
+module.exports.get = async (leagueId) => {
+    return dbretriever.fetchOrdered('rosters', {leagueId}, {wins: -1}, undefined, {teamName: 1, wins: 1, losses: 1});
 }
 
 module.exports.refresh = async () => {
+    await this.reset();
+
     const settings = await Settings.get();
     const leagueIds = await League.getAllIds();
 
@@ -65,4 +67,9 @@ module.exports.refresh = async () => {
     // console.log(matchupResolution);
 
     return matchupResolution;
+}
+
+//reset all teams to 0 wins and 0 losses
+module.exports.reset = async () => {
+    return dbretriever.updateMany('rosters', {}, {$set: {wins: 0, losses: 0}});
 }

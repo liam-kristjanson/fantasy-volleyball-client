@@ -30,6 +30,10 @@ module.exports.startNextWeek = async (req, res, next) => {
         await Settings.setLineupsLocked(false);
         console.log("Lineups unlocked.")
 
+        console.log("Refreshing settings...")
+        await Settings.refresh();
+        console.log("Settings refreshed");
+
         console.log("Next week started succesfully");
         return res.status(200).json({message: "Next week started succesfully"});
     } catch (err) {
@@ -42,6 +46,16 @@ module.exports.refreshStandings = async (req, res, next) => {
         const standingsUpdateResult = await Stanidngs.refresh();
 
         return res.status(200).json({message: "Standings refreshed successfuly"})
+    } catch (err) {
+        next(err);
+    }
+}
+
+module.exports.resetStandings = async (req, res, next) => {
+    try {
+        const standingsResetResult = await Stanidngs.reset();
+
+        return res.status(200).json({message: "Standings reset successfuly"});
     } catch (err) {
         next(err);
     }

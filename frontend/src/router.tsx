@@ -10,6 +10,7 @@ import FreeAgents from "./routes/FreeAgents";
 import EditLineup from "./routes/EditLineup";
 import Matchups from "./routes/Matchups";
 import AdminDashboard from "./routes/AdminDashboard";
+import Standings from "./routes/Standings";
 
 export const router = createBrowserRouter([
     {
@@ -51,5 +52,9 @@ export const router = createBrowserRouter([
     {
         path:"/admin/dashboard",
         element: <ProtectedRoute validRoles={['admin']}> <AdminDashboard /> </ProtectedRoute>
+    },
+    {
+        path:"/standings",
+        element: <ProtectedRoute validRoles={['user']}> <Standings /> </ProtectedRoute>
     }
 ])

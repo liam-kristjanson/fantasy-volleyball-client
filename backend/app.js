@@ -13,6 +13,7 @@ const lineupController = require('./controllers/LineupController');
 const settingsController = require('./controllers/SettingsController');
 const matchupController = require('./controllers/MatchupController')
 const adminController = require('./controllers/AdminController')
+const standingsController = require('./controllers/StandingsController')
 
 const PORT = process.env.PORT || 8080;
 const corsOptions = {
@@ -54,6 +55,8 @@ app.get("/lineup/bench", lineupController.getBench);
 
 app.get("/teams", rosterController.getTeams);
 
+app.get("/standings", standingsController.getStandings);
+
 app.get("/free-agents", rosterController.getFreeAgents);
 app.post("/free-agents/sign", rosterController.signFreeAgent);
 
@@ -62,6 +65,7 @@ app.get("/matchup/scores", matchupController.getMatchupScores);
 app.post("/admin/create-next-week-lineups", adminController.createNextWeekLineups);
 app.post("/admin/start-next-week", adminController.startNextWeek);
 app.post("/admin/refresh-standings", adminController.refreshStandings);
+app.post("/admin/reset-standings", adminController.resetStandings);
 
 //default error handler
 app.use((err, req, res, next) => {

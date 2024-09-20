@@ -89,6 +89,12 @@ async function aggregateDocuments(collectionName, pipeline) {
   return await collection.aggregate(pipeline).toArray();
 }
 
+async function updateMany(collectionName, criteriaObj, updateObj) {
+  const collection = database.collection(collectionName);
+
+  return await collection.updateMany(criteriaObj, updateObj);
+}
+
 
 
 module.exports.fetchDocuments = fetchDocuments;
@@ -99,4 +105,4 @@ module.exports.updateOne = updateOne;
 module.exports.insertOne = insertOne;
 module.exports.deleteDocumentById = deleteDocumentById;
 module.exports.aggregateDocuments = aggregateDocuments;
-
+module.exports.updateMany = updateMany;

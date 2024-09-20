@@ -127,7 +127,7 @@ const createInitialLineup = async (userId, leagueId, season) => {
 }
 
 module.exports.verifyAdmin = (req, res, next) => {
-    if (req.authData.role === "admin") {
+    if (req.authData?.role === "admin") {
         next();
     } else {
         return res.status(401).json({error: "Unauthorized"});

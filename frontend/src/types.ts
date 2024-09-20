@@ -121,3 +121,10 @@ export interface SettingsContextState {
     settings: AppSettings;
     updateSettings : (newSettings: AppSettings) => void;
 }
+
+export interface StandingsEntry {
+    _id: string;
+    teamName: string;
+    wins: number;
+    losses: number;
+}

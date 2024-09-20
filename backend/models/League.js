@@ -1,4 +1,5 @@
 const dbretriever = require('../dbretriever');
+const {ObjectId} = require('mongodb')
 
 module.exports.getAllIds = async (req, res, next) => {
     try {
@@ -14,4 +15,10 @@ module.exports.getAllIds = async (req, res, next) => {
     } catch (err) {
         next(err)
     }
+}
+
+module.exports.get = async (leagueId) => {
+    if (!ObjectId.isValid(leagueId)) return null;
+
+    return dbretriever.fetchDocumentById('leagues', new ObjectId(leagueId));
 }
