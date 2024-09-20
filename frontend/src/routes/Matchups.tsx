@@ -2,7 +2,7 @@ import { Col, Container, Row, Spinner } from "react-bootstrap";
 import Navbar from "../components/Navbar";
 import { useEffect, useState } from "react";
 import { useAuthContext } from "../hooks/useAuthContext";
-import { useNavigate } from "react-router-dom";
+import { Navigate, useNavigate } from "react-router-dom";
 import ServerMessageContainer from "../components/ServerMessageContainer";
 import useServerMessage from "../hooks/useServerMessage";
 import {MatchupsObject } from "../types";
@@ -65,6 +65,7 @@ export default function Matchups() {
     }, []);
 
     //Fetch current week num
+    if (!user) return <Navigate to='/login'/>
 
     return (
         <>

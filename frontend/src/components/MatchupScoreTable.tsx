@@ -11,7 +11,7 @@ export default function MatchupScoreTable({matchupScore} : MatchupScoreTableProp
         <Table striped bordered hover>
             <thead>
                 <tr>
-                    <th>
+                    <th className="text-center">
                         {matchupScore.homeTeam.teamName}
                     </th>
 
@@ -19,7 +19,7 @@ export default function MatchupScoreTable({matchupScore} : MatchupScoreTableProp
                         VS.
                     </th>
 
-                    <th>
+                    <th className="text-center">
                         {matchupScore.awayTeam.teamName}
                     </th>
                 </tr>
@@ -75,7 +75,7 @@ export default function MatchupScoreTable({matchupScore} : MatchupScoreTableProp
             <tfoot>
                 <tr>
                     <td className="fw-bold text-center">
-                        Total: {matchupScore.homeTeam.totalScore}
+                        Total: {matchupScore.homeTeam.totalScore.toFixed(1)}
                     </td>
 
                     <td className="fw-bold text-center">
@@ -135,7 +135,7 @@ function MatchupTableRow({position, homePlayer, awayPlayer} : MatchupTableRowPro
                         {(awayPlayer?.points ?? 0).toFixed(1)}
                     </div>
 
-                    <div>
+                    <div className="text-end">
                         {awayPlayer?.playerName ? (
                             <a className="td-underline hover-pointer text-dark" onClick={() => {navigate('/player-info', {state:{player: awayPlayer}})}}>
                                 {awayPlayer.playerName}

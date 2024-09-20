@@ -62,7 +62,7 @@ export default function LineupWeekStatsTable(props: LineupWeekStatsTableProps) {
                                         </td>
 
                                         <td>
-                                            {props.teamWeekStats?.lineupStats?.S?.points ?? "N/A"}
+                                            {props.teamWeekStats?.lineupStats?.S?.points.toFixed(1) ?? "N/A"}
                                         </td>
                                     </tr>
 
@@ -80,7 +80,7 @@ export default function LineupWeekStatsTable(props: LineupWeekStatsTableProps) {
                                         </td>
 
                                         <td>
-                                            {props.teamWeekStats?.lineupStats?.OH1?.points ?? "N/A"}
+                                            {props.teamWeekStats?.lineupStats?.OH1?.points.toFixed(1) ?? "N/A"}
                                         </td>
                                     </tr>
 
@@ -98,7 +98,7 @@ export default function LineupWeekStatsTable(props: LineupWeekStatsTableProps) {
                                         </td>
 
                                         <td>
-                                            {props.teamWeekStats?.lineupStats?.OH2?.points ?? "N/A"}
+                                            {props.teamWeekStats?.lineupStats?.OH2?.points.toFixed(1) ?? "N/A"}
                                         </td>
                                     </tr>
 
@@ -116,7 +116,7 @@ export default function LineupWeekStatsTable(props: LineupWeekStatsTableProps) {
                                         </td>
 
                                         <td>
-                                            {props.teamWeekStats?.lineupStats?.OH3?.points ?? "N/A"}
+                                            {props.teamWeekStats?.lineupStats?.OH3?.points.toFixed(1) ?? "N/A"}
                                         </td>
                                     </tr>
 
@@ -134,7 +134,7 @@ export default function LineupWeekStatsTable(props: LineupWeekStatsTableProps) {
                                         </td>
 
                                         <td>
-                                            {props.teamWeekStats?.lineupStats?.M1?.points ?? "N/A"}
+                                            {props.teamWeekStats?.lineupStats?.M1?.points.toFixed(1) ?? "N/A"}
                                         </td>
                                     </tr>
 
@@ -152,7 +152,7 @@ export default function LineupWeekStatsTable(props: LineupWeekStatsTableProps) {
                                         </td>
 
                                         <td>
-                                            {props.teamWeekStats?.lineupStats?.M2?.points ?? "N/A"}
+                                            {props.teamWeekStats?.lineupStats?.M2?.points.toFixed(1) ?? "N/A"}
                                         </td>
                                     </tr>
 
@@ -170,7 +170,7 @@ export default function LineupWeekStatsTable(props: LineupWeekStatsTableProps) {
                                         </td>
 
                                         <td>
-                                            {props.teamWeekStats?.lineupStats?.L?.points ?? "N/A"}
+                                            {props.teamWeekStats?.lineupStats?.L?.points.toFixed(1) ?? "N/A"}
                                         </td>
                                     </tr>
 

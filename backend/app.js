@@ -27,7 +27,7 @@ const app = express();
 app.use(cors(corsOptions));
 app.use(bodyParser.json());
 app.use(authController.parseAuthToken);
-app.use('/admin', authController.verifyAdmin);
+app.use('/admin/', authController.verifyAdmin);
 
 //wakeup or status check route
 app.get("/", (req, res) => {
@@ -61,6 +61,7 @@ app.get("/matchup/scores", matchupController.getMatchupScores);
 
 app.post("/admin/create-next-week-lineups", adminController.createNextWeekLineups);
 app.post("/admin/start-next-week", adminController.startNextWeek);
+app.post("/admin/refresh-standings", adminController.refreshStandings);
 
 //default error handler
 app.use((err, req, res, next) => {

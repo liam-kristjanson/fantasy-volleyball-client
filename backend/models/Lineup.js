@@ -37,6 +37,7 @@ module.exports.populate = async (lineupDocument) => {
 
     const roster = await rosterPromise;
     lineupDocument.teamName = roster.teamName;
+    lineupDocument.rosterId = roster._id;
 
     return lineupDocument;
 }

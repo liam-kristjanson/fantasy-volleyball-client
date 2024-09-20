@@ -2,6 +2,7 @@ const dbretriever = require('../dbretriever');
 const Lineup = require('./Lineup');
 
 module.exports.get = (leagueId, weekNum) => {
+    console.log("Fetching matchup document with leagueId ", leagueId, " and weekNum ", weekNum);
     return dbretriever.fetchOneDocument('matchups', {leagueId, weekNum});
 }
 
@@ -12,7 +13,7 @@ module.exports.calculateScores = async (matchupDocument) => {
     for (let i = 0; i<matchupDocument.matchupIds.length; i++) {
         matchups[i] = {};
         //calculate score for home team
-        console.log("Fetching home lineup for matchup " + (i + 1));
+        //console.log("Fetching home lineup for matchup " + (i + 1));
         matchups[i].homeTeam = Lineup.get(matchupDocument.leagueId, matchupDocument.matchupIds[i].homeId, matchupDocument.weekNum)
         .then(fetchedLineup => {
             return Lineup.populate(fetchedLineup);
@@ -23,7 +24,7 @@ module.exports.calculateScores = async (matchupDocument) => {
         });
 
         //calculate score for away team
-        console.log("Fetching away lineup for matchup " + (i + 1));
+        //console.log("Fetching away lineup for matchup " + (i + 1));
         matchups[i].awayTeam = Lineup.get(matchupDocument.leagueId, matchupDocument.matchupIds[i].awayId, matchupDocument.weekNum)
         .then(fetchedLineup => {
             return Lineup.populate(fetchedLineup);
