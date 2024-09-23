@@ -1,4 +1,4 @@
-import { Col, Container, Row, Spinner } from "react-bootstrap";
+import { Col, Container, Dropdown, Row, Spinner } from "react-bootstrap";
 import Navbar from "../components/Navbar";
 import { useEffect, useState } from "react";
 import { useAuthContext } from "../hooks/useAuthContext";
@@ -22,6 +22,12 @@ export default function Matchups() {
 
     const [weekNum, setWeekNum] = useState<number>(settings.currentWeekNum);
     const [matchups, setMatchups] = useState<MatchupsObject | undefined>(undefined);
+
+    //array for possible week numbers to be used in the week-selection dropdown
+    let weekNums = []
+    for (let i = 1; i<=settings.currentWeekNum; i++) {
+        weekNums.push(i);
+    }
     
 
     //Fetch matchup data
@@ -62,7 +68,7 @@ export default function Matchups() {
         } else {
             navigate('/login');
         }
-    }, []);
+    }, [weekNum]);
 
     //Fetch current week num
     if (!user) return <Navigate to='/login'/>
@@ -75,6 +81,18 @@ export default function Matchups() {
                 <Row className="pt-5">
                     <Col>
                         <h1 className="text-center">Matchups: Week {weekNum}</h1>
+
+                        <Dropdown className="mb-3">
+                            <Dropdown.Toggle variant="primary">
+                                Select a Week
+                            </Dropdown.Toggle>
+
+                            <Dropdown.Menu>
+                                {weekNums.map(weekNum => (
+                                    <Dropdown.Item key={weekNum} onClick={() => {setWeekNum(weekNum)}}>Week {weekNum}</Dropdown.Item>
+                                ))}
+                            </Dropdown.Menu>
+                        </Dropdown>
                     </Col>
                 </Row>
 
