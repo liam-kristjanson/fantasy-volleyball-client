@@ -3,6 +3,8 @@ const dbretriever = require('../dbretriever')
 const Settings = require('../models/Settings')
 const Lineup = require('../models/Lineup');
 const Stanidngs = require('../models/Standings');
+const League = require('../models/League')
+const Schedule = require('../models/Schedule')
 
 module.exports.createNextWeekLineups = async (req, res, next) => {
     try {
@@ -56,6 +58,24 @@ module.exports.resetStandings = async (req, res, next) => {
         const standingsResetResult = await Stanidngs.reset();
 
         return res.status(200).json({message: "Standings reset successfuly"});
+    } catch (err) {
+        next(err);
+    }
+}
+
+module.exports.createSchedule = async (req, res, next) => {
+    try {
+        if (!req.query.leagueId) {
+            return res.status(400).json({error: "leagueId must be specified in querystring."});
+        }
+
+        if (!await League.get(req.query.leagueId)) {
+            return res.status(400).json({error: "Invalid leagueId"});
+        }
+
+        await Schedule.create(req.query.leagueId);
+
+        return res.status(200).json({message: "Schedule successfuly created"});
     } catch (err) {
         next(err);
     }
