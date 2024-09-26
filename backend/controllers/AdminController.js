@@ -5,6 +5,8 @@ const Lineup = require('../models/Lineup');
 const Stanidngs = require('../models/Standings');
 const League = require('../models/League')
 const Schedule = require('../models/Schedule')
+const User = require("../models/User");
+const { ObjectId } = require('mongodb');
 
 module.exports.createNextWeekLineups = async (req, res, next) => {
     try {
@@ -76,6 +78,32 @@ module.exports.createSchedule = async (req, res, next) => {
         await Schedule.create(req.query.leagueId);
 
         return res.status(200).json({message: "Schedule successfuly created"});
+    } catch (err) {
+        next(err);
+    }
+}
+
+module.exports.getLeagues = async (req, res, next) => {
+    try {
+        const leagues = await League.getAll();
+
+        return res.status(200).json(leagues);
+    } catch (err) {
+        next(err);
+    }
+}
+
+module.exports.getUsers = async (req, res, next) => {
+    try {
+        let users = []
+
+        if (req.query.leagueId) {
+            users = await League.getUsers(req.query.leagueId);
+        } else {
+            users = await User.getAll();
+        }
+
+        return res.status(200).json(users);
     } catch (err) {
         next(err);
     }

@@ -34,6 +34,7 @@ export interface User {
     role: "user" | "admin";
     leagueId: string;
     authToken: string;
+    _id?: string; 
 }
 
 export interface Player {
@@ -127,4 +128,10 @@ export interface StandingsEntry {
     teamName: string;
     wins: number;
     losses: number;
+}
+
+export interface LeagueDocument {
+    _id: string;
+    name: string;
+    adminId: string;
 }

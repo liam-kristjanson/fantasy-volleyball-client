@@ -30,3 +30,11 @@ module.exports.get = async (leagueId) => {
 
     return dbretriever.fetchDocumentById('leagues', new ObjectId(leagueId));
 }
+
+module.exports.getAll = async () => {
+    return dbretriever.fetchDocuments('leagues', {});
+}
+
+module.exports.getUsers = async (leagueId) => {
+    return dbretriever.fetchDocuments('users', {leagueId});
+}
