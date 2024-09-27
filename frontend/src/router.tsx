@@ -9,8 +9,10 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import FreeAgents from "./routes/FreeAgents";
 import EditLineup from "./routes/EditLineup";
 import Matchups from "./routes/Matchups";
-import AdminDashboard from "./routes/AdminDashboard";
+import AdminDashboard from "./routes/admin/AdminDashboard";
 import Standings from "./routes/Standings";
+import ManageLeague from "./routes/admin/ManageLeague";
+import ManageUser from "./routes/admin/ManageUser";
 
 export const router = createBrowserRouter([
     {
@@ -56,5 +58,13 @@ export const router = createBrowserRouter([
     {
         path:"/standings",
         element: <ProtectedRoute validRoles={['user']}> <Standings /> </ProtectedRoute>
+    },
+    {
+        path: "/admin/manage-league",
+        element: <ProtectedRoute validRoles={['admin']}> <ManageLeague /> </ProtectedRoute>
+    },
+    {
+        path: "/admin/manage-user",
+        element: <ProtectedRoute validRoles={['admin']}> <ManageUser /> </ProtectedRoute>
     }
 ])

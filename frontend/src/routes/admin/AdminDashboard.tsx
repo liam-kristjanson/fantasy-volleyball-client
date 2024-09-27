@@ -1,14 +1,15 @@
 import { Button, Col, Container, Row, Spinner, Table } from "react-bootstrap";
-import { useAuthContext } from "../hooks/useAuthContext"
+import { useAuthContext } from "../../hooks/useAuthContext"
 import { useEffect, useState } from "react";
-import AdminNavbar from "../components/AdminNavbar";
-import ServerMessageContainer from "../components/ServerMessageContainer";
-import { LeagueDocument, ServerMessageType, User } from "../types";
+import AdminNavbar from "../../components/AdminNavbar";
+import ServerMessageContainer from "../../components/ServerMessageContainer";
+import { LeagueDocument, ServerMessageType, User } from "../../types";
+import { useNavigate } from "react-router-dom";
 
 export default function AdminDashboard() {
 
     const user = useAuthContext().state.user;
-    
+    const navigate = useNavigate();
 
     const [isScheduleLoading, setIsScheduleLoading] = useState<boolean>(false);
 
@@ -164,7 +165,7 @@ export default function AdminDashboard() {
                                             </td>
 
                                             <td>
-                                                <Button variant="primary">Manage</Button>
+                                                <Button variant="primary" onClick={() => {navigate("/admin/manage-league", {state: {league}})}}>Manage</Button>
                                             </td>
                                         </tr>
                                     ))}
@@ -231,7 +232,7 @@ export default function AdminDashboard() {
                                             </td>
 
                                             <td>
-                                                <Button variant="primary">Manage</Button>
+                                                <Button variant="primary" onClick={() => {navigate('/admin/manage-user', {state: {selectedUser: user}})}}>Manage</Button>
                                             </td>
                                         </tr>
                                     ))}
