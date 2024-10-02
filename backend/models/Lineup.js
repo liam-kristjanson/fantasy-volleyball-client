@@ -102,3 +102,7 @@ module.exports.createNextWeekLineups = async () => {
 
     if (!lineupsCreatedSuccessfuly) throw new Error('At least one new lineup failed to be created');
 }
+
+module.exports.resetAll = async () => {
+    return await dbretriever.deleteMany('lineups', {weekNum: {$gt: 1}});
+}

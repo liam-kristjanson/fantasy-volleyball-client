@@ -69,6 +69,7 @@ app.post("/admin/reset-standings", adminController.resetStandings);
 app.post("/admin/create-schedule", adminController.createSchedule);
 app.get("/admin/leagues", adminController.getLeagues);
 app.get("/admin/users", adminController.getUsers);
+app.post("/admin/reset-all", adminController.resetAll);
 
 //default error handler
 app.use((err, req, res, next) => {

@@ -2,7 +2,7 @@ const settingsController = require('./SettingsController')
 const dbretriever = require('../dbretriever')
 const Settings = require('../models/Settings')
 const Lineup = require('../models/Lineup');
-const Stanidngs = require('../models/Standings');
+const Standings = require('../models/Standings');
 const League = require('../models/League')
 const Schedule = require('../models/Schedule')
 const User = require("../models/User");
@@ -33,6 +33,10 @@ module.exports.startNextWeek = async (req, res, next) => {
         await Settings.incrementWeekNum();
         console.log("currentWeekNum Incremented");
 
+        console.log("Updating standings...");
+        await Standings.refresh();
+        console.log("Done refreshing standings")
+
         console.log("Unlocking lineups...");
         await Settings.setLineupsLocked(false);
         console.log("Lineups unlocked.")
@@ -48,9 +52,34 @@ module.exports.startNextWeek = async (req, res, next) => {
     }
 }
 
+module.exports.resetAll = async (req, res, next) => {
+    //resets all leagues to week 1 for a fresh start. use with care.
+    try {
+        console.log("Deleting matchup results...");
+        await Matchup.resetAllScores();
+        console.log("Matchup scores reset")
+
+        console.log("Deleting lineups...")
+        await Lineup.resetAll();
+        console.log("Lineups deleted")
+
+        console.log("Resetting standings...");
+        await Standings.reset();
+        console.log("Standings reset");
+
+        console.log("Resetting currentWeekNum to 1");
+        await Settings.setWeekNum(1);
+        console.log("currentWeekNum set to 1");
+
+        return res.status(200).json({message: "All leagues reset successfuly"});
+    } catch (err) {
+        next(err);
+    }
+}
+
 module.exports.refreshStandings = async (req, res, next) => {
     try {
-        const standingsUpdateResult = await Stanidngs.refresh();
+        const standingsUpdateResult = await Standings.refresh();
 
         return res.status(200).json({message: "Standings refreshed successfuly"})
     } catch (err) {
@@ -60,7 +89,7 @@ module.exports.refreshStandings = async (req, res, next) => {
 
 module.exports.resetStandings = async (req, res, next) => {
     try {
-        const standingsResetResult = await Stanidngs.reset();
+        const standingsResetResult = await Standings.reset();
 
         return res.status(200).json({message: "Standings reset successfuly"});
     } catch (err) {

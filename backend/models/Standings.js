@@ -16,7 +16,7 @@ module.exports.refresh = async () => {
 
     const matchupPromises = [];
 
-    for (let weekNum = 1; weekNum <= settings.currentWeekNum; weekNum++) {
+    for (let weekNum = 1; weekNum < settings.currentWeekNum; weekNum++) {
         for (let leagueId of leagueIds) {
 
             const matchupPromise = Matchup.get(leagueId.toString(), weekNum)

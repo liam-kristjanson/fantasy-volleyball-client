@@ -73,3 +73,9 @@ module.exports.writeResults = async (matchupDocument) => {
 
     return result;
 }
+
+module.exports.resetAllScores = async () => {
+    const result = await dbretriever.updateMany('matchups', {}, {$unset: {matchupScores: ""}});
+
+    return result;
+}
