@@ -6,7 +6,7 @@ const Stanidngs = require('../models/Standings');
 const League = require('../models/League')
 const Schedule = require('../models/Schedule')
 const User = require("../models/User");
-const { ObjectId } = require('mongodb');
+const Matchup = require('../models/Matchup')
 
 module.exports.createNextWeekLineups = async (req, res, next) => {
     try {
@@ -21,6 +21,10 @@ module.exports.startNextWeek = async (req, res, next) => {
     try {
         console.log("Starting next week...");
 
+        console.log("Calculating final scores...")
+        await Matchup.calculateAllWeekScores();
+        console.log("Done calculating scores.")
+
         console.log("Creating next week lineups...");
         await Lineup.createNextWeekLineups();
         console.log("Done creating lineups");
@@ -28,7 +32,6 @@ module.exports.startNextWeek = async (req, res, next) => {
         console.log("Incrementing currentWeekNum...")
         await Settings.incrementWeekNum();
         console.log("currentWeekNum Incremented");
-        
 
         console.log("Unlocking lineups...");
         await Settings.setLineupsLocked(false);
