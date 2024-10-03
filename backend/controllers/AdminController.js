@@ -140,3 +140,23 @@ module.exports.getUsers = async (req, res, next) => {
         next(err);
     }
 }
+
+module.exports.lockLineups = async (req, res, next) => {
+    try {
+        await Settings.setLineupsLocked(true);
+
+        return res.status(200).json({message: "Lineups locked successfuly"})
+    } catch (err) {
+        next(err);
+    }
+}
+
+module.exports.unlockLineups = async (req, res, next) => {
+    try {
+        await Settings.setLineupsLocked(false);
+
+        return res.status(200).json({message: "Lineups unlocked successfuly"});
+    } catch (err) {
+        next(err);
+    }
+}

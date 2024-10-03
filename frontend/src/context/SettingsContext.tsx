@@ -19,24 +19,28 @@ type ProviderProps = {
 export const SettingsProvider : React.FC<ProviderProps> = (props) => {
     const [settings, setSettings] = useState<AppSettings>(contextDefaultValues.settings);
 
-    const updateSettings = (newSettings : AppSettings) => {
+    const updateSettings = () => {
         //alert("Updating settings with " + JSON.stringify(newSettings));
-        setSettings(newSettings);
+        fetchSettings();
     }
 
-    useEffect(() => {
+    function fetchSettings() {
         fetch(import.meta.env.VITE_SERVER + "/app-settings")
         .then(response => {
         response.json()
         .then(responseJson => {
             //alert('calling update settings')
-            updateSettings(responseJson);
+            setSettings(responseJson);
         })
         })
         .catch(err => {
         alert('Error fetching settings (see console)')
         console.error(err)
-        }) 
+        })
+    }
+
+    useEffect(() => {
+         fetchSettings();
     }, [])
 
     return (

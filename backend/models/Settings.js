@@ -13,22 +13,24 @@ module.exports.get = async () => {
 
 module.exports.refresh = async () => {
     cachedAppSettings = await dbretriever.fetchOneDocument('app_settings', {});
+
+    return cachedAppSettings
 }
 
 module.exports.setWeekNum = async (weekNum) => {
     await dbretriever.updateOne('app_settings', {}, {$set: {currentWeekNum: weekNum}});
 
-    await this.refresh();
+    return await this.refresh();
 }
 
 module.exports.setLineupsLocked = async (lineupsLocked) => {
     await dbretriever.updateOne('app_settings', {}, {$set: {lineupsLocked: lineupsLocked}});
 
-    await this.refresh();
+    return await this.refresh();
 }
 
 module.exports.incrementWeekNum = async () => {
     const CURRENT_SETTINGS = await this.get();
 
-    await this.setWeekNum(CURRENT_SETTINGS.currentWeekNum + 1);
+    return await this.setWeekNum(CURRENT_SETTINGS.currentWeekNum + 1);
 }

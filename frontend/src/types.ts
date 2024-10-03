@@ -120,7 +120,7 @@ export interface AppSettings {
 
 export interface SettingsContextState {
     settings: AppSettings;
-    updateSettings : (newSettings: AppSettings) => void;
+    updateSettings : () => void;
 }
 
 export interface StandingsEntry {

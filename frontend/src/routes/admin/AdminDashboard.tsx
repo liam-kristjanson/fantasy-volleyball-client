@@ -5,10 +5,13 @@ import AdminNavbar from "../../components/AdminNavbar";
 import ServerMessageContainer from "../../components/ServerMessageContainer";
 import { LeagueDocument, ServerMessageType, User } from "../../types";
 import { useNavigate } from "react-router-dom";
+import ControlPanel from "../../components/admin/ControlPanel";
+import { useSettingsContext } from "../../hooks/useSettingsContext";
 
 export default function AdminDashboard() {
 
     const user = useAuthContext().state.user;
+    const {settings} = useSettingsContext();
     const navigate = useNavigate();
 
     //state variables for league
@@ -138,6 +141,12 @@ export default function AdminDashboard() {
                                         </tr>
                                     ))}
                                 </tbody>
+
+                                <tfoot>
+                                    <tr>
+                                        <td colSpan={3}><Button variant="primary">+ Create League</Button></td>
+                                    </tr>
+                                </tfoot>
                             </Table>
                         )}
 
@@ -205,18 +214,36 @@ export default function AdminDashboard() {
                                         </tr>
                                     ))}
                                 </tbody>
+
+                                <tfoot>
+                                    <tr>
+                                        <td colSpan={5}><Button variant="primary">+ Add User</Button></td>
+                                    </tr>
+                                </tfoot>
                             </Table>
                         )}
 
                         <ServerMessageContainer message={usersMessage} variant={usersMessageType}/>
                     </Col>
                 </Row>
+
+                <Row>
+                    <Col>
+                        <h3>Control Panel</h3>
+                    </Col>
+                </Row>
+
+                <ControlPanel/>
             </Container>
 
             <p>
                 Current auth context:
                 {JSON.stringify(user)}
+            </p>
 
+            <p>
+                Current Settings context:
+                {JSON.stringify(settings)}
             </p>
         </>
     )
