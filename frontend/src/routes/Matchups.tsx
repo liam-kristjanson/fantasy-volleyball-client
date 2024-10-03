@@ -1,4 +1,4 @@
-import { Col, Container, Dropdown, Row, Spinner } from "react-bootstrap";
+import { Carousel, Col, Container, Dropdown, Row, Spinner } from "react-bootstrap";
 import Navbar from "../components/Navbar";
 import { useEffect, useState } from "react";
 import { useAuthContext } from "../hooks/useAuthContext";
@@ -78,16 +78,18 @@ export default function Matchups() {
             <Navbar />
 
             <Container>
-                <Row className="pt-5">
-                    <Col>
+                <Row className="pt-5 mb-4 justify-content-center">
+                    <Col xs={12}>
                         <h1 className="text-center">Matchups: Week {weekNum}</h1>
+                    </Col>
 
+                    <Col xs={12} md={6}>
                         <Dropdown className="mb-3">
-                            <Dropdown.Toggle variant="primary">
+                            <Dropdown.Toggle variant="primary" className="w-100">
                                 Select a Week
                             </Dropdown.Toggle>
 
-                            <Dropdown.Menu>
+                            <Dropdown.Menu className="w-100">
                                 {weekNums.map(weekNum => (
                                     <Dropdown.Item key={weekNum} onClick={() => {setWeekNum(weekNum)}}>Week {weekNum}</Dropdown.Item>
                                 ))}
@@ -95,6 +97,7 @@ export default function Matchups() {
                         </Dropdown>
                     </Col>
                 </Row>
+            </Container>
 
                 <Row>
                     <Col>
@@ -104,21 +107,26 @@ export default function Matchups() {
                             </p>
                         ) : (
                             <>
-                                {Array.isArray(matchups?.matchupScores) && matchups.matchupScores.map(matchupScore => (
-                                    <>
-                                        <Row className="mb-5">
-                                            <Col>
-                                                <MatchupScoreTable matchupScore={matchupScore} />
-                                            </Col>
-                                        </Row>
-                                    </>
-                                ))}
+                                <Carousel className="pb-4" variant="dark">
+                                    {Array.isArray(matchups?.matchupScores) && matchups.matchupScores.map((matchupScore, idx) => (
+                                        <Carousel.Item key={idx} className="">
+                                            <Container>
+                                                <Row className="d-flex justify-content-center">
+                                                    <Col xs={10}>
+                                                        <MatchupScoreTable matchupScore={matchupScore} />    
+                                                    </Col>
+                                                </Row>
+                                            </Container>
+                                            
+                                        </Carousel.Item>
+                                    ))}
+                                </Carousel>
+
                                 <ServerMessageContainer message={serverMessage} variant={serverMessageType}/>
                             </>
                         )}
                     </Col>
                 </Row>
-            </Container>
         </>
     )
 }

@@ -8,7 +8,7 @@ interface StandingsTableProps {
 
 export default function StandingsTable({standings} : StandingsTableProps) {
     return (
-        <Table striped bordered hover>
+        <Table striped hover>
             <thead>
                 <th>
                     #

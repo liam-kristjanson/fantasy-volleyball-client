@@ -114,6 +114,11 @@ module.exports.lineupSwap = async (req, res, next) => {
             return res.status(400).json({error: "playerId and lineupSlot must be specified in querystring"});
         }
 
+        const settings = await Settings.get();
+        if (settings.lineupsLocked) {
+            return res.status(403).json({error: "Lineup cannot bve changed while lineups are locked."})
+        }
+
         //validate position
         if (!["S", "OH1", "OH2", "OH3", "M1", "M2", "L"].includes(req.query.lineupSlot)) {
             return (res.status(400).json({error: "Invalid lineup slot requested"}));

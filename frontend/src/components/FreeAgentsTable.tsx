@@ -4,10 +4,12 @@ import { Player, ServerMessageType } from "../types";
 import { useAuthContext } from "../hooks/useAuthContext";
 import ServerMessageContainer from "./ServerMessageContainer";
 import { useNavigate } from "react-router-dom";
+import { useSettingsContext } from "../hooks/useSettingsContext";
 
 export default function FreeAgentsTable() {
 
     const user = useAuthContext().state.user;
+    const {settings} = useSettingsContext();
     const navigate = useNavigate();
 
     const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -71,11 +73,13 @@ export default function FreeAgentsTable() {
                     navigate('/my-account');
                 })
             } else {
-                setIsLoading(false);
-                setServerMessageType("danger");
-                setServerMessage("An unexpected error occured (see console)");
-
-                response.json().then(responseJson => {console.log(responseJson)})
+                response.json()
+                .then(responseJson => {
+                    setIsLoading(false);
+                    setServerMessageType("danger");
+                    setServerMessage(responseJson.error ?? "An unexpected error occured (see console)");
+                })
+                
             }
         })
         .catch(err => {
@@ -139,7 +143,7 @@ export default function FreeAgentsTable() {
                                         </td>
 
                                         <td>
-                                            <Button className="fw-bold btn-primary" onClick={() => {signFreeAgent(player._id)}}>Sign</Button>
+                                            <Button disabled={settings.lineupsLocked} className="fw-bold btn-primary w-100" onClick={() => {signFreeAgent(player._id)}}>Sign</Button>
                                         </td>
                                     </tr>
                                 ))}

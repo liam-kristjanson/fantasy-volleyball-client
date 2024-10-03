@@ -2,6 +2,7 @@ require('dotenv').config();
 const dbretriever = require('../dbretriever');
 const fantasyUtilities = require("../FantasyUtilities")
 const Roster = require("../models/Roster");
+const Settings = require("../models/Settings");
 
 module.exports.getRoster = async (req, res) => {
 
@@ -55,6 +56,11 @@ module.exports.signFreeAgent = async (req, res) => {
         return res.status(400).json({error: "playerId must be specified in querystring"});
     }
 
+    const settings = await Settings.get();
+    if (settings.lineupsLocked) {
+        return res.status(403).json({error: "Free agent signing not allowed while lineups are locked."});
+    }
+
     //if the player is not available, reject the request as forbidden
     if (!await fantasyUtilities.isFreeAgent(req.query.playerId, req.authData.leagueId)) {
         return res.status(403).json({error: "Requested player is not a free agent."});
@@ -83,6 +89,11 @@ module.exports.dropPlayer = async (req, res) => {
 
     if (!req.query.playerId) {
         return (res.status(400).json({error: "playerId must be specified in querystring"}));
+    }
+
+    const settings = await Settings.get();
+    if (settings.lineupsLocked) {
+        return (res.status(403).json({error: "Dropping player not allowed while lineups are locked"}));
     }
 
     //validate that the player exists on the user's current roster.

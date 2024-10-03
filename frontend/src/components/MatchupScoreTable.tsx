@@ -119,7 +119,7 @@ function MatchupTableRow({position, homePlayer, awayPlayer} : MatchupTableRowPro
                         )}
                     </div>
 
-                    <div>
+                    <div className="fw-bold">
                         {(homePlayer?.points ?? 0).toFixed(1)}
                     </div>
                 </div>                    
@@ -131,7 +131,7 @@ function MatchupTableRow({position, homePlayer, awayPlayer} : MatchupTableRowPro
 
             <td>
                 <div className="d-flex flex-row justify-content-between">
-                    <div>
+                    <div className="fw-bold">
                         {(awayPlayer?.points ?? 0).toFixed(1)}
                     </div>
 

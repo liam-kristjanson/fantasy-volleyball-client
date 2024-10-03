@@ -135,7 +135,7 @@ export default function MyAccount() {
                         <ServerMessageContainer message={lineupMessage} variant={lineupMessageType}/>
                         <Card className="shadow mb-5">
                             <Card.Header className="text-primary fw-bold">
-                                Active Lineup
+                                Active Lineup: Week {settings.currentWeekNum} {settings.lineupsLocked && "(LOCKED IN)"}
                             </Card.Header>
 
                             <Card.Body>
@@ -202,7 +202,7 @@ export default function MyAccount() {
                                 </Table>
 
                                 <Button className="btn-primary fw-bold me-2" onClick={() => {navigate('/team-performance')}}>View Performance</Button>
-                                <Button className="btn-primary fw-bold" onClick={() => {navigate('/edit-lineup')}}>Edit Lineup</Button>
+                                <Button disabled={settings.lineupsLocked} className="btn-primary fw-bold" onClick={() => {navigate('/edit-lineup')}}>Edit Lineup</Button>
                             </Card.Body>
                         </Card>
                     </Col>
@@ -265,7 +265,7 @@ export default function MyAccount() {
                                                         </td>
     
                                                         <td>
-                                                            <Button className="btn-primary fw-bold" onClick={() => {handleDropPlayer(player._id)}}>Drop</Button>
+                                                            <Button disabled={settings.lineupsLocked} className="btn-primary fw-bold" onClick={() => {handleDropPlayer(player._id)}}>Drop</Button>
                                                         </td>
                                                     </tr>
                                                 ))
@@ -289,9 +289,9 @@ export default function MyAccount() {
                 <Row>
                     <Col>
                         <Button className="w-100 btn-lg mb-5 fw-bold" variant="primary" onClick={() => {handleLogout()}}>Log Out</Button>
-                        <p className="mb-4">Current auth context: {JSON.stringify(user) ?? "Not found"}</p>
+                        {/* <p className="mb-4">Current auth context: {JSON.stringify(user) ?? "Not found"}</p>
 
-                        <p>Current settings context: {JSON.stringify(settings)}</p>
+                        <p>Current settings context: {JSON.stringify(settings)}</p> */}
                     </Col>
                 </Row>
             </Container>
