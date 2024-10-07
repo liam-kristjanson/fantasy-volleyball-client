@@ -84,17 +84,13 @@ export default function ControlPanel() {
                 </Col>
             </Row>
 
-            <Row className="border-top p-1">
+            <Row className="border-top p-1 mb-3">
                 <Col xs={12}>
                     <h5>Global Managment</h5>
                 </Col>
 
                 <Col xs={4}>
                     <Button className="btn-primary w-100" onClick={() => {makeRequest("/admin/start-next-week")}}>Start Next Week</Button>
-                </Col>
-
-                <Col xs={4}>
-                    <Button className="btn-primary w-100">Upload Match Data</Button>
                 </Col>
 
                 <Col xs={4}>

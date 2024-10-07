@@ -43,9 +43,9 @@ export default function Home() {
                 </Row>
             </Container>
 
-            <p>
+            {/* <p>
                 Current settings: {JSON.stringify(settings)}
-            </p>
+            </p> */}
         </>
     )
 }

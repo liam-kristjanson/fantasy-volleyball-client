@@ -7,6 +7,7 @@ import { LeagueDocument, ServerMessageType, User } from "../../types";
 import { useNavigate } from "react-router-dom";
 import ControlPanel from "../../components/admin/ControlPanel";
 import { useSettingsContext } from "../../hooks/useSettingsContext";
+import MatchUploadCluster from "../../components/admin/MatchUploadCluster";
 
 export default function AdminDashboard() {
 
@@ -234,6 +235,14 @@ export default function AdminDashboard() {
                 </Row>
 
                 <ControlPanel/>
+
+                <Row>
+                    <Col>
+                        <h3>Upload match data: Week {settings.currentWeekNum}</h3>
+                    </Col>
+                </Row>
+
+                <MatchUploadCluster/>
             </Container>
 
             <p>

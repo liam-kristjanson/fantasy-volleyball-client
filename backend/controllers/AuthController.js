@@ -53,10 +53,10 @@ module.exports.parseAuthToken = (req, res, next) => {
     if (!req.headers.authorization) return next();
 
     try {
-        console.log("Claim token: " + req.headers.authorization);
+        //console.log("Claim token: " + req.headers.authorization);
         req.authData = jwt.verify(req.headers.authorization, process.env.JWT_SECRET);
-        console.log("Verified auth data: ");
-        console.log(req.authData);
+        //console.log("Verified auth data: ");
+        //console.log(req.authData);
     } catch (e) {
         console.error("Error parsing jwt token:", e);
     } finally {
