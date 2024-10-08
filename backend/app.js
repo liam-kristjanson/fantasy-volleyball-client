@@ -72,12 +72,7 @@ app.get("/admin/users", adminController.getUsers);
 app.post("/admin/reset-all", adminController.resetAll);
 app.post("/admin/lock-lineups", adminController.lockLineups);
 app.post("/admin/unlock-lineups", adminController.unlockLineups)
-app.post("/admin/match-data", (req, res) => {
-    console.log("Recieved match for weekNum ", req.query.weekNum, " season ", req.query.season, " title ", req.query.gameTitle);
-    console.log(req.body);
-
-    return res.status(200).json({message: "Match data recieved"});
-})
+app.post("/admin/match-data", adminController.uploadMatchData);
 
 //default error handler
 app.use((err, req, res, next) => {

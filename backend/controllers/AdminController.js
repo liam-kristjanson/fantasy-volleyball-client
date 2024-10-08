@@ -7,6 +7,7 @@ const League = require('../models/League')
 const Schedule = require('../models/Schedule')
 const User = require("../models/User");
 const Matchup = require('../models/Matchup')
+const Match = require('../models/Match')
 
 module.exports.createNextWeekLineups = async (req, res, next) => {
     try {
@@ -70,6 +71,14 @@ module.exports.resetAll = async (req, res, next) => {
         console.log("Resetting currentWeekNum to 1");
         await Settings.setWeekNum(1);
         console.log("currentWeekNum set to 1");
+
+        console.log("Unlinking player matches...")
+        await Match.unlinkAll();
+        console.log("Unlinked all player matches");
+
+        console.log("Deleting all matches...");
+        await Match.deleteAll();
+        console.log("Deleted all matches");
 
         return res.status(200).json({message: "All leagues reset successfuly"});
     } catch (err) {
@@ -156,6 +165,43 @@ module.exports.unlockLineups = async (req, res, next) => {
         await Settings.setLineupsLocked(false);
 
         return res.status(200).json({message: "Lineups unlocked successfuly"});
+    } catch (err) {
+        next(err);
+    }
+}
+
+module.exports.unlinkAllMatches = async (req, res, next) => {
+    try {
+        const unlinkSuccess = await Match.unlinkAll();
+    
+        if (unlinkSuccess) {
+            return res.status(200).json({message: "All matches unlinked successfuly"});
+        } else {
+            return res.status(500).json({error: "Failed to unlink matches"});
+        }
+    } catch (err) {
+        next(err);
+    }
+}
+
+module.exports.uploadMatchData = async (req, res, next) => {
+    try {
+        if (!req.query.weekNum || !req.query.season || !req.query.gameTitle) {
+            return res.status(400).json({error: "weekNum, season, and gameTitle must be specified in querystring"});
+        }
+
+        const weekNum = decodeURIComponent(req.query.weekNum);
+        const season = decodeURIComponent(req.query.season);
+        const gameTitle = decodeURIComponent(req.query.gameTitle);
+        const stats = req.body;
+
+        const matchCreationSuccess = await Match.create(gameTitle, weekNum, season, stats);
+
+        if (matchCreationSuccess) {
+            return res.status(200).json({message: "Match data uploaded successfuly"});
+        } else {
+            return res.status(500).json({message: "Failed to upload match data"});
+        }
     } catch (err) {
         next(err);
     }
