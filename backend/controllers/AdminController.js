@@ -8,6 +8,7 @@ const Schedule = require('../models/Schedule')
 const User = require("../models/User");
 const Matchup = require('../models/Matchup')
 const Match = require('../models/Match')
+const Player = require('../models/Player')
 
 module.exports.createNextWeekLineups = async (req, res, next) => {
     try {
@@ -79,6 +80,11 @@ module.exports.resetAll = async (req, res, next) => {
         console.log("Deleting all matches...");
         await Match.deleteAll();
         console.log("Deleted all matches");
+
+        console.log("Resettings player season points totals...");
+        await Player.resetAllPointsTotals();
+        console.log("Reset all player points totals")
+
 
         return res.status(200).json({message: "All leagues reset successfuly"});
     } catch (err) {

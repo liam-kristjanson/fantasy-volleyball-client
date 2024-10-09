@@ -52,7 +52,7 @@ export default function PlayerRankingsTable(props: PlayerRankingsTableProps) {
                                     </td>
 
                                     <td>
-                                        {player.prevSeasonPoints}
+                                        {player.seasonTotalPoints.toFixed(1)}
                                     </td>
 
                                 </tr>

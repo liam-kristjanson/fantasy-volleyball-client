@@ -3,7 +3,7 @@ const dbretriever = require('../dbretriever')
 const { calculateFantasyPoints } = require('../FantasyUtilities');
 
 module.exports.getRankedPlayers = (req, res) => {
-    dbretriever.fetchOrdered('players', {}, {prevSeasonPoints: -1})
+    dbretriever.fetchOrdered('players', {}, {seasonTotalPoints: -1})
     .then(retrievedPlayers => {
         res.json(retrievedPlayers)
     })

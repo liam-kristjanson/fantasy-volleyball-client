@@ -1,5 +1,6 @@
 const dbretriever = require('../dbretriever');
 const {ObjectId} = require('mongodb')
+const FantasyUtilities = require("../FantasyUtilities");
 
 module.exports.unlinkAll = async () => {
     const result = await dbretriever.updateMany('players', {}, {$set: {matches: []}});
@@ -32,12 +33,19 @@ module.exports.create = async (gameTitle, weekNum, season, stats) => {
     const playerLinkSuccess = await this.linkPlayers(matchDocument);
 
     if (!playerLinkSuccess) {
-        throw new Error("Error linking players to new match");
+        throw new Error("Failed to link players to new match");
     }
 
-   return playerLinkSuccess; 
+    const updatePlayerPointsSuccess = await this.updatePlayerPointsTotal(matchDocument);
+
+    if (!updatePlayerPointsSuccess) {
+        throw new Error("Failed to update players season scores");
+    }
+
+   return updatePlayerPointsSuccess; 
 }
 
+//adds match FK to all players who played in the match
 module.exports.linkPlayers = async (matchDocument) => {
     //console.log("Linking players with match document", matchDocument)
     let playerUpdatePromises = []
@@ -52,6 +60,26 @@ module.exports.linkPlayers = async (matchDocument) => {
     const playerUpdateResults = await Promise.all(playerUpdatePromises);
 
     //console.log("Player update results: ", playerUpdateResults)
+
+    let isSuccess = true;
+    for (let playerUpdateResult of playerUpdateResults) {
+        isSuccess = isSuccess && playerUpdateResult.acknowledged;
+    }
+
+    return isSuccess;
+}
+
+//increments a players total season points by the number of points they scored in the given match.
+module.exports.updatePlayerPointsTotal = async (matchDocument) => {
+    let playerUpdatePromises = []
+    
+    for (let playerName in matchDocument.stats) {
+        const matchPoints = FantasyUtilities.calculateFantasyPoints(matchDocument.stats[playerName]);
+
+        playerUpdatePromises.push(dbretriever.updateOne('players', {playerName}, {$inc: {seasonTotalPoints: matchPoints}}));
+    }
+
+    const playerUpdateResults = await Promise.all(playerUpdatePromises);
 
     let isSuccess = true;
     for (let playerUpdateResult of playerUpdateResults) {

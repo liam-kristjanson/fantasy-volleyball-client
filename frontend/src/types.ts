@@ -3,6 +3,7 @@ export interface PlayerRanking {
     prevSeasonPoints: number;
     _id: string;
     position?: string;
+    seasonTotalPoints: number;
 }
 
 export interface PlayerMatch {
