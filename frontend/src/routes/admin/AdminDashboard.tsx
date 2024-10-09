@@ -145,7 +145,7 @@ export default function AdminDashboard() {
 
                                 <tfoot>
                                     <tr>
-                                        <td colSpan={3}><Button variant="primary">+ Create League</Button></td>
+                                        <td colSpan={3}><Button variant="primary" onClick={() => {navigate('/admin/create-league')}}>+ Create League</Button></td>
                                     </tr>
                                 </tfoot>
                             </Table>

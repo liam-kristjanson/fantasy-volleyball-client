@@ -71,8 +71,9 @@ app.get("/admin/leagues", adminController.getLeagues);
 app.get("/admin/users", adminController.getUsers);
 app.post("/admin/reset-all", adminController.resetAll);
 app.post("/admin/lock-lineups", adminController.lockLineups);
-app.post("/admin/unlock-lineups", adminController.unlockLineups)
+app.post("/admin/unlock-lineups", adminController.unlockLineups);
 app.post("/admin/match-data", adminController.uploadMatchData);
+app.post("/admin/create-league", adminController.createLeague);
 
 //default error handler
 app.use((err, req, res, next) => {

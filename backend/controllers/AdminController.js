@@ -212,3 +212,21 @@ module.exports.uploadMatchData = async (req, res, next) => {
         next(err);
     }
 }
+
+module.exports.createLeague = async (req, res, next) => {
+    try {
+        if (!req.body?.name) {
+            return res.status(400).json({error: "name must be specified in request body"});
+        }
+
+        const leagueDocument = await League.create(req.body.name);
+
+        if (leagueDocument) {
+            return res.status(200).json({message: "Created league successfuly"})
+        } else {
+            return res.status(500).json({error: "Failed to create league"});
+        }
+    } catch (err) {
+        next(err);
+    }
+}

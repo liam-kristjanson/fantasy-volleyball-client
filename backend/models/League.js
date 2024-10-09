@@ -38,3 +38,18 @@ module.exports.getAll = async () => {
 module.exports.getUsers = async (leagueId) => {
     return dbretriever.fetchDocuments('users', {leagueId});
 }
+
+module.exports.create = async (leagueName) => {
+    const leagueDocument = {
+        _id: new ObjectId(),
+        name: leagueName
+    }
+
+    const result = await dbretriever.insertOne('leagues', leagueDocument);
+
+    if (result.acknowledged) {
+        return leagueDocument;
+    } else {
+        throw new Error("Failed to write new league to database");
+    }
+}

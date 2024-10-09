@@ -13,6 +13,7 @@ import AdminDashboard from "./routes/admin/AdminDashboard";
 import Standings from "./routes/Standings";
 import ManageLeague from "./routes/admin/ManageLeague";
 import ManageUser from "./routes/admin/ManageUser";
+import CreateLeague from "./routes/admin/CreateLeague";
 
 export const router = createBrowserRouter([
     {
@@ -66,5 +67,9 @@ export const router = createBrowserRouter([
     {
         path: "/admin/manage-user",
         element: <ProtectedRoute validRoles={['admin']}> <ManageUser /> </ProtectedRoute>
+    },
+    {
+        path: "/admin/create-league",
+        element: <ProtectedRoute validRoles={['admin']}> <CreateLeague /> </ProtectedRoute>
     }
 ])
