@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Button, Card, Spinner, Table } from "react-bootstrap";
+import { Button, Spinner, Table } from "react-bootstrap";
 import { Player, ServerMessageType } from "../types";
 import { useAuthContext } from "../hooks/useAuthContext";
 import ServerMessageContainer from "./ServerMessageContainer";
@@ -94,64 +94,56 @@ export default function FreeAgentsTable() {
         <>
             <ServerMessageContainer message={serverMessage} variant={serverMessageType} />
 
-            <Card>
-                <Card.Header className="text-primary">
-                    Available players
-                </Card.Header>
+            {isLoading ? (
+                <>
+                    <Spinner variant="primary" /> Loading...
+                </>
+            ) : (
+                <Table striped bordered hover>
 
-                <Card.Body>
-                    {isLoading ? (
-                        <>
-                            <Spinner variant="primary" /> Loading...
-                        </>
-                    ) : (
-                        <Table striped bordered hover>
+                    <thead>
+                        <tr>
+                            <th>
+                                Player
+                            </th>
 
-                            <thead>
-                                <tr>
-                                    <th>
-                                        Player
-                                    </th>
+                            <th>
+                                Position
+                            </th>
 
-                                    <th>
-                                        Position
-                                    </th>
+                            <th>
+                                Total Points
+                            </th>
 
-                                    <th>
-                                        Points (prev. season)
-                                    </th>
+                            <th>
+                                Actions
+                            </th>
+                        </tr>
+                    </thead>
 
-                                    <th>
-                                        Actions
-                                    </th>
-                                </tr>
-                            </thead>
+                    <tbody>
+                        {players.map((player, idx) => (
+                            <tr key={idx}>
+                                <td>
+                                    {player.playerName}
+                                </td>
 
-                            <tbody>
-                                {players.map((player, idx) => (
-                                    <tr key={idx}>
-                                        <td>
-                                            {player.playerName}
-                                        </td>
+                                <td>
+                                    {player.position}
+                                </td>
 
-                                        <td>
-                                            {player.position}
-                                        </td>
+                                <td>
+                                    {player.seasonTotalPoints.toFixed(1)}
+                                </td>
 
-                                        <td>
-                                            {player.prevSeasonPoints}
-                                        </td>
-
-                                        <td>
-                                            <Button disabled={settings.lineupsLocked} className="fw-bold btn-primary w-100" onClick={() => {signFreeAgent(player._id)}}>Sign</Button>
-                                        </td>
-                                    </tr>
-                                ))}
-                            </tbody>
-                        </Table>
-                    )}
-                </Card.Body>    
-            </Card> 
+                                <td>
+                                    <Button disabled={settings.lineupsLocked} className="fw-bold btn-primary w-100" onClick={() => {signFreeAgent(player._id)}}>Sign</Button>
+                                </td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </Table>
+            )}
         </>
     )
 }

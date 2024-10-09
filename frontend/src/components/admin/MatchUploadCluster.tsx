@@ -7,7 +7,8 @@ export default function MatchUploadCluster() {
     const {settings} = useSettingsContext();
     const {user} = useAuthContext().state;
 
-    const [isLoading, setIsLoading] = useState<boolean>(false);
+    const [numUploaded, setNumUploaded] = useState<number>(0);
+    const [numSuccessful, setNumSuccessful] = useState<number>(0);
 
     //const [fileList, setFileList] = useState<FileList | null>(null);
     const [fileTexts, setFileTexts] = useState<string[]>([]);
@@ -44,7 +45,10 @@ export default function MatchUploadCluster() {
     }
 
     function handleSubmit() {
-        setIsLoading(true);
+        setNumUploaded(fileTexts.length);
+        setNumSuccessful(0);
+        let numSuccessful = 0;
+
 
         for (let i = 0; i<fileTexts.length; i++) {
             const QUERY = new URLSearchParams({
@@ -62,25 +66,23 @@ export default function MatchUploadCluster() {
                 body: fileTexts[i]
             })
             .then(response => {
-                setIsLoading(false);
-                return response.json();
-            })
-            .then(responseJson => {
-                alert(JSON.stringify(responseJson));
+                response.json()
+                .then(responseJson => {
+                    console.log(responseJson);
+
+                    if (response.ok) {
+                        numSuccessful++;
+                        setNumSuccessful(numSuccessful);
+                    } else {
+                        alert(responseJson.error ?? "An error occured while uploading match data (see logs)");
+                    }
+                })
             })
             .catch(err => {
                 console.error(err);
                 alert(err);
             })
         }
-    }
-
-    if (isLoading) {
-        return (
-            <>
-                <Spinner variant="primary"/> Uploading match data...
-            </>
-        )
     }
 
     return (
@@ -93,8 +95,23 @@ export default function MatchUploadCluster() {
                 <Col xs={6}>
                     <Button onClick={() => {handleSubmit()}}className="w-100">Submit</Button>
                 </Col>
-                
             </Row>
+
+            {numUploaded > 0 && numUploaded > numSuccessful &&
+                <Row>
+                    <Col className="text-warning fw-bold">
+                        <Spinner variant="primary"/> Uploaded {numSuccessful} of {numUploaded} files...
+                    </Col>
+                </Row>
+            }
+
+            {numUploaded > 0 && numUploaded == numSuccessful &&
+                <Row>
+                    <Col className="text-success fw-bold">
+                        Uploaded {numSuccessful} of {numUploaded} files successfuly
+                    </Col>
+                </Row>
+            }
         </>
     )
 }

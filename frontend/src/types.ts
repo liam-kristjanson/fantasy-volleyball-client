@@ -44,6 +44,7 @@ export interface Player {
     position: string,
     prevSeasonPoints: number,
     _id: string,
+    seasonTotalPoints: number;
 }
 
 export interface Roster {

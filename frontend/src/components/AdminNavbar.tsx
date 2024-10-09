@@ -22,7 +22,7 @@ export default function AdminNavbar() {
     
     if (user) navLinks = [
         {
-            route: "/admin/players",
+            route: "/players",
             text: "Players",
             iconPath: mdiHandball
         },
