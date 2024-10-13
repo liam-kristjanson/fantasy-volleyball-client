@@ -1,7 +1,7 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
-import './app.scss'
 import 'bootstrap/dist/css/bootstrap.min.css'
+import './app.scss'
 import './app.css'
 import App from './App.tsx'
 
