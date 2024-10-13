@@ -50,7 +50,7 @@ export default function FreeAgentsTable() {
             setServerMessageType("danger");
             setServerMessage("An unexpected error occured (see console)");
         })
-    }, [])
+    }, [user?.leagueId])
 
     const signFreeAgent = (playerId : string) => {
         setIsLoading(true);

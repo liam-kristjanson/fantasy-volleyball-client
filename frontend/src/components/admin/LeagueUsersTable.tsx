@@ -45,7 +45,7 @@ export default function LeagueUsersTable({leagueId} : LeagueUsersTableProps) {
             setServerMessage("An unexpected error occured (see console)");
             setServerMessageType('danger');
         })
-    }, [])
+    }, [leagueId, setServerMessage, setServerMessageType, user?.authToken])
 
     if (isLoading) return (
         <>

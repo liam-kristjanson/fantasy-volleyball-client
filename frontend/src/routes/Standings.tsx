@@ -52,7 +52,7 @@ export default function Standings() {
         } else {
             navigate("/login")
         }
-    }, [])
+    }, [navigate, setServerMessage, setServerMessageType, user])
 
     return (
         <>

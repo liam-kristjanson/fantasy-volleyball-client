@@ -1,8 +1,8 @@
 import { Button, Card, Col, Container, Row, Spinner, Table } from "react-bootstrap";
 import Navbar from "../components/Navbar";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useAuthContext } from "../hooks/useAuthContext";
-import { Navigate, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import ServerMessageContainer from "../components/ServerMessageContainer";
 import useServerMessage from "../hooks/useServerMessage";
 import { Lineup, Player, Position, User } from "../types";
@@ -10,10 +10,7 @@ import { Lineup, Player, Position, User } from "../types";
 export default function EditLineup() {
 
     const user = useAuthContext().state.user;
-    if (!user) return <Navigate to="/login"/>
-
     const navigate = useNavigate();
-
     const {serverMessage, setServerMessage, serverMessageType, setServerMessageType} = useServerMessage();
 
     const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -21,14 +18,8 @@ export default function EditLineup() {
     const [benchPlayers, setBenchPlayers] = useState<Player[] | undefined>(undefined);
     const [swapInPlayers, setSwapInPlayers] = useState<Player[] | undefined>(undefined);
     const [selectedPosition, setSelectedPosition] = useState<Position | undefined>(undefined);
-    
 
-    useEffect(() => {
-        getLineup(user);
-        getBenchPlayers(user);
-    }, [user]);
-
-    function getLineup(user : User) {
+    const getLineup = useCallback((user : User) => {
         setIsLoading(true);
         // setServerMessage("");
         // setServerMessageType("info");
@@ -59,9 +50,9 @@ export default function EditLineup() {
             setServerMessage("An unexpected error occured (see console)");
             console.error(err);  
         })
-    }
+    }, [setServerMessage, setServerMessageType])
 
-    function getBenchPlayers(user: User) {
+    const getBenchPlayers = useCallback((user: User) => {
         setIsLoading(true);
         // setServerMessage("");
         // setServerMessageType("info");
@@ -92,7 +83,7 @@ export default function EditLineup() {
             setServerMessage("An unexpected error occured (see console)");
             console.error(err);
         })
-    }
+    }, [setServerMessageType, setServerMessage])
 
     function selectPosition(selectedPosition: Position) {
         setServerMessage("");
@@ -189,6 +180,15 @@ export default function EditLineup() {
         setSelectedPosition(undefined);
         setSwapInPlayers(undefined);
     }
+
+    useEffect(() => {
+        if (user) {
+            getLineup(user);
+            getBenchPlayers(user);
+        } else {
+            navigate('/login')
+        }
+    }, [user, getBenchPlayers, getLineup, navigate]);
 
     return (
         <>

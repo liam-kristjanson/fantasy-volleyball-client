@@ -1,7 +1,7 @@
 import { Button, Card, Col, Container, Row, Spinner, Table } from "react-bootstrap";
 import Navbar from "../components/Navbar";
 import { useAuthContext } from "../hooks/useAuthContext";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { LineupDocument, Roster, ServerMessageType } from "../types";
 import { useNavigate } from "react-router-dom";
 import ServerMessageContainer from "../components/ServerMessageContainer";
@@ -23,17 +23,11 @@ export default function MyAccount() {
     const [lineupMessage, setLineupMessage] = useState<string>("");
     const [lineupMessageType, setLineupMessageType] = useState<ServerMessageType>("info");
 
-    const QUERY_PARAMS = new URLSearchParams({
+    const QUERY_PARAMS = useMemo(() => {return new URLSearchParams({
         leagueId: user?.leagueId ?? "",
         userId: user?.userId ?? ""
-    })
+    })}, [user?.userId, user?.leagueId])
 
-    useEffect(() => {
-
-        fetchRoster();
-        fetchLineup();
-
-    }, [user])
 
     function handleLogout() {
         dispatch({type: "LOGOUT", payload: null});
@@ -72,7 +66,7 @@ export default function MyAccount() {
         })
     }
 
-    function fetchRoster() {
+    const fetchRoster = useCallback(() => {
         setIsRosterLoading(true);
 
         fetch(import.meta.env.VITE_SERVER + "/roster?" + QUERY_PARAMS.toString())
@@ -85,9 +79,9 @@ export default function MyAccount() {
             setRoster(responseJson);
             setIsRosterLoading(false);
         })
-    }
+    }, [QUERY_PARAMS])
 
-    function fetchLineup() {
+    const fetchLineup = useCallback(() => {
         setLineupMessage("");
         setLineupMessageType("info");
         setIsLineupLoading(true);
@@ -117,7 +111,14 @@ export default function MyAccount() {
             setLineupMessage(err);
         })
 
-    }
+    }, [QUERY_PARAMS])
+
+    useEffect(() => {
+
+        fetchRoster();
+        fetchLineup();
+
+    }, [user, fetchRoster, fetchLineup])
 
     return (
         <>

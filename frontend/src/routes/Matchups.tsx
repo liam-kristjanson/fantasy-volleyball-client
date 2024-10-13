@@ -24,7 +24,7 @@ export default function Matchups() {
     const [matchups, setMatchups] = useState<MatchupsObject | undefined>(undefined);
 
     //array for possible week numbers to be used in the week-selection dropdown
-    let weekNums = []
+    const weekNums = []
     for (let i = 1; i<=settings.currentWeekNum; i++) {
         weekNums.push(i);
     }
@@ -68,7 +68,7 @@ export default function Matchups() {
         } else {
             navigate('/login');
         }
-    }, [weekNum]);
+    }, [weekNum, navigate, setServerMessage, setServerMessageType, user]);
 
     //Fetch current week num
     if (!user) return <Navigate to='/login'/>

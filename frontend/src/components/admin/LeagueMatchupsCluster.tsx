@@ -1,10 +1,6 @@
 import { Table } from "react-bootstrap";
 
-interface LeagueMatchupsTableProps {
-    leagueId: string;
-}
-
-export default function LeagueMatchupsCluster({leagueId} : LeagueMatchupsTableProps) {
+export default function LeagueMatchupsCluster() {
 
     return (
         <Table striped bordered hover>
