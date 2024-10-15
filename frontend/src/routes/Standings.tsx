@@ -18,7 +18,7 @@ export default function Standings() {
     const [standings, setStandings] = useState<StandingsEntry[]>([]);
 
     useEffect(() => {
-        setIsLoading(false);
+        setIsLoading(true);
 
         if (user) {
             const QUERY_PARAMS = new URLSearchParams({
