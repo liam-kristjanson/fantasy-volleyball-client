@@ -1,7 +1,7 @@
 import { Button, Col, Container, Row, Spinner, Table } from "react-bootstrap";
 import { useAuthContext } from "../../hooks/useAuthContext"
 import { useEffect, useState } from "react";
-import AdminNavbar from "../../components/AdminNavbar";
+import AdminNavbar from "../../components/admin/AdminNavbar";
 import ServerMessageContainer from "../../components/ServerMessageContainer";
 import { LeagueDocument, ServerMessageType, User } from "../../types";
 import { useNavigate } from "react-router-dom";

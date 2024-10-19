@@ -8,7 +8,8 @@ const Schedule = require('../models/Schedule')
 const User = require("../models/User");
 const Matchup = require('../models/Matchup')
 const Match = require('../models/Match')
-const Player = require('../models/Player')
+const Player = require('../models/Player');
+const { ObjectId } = require('mongodb');
 
 module.exports.createNextWeekLineups = async (req, res, next) => {
     try {
@@ -228,5 +229,29 @@ module.exports.createLeague = async (req, res, next) => {
         }
     } catch (err) {
         next(err);
+    }
+}
+
+module.exports.updatePlayer = async (req, res, next) => {
+    if (!req.query.id) {
+        return res.status(400).json({error: "id must be specified in querystring."});
+    }
+
+    if (!ObjectId.isValid(req.query.id)) {
+        return res.status(400).json({error: "Invalid player id"});
+    }
+
+    let playerDocument = await Player.get(req.query.id);
+
+    if (!playerDocument) {
+        return res.status(404).json({error: "Player with given id not found"});
+    }
+
+    const playerUpdateSuccess = await Player.update(req.query.id, req.body);
+
+    if (playerUpdateSuccess) {
+        return res.status(200).json({message: "Player updated successfuly"});
+    } else {
+        return res.status(500).json({error: "Failed to update player"});
     }
 }

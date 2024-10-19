@@ -3,6 +3,24 @@ const {ObjectId} = require('mongodb');
 
 let pendingCreations = {}
 
+module.exports.get = async (playerId) => {
+    return dbretriever.fetchDocumentById('players', playerId);
+}
+
+module.exports.update = async (playerId, updateObj) => {
+    //only allow specified fields to be set by the updateObj
+    const filteredUpdateObj = {
+        playerName: updateObj.playerName,
+        team: updateObj.team,
+        position: updateObj.position,
+        isActive: updateObj.isActive
+    }
+
+    const playerUpdateResult = await dbretriever.updateOne('players', {_id: new ObjectId(playerId)}, {$set: filteredUpdateObj});
+
+    return playerUpdateResult.matchedCount === 1;
+}
+
 module.exports.resetAllPointsTotals = async () => {
     const result = await dbretriever.updateMany('players', {}, {$set: {seasonTotalPoints: 0}});
 

@@ -3,7 +3,7 @@ import Icon from "@mdi/react";
 import { useState } from "react";
 import { Button, Offcanvas } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
-import { useAuthContext } from "../hooks/useAuthContext";
+import { useAuthContext } from "../../hooks/useAuthContext";
 
 interface NavLink {
     route: string,
@@ -22,7 +22,7 @@ export default function AdminNavbar() {
     
     if (user) navLinks = [
         {
-            route: "/players",
+            route: "/admin/players",
             text: "Players",
             iconPath: mdiHandball
         },
@@ -45,7 +45,7 @@ export default function AdminNavbar() {
 
     else  navLinks = [
         {
-            route: "/players",
+            route: "/admin/players",
             text: "Players",
             iconPath: mdiHandball
         },

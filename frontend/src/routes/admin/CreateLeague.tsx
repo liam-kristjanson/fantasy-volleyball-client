@@ -1,5 +1,5 @@
 import { Button, Col, Container, Form, Row, Spinner } from "react-bootstrap";
-import AdminNavbar from "../../components/AdminNavbar";
+import AdminNavbar from "../../components/admin/AdminNavbar";
 import { useState } from "react";
 import ServerMessageContainer from "../../components/ServerMessageContainer";
 import useServerMessage from "../../hooks/useServerMessage";

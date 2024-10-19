@@ -24,10 +24,12 @@ const corsOptions = {
 
 const app = express();
 
-//middleware
+//all route middleware
 app.use(cors(corsOptions));
 app.use(bodyParser.json());
 app.use(authController.parseAuthToken);
+
+//admin route middleware
 app.use('/admin/', authController.verifyAdmin);
 
 //wakeup or status check route
@@ -74,6 +76,7 @@ app.post("/admin/lock-lineups", adminController.lockLineups);
 app.post("/admin/unlock-lineups", adminController.unlockLineups);
 app.post("/admin/match-data", adminController.uploadMatchData);
 app.post("/admin/create-league", adminController.createLeague);
+app.post("/admin/update-player", adminController.updatePlayer);
 
 //default error handler
 app.use((err, req, res, next) => {

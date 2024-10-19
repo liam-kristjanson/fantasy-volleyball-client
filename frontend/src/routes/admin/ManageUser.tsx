@@ -1,6 +1,6 @@
 import { useLocation } from "react-router-dom";
 import { User } from "../../types";
-import AdminNavbar from "../../components/AdminNavbar";
+import AdminNavbar from "../../components/admin/AdminNavbar";
 import { Col, Container, Row } from "react-bootstrap";
 
 

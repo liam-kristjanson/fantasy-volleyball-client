@@ -1,5 +1,5 @@
 import { Button, Col, Container, Row, Spinner } from "react-bootstrap";
-import AdminNavbar from "../../components/AdminNavbar";
+import AdminNavbar from "../../components/admin/AdminNavbar";
 import { useLocation } from "react-router-dom";
 import { LeagueDocument } from "../../types";
 import LeagueUsersTable from "../../components/admin/LeagueUsersTable";

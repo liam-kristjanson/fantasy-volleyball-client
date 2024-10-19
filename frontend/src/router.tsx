@@ -14,6 +14,8 @@ import Standings from "./routes/Standings";
 import ManageLeague from "./routes/admin/ManageLeague";
 import ManageUser from "./routes/admin/ManageUser";
 import CreateLeague from "./routes/admin/CreateLeague";
+import AdminPlayers from "./routes/admin/AdminPlayers";
+import ManagePlayer from "./routes/admin/ManagePlayer";
 
 export const router = createBrowserRouter([
     {
@@ -71,5 +73,13 @@ export const router = createBrowserRouter([
     {
         path: "/admin/create-league",
         element: <ProtectedRoute validRoles={['admin']}> <CreateLeague /> </ProtectedRoute>
+    },
+    {
+        path: "/admin/players",
+        element: <ProtectedRoute validRoles={['admin']}> <AdminPlayers /> </ProtectedRoute>
+    },
+    {
+        path: "/admin/manage-player",
+        element: <ProtectedRoute validRoles={['admin']}> <ManagePlayer /> </ProtectedRoute>
     }
 ])

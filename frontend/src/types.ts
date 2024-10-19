@@ -45,6 +45,8 @@ export interface Player {
     prevSeasonPoints: number,
     _id: string,
     seasonTotalPoints: number;
+    team?: string;
+    isActive?: boolean;
 }
 
 export interface Roster {
