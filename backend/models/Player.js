@@ -43,3 +43,7 @@ module.exports.create = async (playerName) => {
 
     return pendingCreations[playerName];
 }
+
+module.exports.getRanked = async () => {
+    return dbretriever.fetchOrdered('players', {isActive: true}, {seasonTotalPoints: -1});
+}

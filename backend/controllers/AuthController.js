@@ -10,8 +10,6 @@ const Settings = require('../models/Settings')
 module.exports.login = (req, res) => {
     //validation
 
-    console.log(req.body);
-
     if (!req.body.username || !req.body.password) {
         return res.status(400).json({error: "Username and password must be defined"});
     }

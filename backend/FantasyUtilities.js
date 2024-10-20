@@ -57,7 +57,7 @@ const getFreeAgents = async (leagueId) => {
         }
     }
 
-    const freeAgentDocuments = await dbretriever.fetchOrdered('players', {_id: {$nin: rosteredPlayerIds}}, {prevSeasonPoints: -1}, undefined, {matches: 0});
+    const freeAgentDocuments = await dbretriever.fetchOrdered('players', {_id: {$nin: rosteredPlayerIds}, isActive: true}, {prevSeasonPoints: -1}, undefined, {matches: 0});
 
     return freeAgentDocuments;
 }

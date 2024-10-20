@@ -1,15 +1,15 @@
 const { ObjectId } = require('mongodb');
 const dbretriever = require('../dbretriever')
 const { calculateFantasyPoints } = require('../FantasyUtilities');
+const Player = require('../models/Player')
 
-module.exports.getRankedPlayers = (req, res) => {
-    dbretriever.fetchOrdered('players', {}, {seasonTotalPoints: -1})
-    .then(retrievedPlayers => {
-        res.json(retrievedPlayers)
-    })
-    .catch(err => {
-        res.status(500).json({error: "500: Internal Server Error"});
-    });
+module.exports.getRankedPlayers = async (req, res, next) => {
+    try {
+        const players = await Player.getRanked();
+        return res.status(200).json(players)
+    } catch (err) {
+        next(err);
+    }
 }
 
 module.exports.getPlayerMatches = async (req, res) => {
