@@ -35,7 +35,8 @@ module.exports.create = async (playerName) => {
             prevSeasonPoints: 0,
             matches: [],
             position: "Unknown",
-            seasonTotalPoints: 0
+            seasonTotalPoints: 0,
+            isActive: true
         })
     } else {
         console.log("Creation already pending for " + playerName);
