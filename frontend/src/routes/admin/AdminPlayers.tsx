@@ -31,7 +31,7 @@ export default function AdminPlayers() {
                 setIsLoading(false);
             })
         })
-    }, [])
+    }, [setServerMessage, setServerMessageType])
     return (
         <>
             <AdminNavbar/>

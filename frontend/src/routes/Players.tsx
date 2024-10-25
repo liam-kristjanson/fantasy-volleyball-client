@@ -1,7 +1,7 @@
 import { Col, Container, Row } from "react-bootstrap";
 import Navbar from "../components/Navbar";
 import { useEffect, useState } from "react";
-import { PlayerRanking, ServerMessageType } from "../types";
+import { Player, ServerMessageType } from "../types";
 import PlayerRankingsTable from "../components/PlayerRankingsTable";
 import ServerMessageContainer from "../components/ServerMessageContainer";
 
@@ -10,7 +10,7 @@ export default function Players() {
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [serverMessage, setServerMessage] = useState<string>("");
     const [responseType, setResponseType] = useState<ServerMessageType>("info");
-    const [playerRankings, setPlayerRankings] = useState<PlayerRanking[]>([]);
+    const [players, setPlayers] = useState<Player[]>([]);
 
     //load player rankings from server
     useEffect(() => {
@@ -31,7 +31,7 @@ export default function Players() {
             if (responseJson.error) {
                 setServerMessage(responseJson.error)
             } else {
-                setPlayerRankings(responseJson);
+                setPlayers(responseJson);
             }
         })
         .catch(error => {
@@ -56,7 +56,7 @@ export default function Players() {
                 <Row>
                     <Col>
                         <PlayerRankingsTable
-                            playerRankings={playerRankings}
+                            players={players}
                             isLoading={isLoading}
                         />
                     </Col>

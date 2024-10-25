@@ -227,6 +227,10 @@ export default function MyAccount() {
                                             </th>
 
                                             <th>
+                                                Team
+                                            </th>
+
+                                            <th>
                                                 Position
                                             </th>
 
@@ -252,9 +256,13 @@ export default function MyAccount() {
                                                 roster?.players.map(player => (
                                                     <tr>
                                                         <td>
-                                                        <a onClick={() => navigate("/player-info", {state: {player: player}})} className="text-black text-decoration-underline hover-pointer">
-                                                            {player.playerName}
-                                                        </a>
+                                                            <a onClick={() => navigate("/player-info", {state: {player: player}})} className="text-black text-decoration-underline hover-pointer">
+                                                                {player.playerName}
+                                                            </a>
+                                                        </td>
+
+                                                        <td>
+                                                            {player.team ?? "Unknown"}
                                                         </td>
         
                                                         <td>
@@ -266,7 +274,7 @@ export default function MyAccount() {
                                                         </td>
     
                                                         <td>
-                                                            <Button disabled={settings.lineupsLocked} className="btn-primary fw-bold" onClick={() => {handleDropPlayer(player._id)}}>Drop</Button>
+                                                            <Button disabled={settings.lineupsLocked} className="btn-primary fw-bold w-100" onClick={() => {handleDropPlayer(player._id)}}>Drop</Button>
                                                         </td>
                                                     </tr>
                                                 ))

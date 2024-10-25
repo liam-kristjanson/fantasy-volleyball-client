@@ -6,6 +6,7 @@ import { useState } from "react";
 import ServerMessageContainer from "../../components/ServerMessageContainer";
 import useServerMessage from "../../hooks/useServerMessage";
 import { useAuthContext } from "../../hooks/useAuthContext";
+import PlayerMatchesTable from "../../components/PlayerMatchesTable";
 
 export default function ManagePlayer() {
     const player : Player = useLocation().state.player;
@@ -77,7 +78,7 @@ export default function ManagePlayer() {
                     </Col>
                 </Row>
 
-                <Row>
+                <Row className="mb-5">
                     <Col>
                         <Card className="shadow">
                             <Card.Header>
@@ -130,6 +131,24 @@ export default function ManagePlayer() {
                                     </>
                                 )}
                                 
+                            </Card.Footer>
+                        </Card>
+                    </Col>
+                </Row>
+
+                <Row>
+                    <Col>
+                        <Card>
+                            <Card.Header>
+                                Player Matches
+                            </Card.Header>
+
+                            <Card.Body>
+                                <PlayerMatchesTable player={player}/>
+                            </Card.Body>
+
+                            <Card.Footer>
+                                <Button className="btn-primary fw-bold">Manage Matches</Button>
                             </Card.Footer>
                         </Card>
                     </Col>

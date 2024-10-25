@@ -108,6 +108,10 @@ export default function FreeAgentsTable() {
                             </th>
 
                             <th>
+                                Team
+                            </th>
+
+                            <th>
                                 Position
                             </th>
 
@@ -126,6 +130,10 @@ export default function FreeAgentsTable() {
                             <tr key={idx}>
                                 <td>
                                     {player.playerName}
+                                </td>
+
+                                <td>
+                                    {player.team ?? "Unknown"}
                                 </td>
 
                                 <td>

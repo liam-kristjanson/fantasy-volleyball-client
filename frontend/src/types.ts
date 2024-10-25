@@ -1,10 +1,3 @@
-export interface PlayerRanking {
-    playerName: string;
-    prevSeasonPoints: number;
-    _id: string;
-    position?: string;
-    seasonTotalPoints: number;
-}
 
 export interface PlayerMatch {
     _id: string;
