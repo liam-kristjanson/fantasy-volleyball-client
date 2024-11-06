@@ -1,6 +1,6 @@
 import { Button, Col, Container, Row, Spinner } from "react-bootstrap";
 import AdminNavbar from "../../components/admin/AdminNavbar";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { LeagueDocument } from "../../types";
 import LeagueUsersTable from "../../components/admin/LeagueUsersTable";
 import { useState } from "react";
@@ -11,6 +11,7 @@ export default function ManageLeague() {
     const {state} = useLocation();
     const {user} = useAuthContext().state;
     const league: LeagueDocument = state.league;
+    const navigate = useNavigate();
 
     const [isScheduleLoading, setIsScheduleLoading] = useState<boolean>(false);
 
@@ -70,6 +71,7 @@ export default function ManageLeague() {
                     <Col>
                         <h3>Users</h3>
                         <LeagueUsersTable leagueId={league._id}/>
+                        <Button className="btn-primary" onClick={() => {navigate("/admin/add-user", {state: {league}})}}>+ Add User</Button>
                     </Col>
                 </Row>
 

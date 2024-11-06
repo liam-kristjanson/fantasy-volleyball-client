@@ -79,11 +79,15 @@ export default function MatchupScoreTable({matchupScore} : MatchupScoreTableProp
                     </td>
 
                     <td className="fw-bold text-center">
-                        {matchupScore.homeTeam.totalScore > matchupScore.awayTeam.totalScore ? (
-                            matchupScore.homeTeam.teamName + " wins"
+                        {/* {matchupScore.homeTeam.totalScore == matchupScore.awayTeam.totalScore ? (
+                            "Tie!"
                         ) : (
+                            
                             matchupScore.awayTeam.teamName + " wins"
-                        )}
+                        )} */}
+                        {matchupScore.homeTeam.totalScore == matchupScore.awayTeam.totalScore && "Tie"}
+                        {matchupScore.homeTeam.totalScore > matchupScore.awayTeam.totalScore && matchupScore.homeTeam.teamName + " wins"}
+                        {matchupScore.homeTeam.totalScore < matchupScore.awayTeam.totalScore && matchupScore.awayTeam.teamName + " wins"}
                     </td>
 
                     <td className="fw-bold text-center">

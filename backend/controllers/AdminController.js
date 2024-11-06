@@ -10,6 +10,7 @@ const Matchup = require('../models/Matchup')
 const Match = require('../models/Match')
 const Player = require('../models/Player');
 const { ObjectId } = require('mongodb');
+const bcrypt = require('bcrypt');
 
 module.exports.createNextWeekLineups = async (req, res, next) => {
     try {
@@ -253,5 +254,44 @@ module.exports.updatePlayer = async (req, res, next) => {
         return res.status(200).json({message: "Player updated successfuly"});
     } else {
         return res.status(500).json({error: "Failed to update player"});
+    }
+}
+
+module.exports.createLeague = async (req, res, next) => {
+    try {
+        //validate leagueId
+        if (!req.body?.leagueId) {
+            return res.status(400).json({error: "leagueId must be specified in request body"})
+        }
+
+        if (!ObjectId.isValid(req.body.leagueId)) {
+            return res.status(400).json({error: "Invalid leagueId"});
+        }
+
+        const matchedLeagueDocument = dbretriever.fetchDocumentById('leagues', req.body.leagueId);
+
+        if (!matchedLeagueDocument) {
+            return res.status(404).json({error: "League not found with specified leagueId"});
+        }
+
+        //validate username
+        if (!req.body.username || !req.body.password) {
+            return res.status(400).json({error: "Username and password must be specified in request body."})
+        }
+
+        //check for duplicate username
+        const matchedUsernameAccount = dbretriever.fetchOneDocument('users', {username: req.body.username}, {_id: 1});
+
+        if (matchedUsernameAccount) {
+            return res.status(400).json({error: "Username is already taken by another account"});
+        }
+
+        const userCreationResult = await User.create({
+            _id: new ObjectId(),
+            username: req.body.username,
+            leagueId: req.body.leagueId,
+        })
+    } catch (err) {
+        next(err);
     }
 }

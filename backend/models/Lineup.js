@@ -3,6 +3,16 @@ const fantasyUtilities = require('../FantasyUtilities');
 const settingsController = require('../controllers/SettingsController')
 const Settings = require('./Settings')
 
+const EMPTY_LINEUP = {
+    S: null,
+    OH1: null,
+    OH2: null,
+    OH3: null,
+    M1: null,
+    M2: null,
+    L: null
+}
+
 module.exports.get = (leagueId, userId, weekNum) => {
 
     return dbretriever.fetchOneDocument('lineups', {leagueId, userId, weekNum: parseInt(weekNum)}, {matches: 0});
@@ -105,4 +115,22 @@ module.exports.createNextWeekLineups = async () => {
 
 module.exports.resetAll = async () => {
     return await dbretriever.deleteMany('lineups', {weekNum: {$gt: 1}});
+}
+
+module.exports.createInitialLineups = async (userId, leagueId, season, currentWeekNum) => {
+    const lineupPromises = []
+
+    for (let weekNum = 1; weekNum <= currentWeekNum; weekNum++) {
+        lineupPromises.push(dbretriever.insertOne('lineups', {userId, leagueId, season, weekNum, lineupIds: EMPTY_LINEUP}));
+    }
+
+    const lineupCreationResults = await Promise.all(lineupPromises);
+
+    let lineupCreationSuccess = true;
+
+    for (let lineupCreationResult of lineupCreationResults) {
+        lineupCreationSuccess = lineupCreationSuccess && lineupCreationResult.acknowledged;
+    }
+
+    return lineupCreationSuccess;
 }

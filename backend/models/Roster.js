@@ -15,3 +15,20 @@ module.exports.populate = async (rosterDocument) => {
 
     return rosterDocument;
 }
+
+module.exports.create = async (userId, leagueId, username) => {
+    const initialTeamName = username + "'s Team";
+
+    const rosterCreationResult = await dbretriever.insertOne('rosters', {
+        userId,
+        leagueId,
+        teamName: initialTeamName, 
+        playerIds: [],
+        wins: 0,
+        losses: 0
+    });
+
+    const rosterCreationSuccess = rosterCreationResult.acknowledged;
+
+    return rosterCreationSuccess
+}

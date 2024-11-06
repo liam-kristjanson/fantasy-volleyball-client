@@ -4,16 +4,6 @@ const { ObjectId } = require('mongodb');
 const settingsController = require('./controllers/SettingsController');
 const Settings = require('./models/Settings')
 
-const EMPTY_LINEUP = {
-    S: null,
-    OH1: null,
-    OH2: null,
-    OH3: null,
-    M1: null,
-    M2: null,
-    L: null
-}
-
 const calculateFantasyPoints = (statsObject) => {
     const POINTS_PER_KILL = 1;
     const POINTS_PER_ERROR = -1;
@@ -154,4 +144,3 @@ module.exports.getFreeAgents = getFreeAgents
 module.exports.isPlayerRostered = isPlayerRostered;
 module.exports.isPlayerInCurrentLineup = isPlayerInCurrentLineup;
 module.exports.getBench = getBench;
-module.exports.EMPTY_LINEUP = EMPTY_LINEUP;
