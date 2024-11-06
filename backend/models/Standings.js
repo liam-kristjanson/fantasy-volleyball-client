@@ -36,22 +36,24 @@ module.exports.refresh = async () => {
                     const homeScore = calculatedMatchupDocument.matchupScores[i].homeTeam.totalScore;
                     const awayScore = calculatedMatchupDocument.matchupScores[i].awayTeam.totalScore;
 
-                    let winningId, losingId
-                    if (awayScore > homeScore) {
-                        winningId = awayTeamId;
-                        losingId = homeTeamId;
-                    } else {
-                        winningId = homeTeamId;
-                        losingId = awayTeamId;
+                    if (awayScore != homeScore) {
+                        let winningId, losingId
+                        if (awayScore > homeScore) {
+                            winningId = awayTeamId;
+                            losingId = homeTeamId;
+                        } else {
+                            winningId = homeTeamId;
+                            losingId = awayTeamId;
+                        }
+
+
+
+                        let winnerUpdatePromise = dbretriever.updateOne('rosters', {_id: new ObjectId(losingId)}, {$inc: {losses: 1}});
+                        let loserUpdatePromise = dbretriever.updateOne('rosters', {_id: new ObjectId(winningId)}, {$inc: {wins: 1}});
+
+                        recordUpdatePromises.push(winnerUpdatePromise);
+                        recordUpdatePromises.push(loserUpdatePromise);
                     }
-
-
-
-                    let winnerUpdatePromise = dbretriever.updateOne('rosters', {_id: new ObjectId(losingId)}, {$inc: {losses: 1}});
-                    let loserUpdatePromise = dbretriever.updateOne('rosters', {_id: new ObjectId(winningId)}, {$inc: {wins: 1}});
-
-                    recordUpdatePromises.push(winnerUpdatePromise);
-                    recordUpdatePromises.push(loserUpdatePromise);
                 }
 
                 return Promise.all(recordUpdatePromises);
