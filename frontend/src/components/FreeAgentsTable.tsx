@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Button, Spinner, Table } from "react-bootstrap";
+import { Button, Col, Container, Dropdown, Row, Spinner, Table } from "react-bootstrap";
 import { Player, ServerMessageType } from "../types";
 import { useAuthContext } from "../hooks/useAuthContext";
 import ServerMessageContainer from "./ServerMessageContainer";
@@ -17,6 +17,13 @@ export default function FreeAgentsTable() {
 
     const [serverMessage, setServerMessage] = useState<string>("");
     const [serverMessageType, setServerMessageType] = useState<ServerMessageType>("info");
+
+    const [selectedPosition, setSelectedPosition] = useState<string | undefined>(undefined);
+    const [selectedTeam, setSelectedTeam] = useState<string | undefined>(undefined);
+
+    const filteredPlayers = players.filter(player => {
+        return player.position.includes(selectedPosition ?? "") && player.team?.includes(selectedTeam ?? "")
+    })
 
     useEffect(() => {
         const QUERY_PARAMS = new URLSearchParams({leagueId: user?.leagueId ?? ""})
@@ -99,58 +106,97 @@ export default function FreeAgentsTable() {
                     <Spinner variant="primary" /> Loading...
                 </>
             ) : (
-                <Table striped bordered hover>
+                <>
+                    <Container className="p-0">
+                        <Row className="mb-3">
+                            <Col md={4} lg={2} className="mb-3 mb-md-0">
+                                <Dropdown>
+                                    <Dropdown.Toggle className="w-100">
+                                        {selectedPosition ?? "Position"}
+                                    </Dropdown.Toggle>
 
-                    <thead>
-                        <tr>
-                            <th>
-                                Player
-                            </th>
+                                    <Dropdown.Menu>
+                                        <Dropdown.Item onClick={() => {setSelectedPosition(undefined)}}> -- ALL -- </Dropdown.Item>
+                                        {['S', 'OH', 'M', 'L'].map(position => (
+                                            <Dropdown.Item onClick={() => {setSelectedPosition(position)}} key={position}>{position}</Dropdown.Item>
+                                        ))}
+                                    </Dropdown.Menu>
 
-                            <th>
-                                Team
-                            </th>
+                                </Dropdown>
+                            </Col>
 
-                            <th>
-                                Position
-                            </th>
+                            <Col md={4} lg={2}>
+                                <Dropdown>
+                                    <Dropdown.Toggle className="w-100">
+                                        {selectedTeam ?? "Team"}
+                                    </Dropdown.Toggle>
 
-                            <th>
-                                Total Points
-                            </th>
+                                    <Dropdown.Menu>
+                                        <Dropdown.Item onClick={() => {setSelectedTeam(undefined)}}> -- ALL -- </Dropdown.Item>
+                                        {['ALB', 'BDN', 'CGY', 'GMU', 'MAN', 'MRU', 'SSK', 'TRU', 'TWU', 'UBC', 'UBCO', 'UFV', 'WIN'].map(teamName => (
+                                            <Dropdown.Item onClick={() => {setSelectedTeam(teamName)}}key={teamName}>{teamName}</Dropdown.Item>
+                                        ))}
+                                    </Dropdown.Menu>
+                                </Dropdown>
+                            </Col>
+                        </Row>
+                    </Container>
+                    
 
-                            <th>
-                                Actions
-                            </th>
-                        </tr>
-                    </thead>
+                    
+                    <Table striped bordered hover>
 
-                    <tbody>
-                        {players.map((player, idx) => (
-                            <tr key={idx}>
-                                <td>
-                                    {player.playerName}
-                                </td>
+                        <thead>
+                            <tr>
+                                <th>
+                                    Player
+                                </th>
 
-                                <td>
-                                    {player.team ?? "Unknown"}
-                                </td>
+                                <th>
+                                    Team
+                                </th>
 
-                                <td>
-                                    {player.position}
-                                </td>
+                                <th>
+                                    Position
+                                </th>
 
-                                <td>
-                                    {player.seasonTotalPoints.toFixed(1)}
-                                </td>
+                                <th>
+                                    Total Points
+                                </th>
 
-                                <td>
-                                    <Button disabled={settings.lineupsLocked} className="fw-bold btn-primary w-100" onClick={() => {signFreeAgent(player._id)}}>Sign</Button>
-                                </td>
+                                <th>
+                                    Actions
+                                </th>
                             </tr>
-                        ))}
-                    </tbody>
-                </Table>
+                        </thead>
+
+                        <tbody>
+                            {filteredPlayers.map((player, idx) => (
+                                <tr key={idx}>
+                                    <td>
+                                        {player.playerName}
+                                    </td>
+
+                                    <td>
+                                        {player.team ?? "Unknown"}
+                                    </td>
+
+                                    <td>
+                                        {player.position}
+                                    </td>
+
+                                    <td>
+                                        {player.seasonTotalPoints.toFixed(1)}
+                                    </td>
+
+                                    <td>
+                                        <Button disabled={settings.lineupsLocked} className="fw-bold btn-primary w-100" onClick={() => {signFreeAgent(player._id)}}>Sign</Button>
+                                    </td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </Table>
+                </>
             )}
         </>
     )
