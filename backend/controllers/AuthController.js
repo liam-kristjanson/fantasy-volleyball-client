@@ -111,3 +111,34 @@ module.exports.verifyAdmin = (req, res, next) => {
     }
 }
 
+module.exports.updatePassword = async (req, res, next) => {
+    try {
+        if (!req.authData) {
+            return res.status(401).json({error: "Unauthorized"});
+        }
+
+        if (!req.body?.oldPassword || !req.body?.newPassword) {
+            return res.status(400).json({error: "oldPassword and newPassword must be specified in request body"});
+        }
+
+        const userDocument = await dbretriever.fetchDocumentById('users', req.authData.userId);
+
+        const oldPasswordMatch = await bcrypt.compare(req.body.oldPassword, userDocument.password);
+
+        if (!oldPasswordMatch) {
+            return res.status(401).json({error: "Incorrect old password"});
+        }
+
+        const passwordUpdateSuccess = await User.updatePassword(req.authData.userId, req.body.newPassword);
+
+        if (passwordUpdateSuccess) {
+            return res.status(200).json({message: "Password updated successfuly"});
+        } else {
+            throw new Error("Failed to update password");
+        }
+
+    } catch (err) {
+        next(err);
+    }
+}
+

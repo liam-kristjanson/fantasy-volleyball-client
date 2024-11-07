@@ -12,6 +12,7 @@ import MatchUploadCluster from "../../components/admin/MatchUploadCluster";
 export default function AdminDashboard() {
 
     const user = useAuthContext().state.user;
+    const dispatch = useAuthContext().dispatch;
     const {settings} = useSettingsContext();
     const navigate = useNavigate();
 
@@ -86,6 +87,12 @@ export default function AdminDashboard() {
             setUsersMessageType("danger");
         })
     }, [user])
+
+    function handleLogout() {
+        dispatch({type: "LOGOUT", payload:null});
+        navigate('/')
+        window.scrollTo(0,0);
+    }
 
     return (
         <>
@@ -243,6 +250,22 @@ export default function AdminDashboard() {
                 </Row>
 
                 <MatchUploadCluster/>
+
+                <Row>
+                    <Col>
+                        <h3>Account Managment</h3>
+                    </Col>
+                </Row>
+
+                <Row className="mb-5">
+                    <Col xs={6}>
+                        <Button className="btn-warning btn-lg w-100 fw-bold" onClick={() => {navigate('/change-password')}}>Change Password</Button>
+                    </Col>
+
+                    <Col xs={6}>
+                        <Button className="btn-primary btn-lg w-100 fw-bold" onClick={() => {handleLogout()}}>Log Out</Button>
+                    </Col>
+                </Row>
             </Container>
 
             <p>

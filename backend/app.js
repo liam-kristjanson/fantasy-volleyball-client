@@ -42,6 +42,7 @@ app.get("/app-settings", settingsController.fetchAppSettings);
 
 app.post("/login", authController.login);
 app.post("/account/create", authController.createAccount);
+app.post("/account/update-password", authController.updatePassword);
 
 app.get("/players", playerController.getRankedPlayers);
 app.get("/player-matches", playerController.getPlayerMatches);

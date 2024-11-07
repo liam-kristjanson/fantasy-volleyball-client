@@ -3,6 +3,7 @@ const Roster = require('./Roster')
 const Lineup = require('./Lineup')
 const Settings = require('./Settings')
 const bcrypt = require('bcrypt')
+const {ObjectId} = require('mongodb')
 
 module.exports.get = async (userId) => {
     return dbretriever.fetchDocumentById('users', userId);
@@ -35,4 +36,12 @@ module.exports.create = async (userDocument) => {
     const userCreationSuccess = rosterCreationSuccess && lineupCreationSuccess;
 
     return userCreationSuccess;
+}
+
+module.exports.updatePassword = async (userId, newPassword) => {
+    const hashedPassword = await bcrypt.hash(newPassword, parseInt(process.env.SALT_ROUNDS));
+
+    const passwordUpdateResult = await dbretriever.updateOne('users', {_id: new ObjectId(userId)}, {$set: {password: hashedPassword}});
+
+    return passwordUpdateResult.acknowledged && passwordUpdateResult.modifiedCount == 1;
 }

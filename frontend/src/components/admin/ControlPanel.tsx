@@ -93,9 +93,9 @@ export default function ControlPanel() {
                     <Button className="btn-primary w-100" onClick={() => {makeRequest("/admin/start-next-week")}}>Start Next Week</Button>
                 </Col>
 
-                <Col xs={4}>
+                {/* <Col xs={4}>
                     <Button className="btn-warning w-100 fw-bold" onClick={() => {makeRequest("/admin/reset-all")}}>Reset to Week 1</Button>
-                </Col>
+                </Col> */}
             </Row>
         </>
     )

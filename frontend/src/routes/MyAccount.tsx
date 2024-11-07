@@ -32,6 +32,7 @@ export default function MyAccount() {
     function handleLogout() {
         dispatch({type: "LOGOUT", payload: null});
         navigate('/')
+        window.scrollTo(0,0);
     }
 
     function handleDropPlayer(playerId : string) {
@@ -296,11 +297,12 @@ export default function MyAccount() {
                 </Row>
 
                 <Row>
-                    <Col>
-                        <Button className="w-100 btn-lg mb-5 fw-bold" variant="primary" onClick={() => {handleLogout()}}>Log Out</Button>
-                        {/* <p className="mb-4">Current auth context: {JSON.stringify(user) ?? "Not found"}</p>
+                    <Col lg={6}>
+                        <Button className="w-100 btn-lg mb-2 fw-bold btn-warning" onClick={() => {navigate('/change-password')}}>Change Password</Button>
+                    </Col>
 
-                        <p>Current settings context: {JSON.stringify(settings)}</p> */}
+                    <Col lg={6}>
+                        <Button className="w-100 btn-lg mb-5 fw-bold" variant="primary" onClick={() => {handleLogout()}}>Log Out</Button>
                     </Col>
                 </Row>
             </Container>
