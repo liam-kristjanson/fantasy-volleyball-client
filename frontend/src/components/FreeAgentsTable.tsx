@@ -1,10 +1,12 @@
 import { useEffect, useState } from "react";
-import { Button, Col, Container, Dropdown, Row, Spinner, Table } from "react-bootstrap";
+import { Button, Col, Container, Row, Spinner, Table } from "react-bootstrap";
 import { Player, ServerMessageType } from "../types";
 import { useAuthContext } from "../hooks/useAuthContext";
 import ServerMessageContainer from "./ServerMessageContainer";
 import { useNavigate } from "react-router-dom";
 import { useSettingsContext } from "../hooks/useSettingsContext";
+import PositionSelectionDropdown from "./PositionSelectionDropdown";
+import PlayerTeamSelectionDropdown from "./PlayerTeamSelectionDropdown";
 
 export default function FreeAgentsTable() {
 
@@ -110,34 +112,11 @@ export default function FreeAgentsTable() {
                     <Container className="p-0">
                         <Row className="mb-3">
                             <Col md={4} lg={2} className="mb-3 mb-md-0">
-                                <Dropdown>
-                                    <Dropdown.Toggle className="w-100">
-                                        {selectedPosition ?? "Position"}
-                                    </Dropdown.Toggle>
-
-                                    <Dropdown.Menu>
-                                        <Dropdown.Item onClick={() => {setSelectedPosition(undefined)}}> -- ALL -- </Dropdown.Item>
-                                        {['S', 'OH', 'M', 'L'].map(position => (
-                                            <Dropdown.Item onClick={() => {setSelectedPosition(position)}} key={position}>{position}</Dropdown.Item>
-                                        ))}
-                                    </Dropdown.Menu>
-
-                                </Dropdown>
+                                <PositionSelectionDropdown selectedPosition={selectedPosition} setSelectedPosition={setSelectedPosition}/>
                             </Col>
 
                             <Col md={4} lg={2}>
-                                <Dropdown>
-                                    <Dropdown.Toggle className="w-100">
-                                        {selectedTeam ?? "Team"}
-                                    </Dropdown.Toggle>
-
-                                    <Dropdown.Menu>
-                                        <Dropdown.Item onClick={() => {setSelectedTeam(undefined)}}> -- ALL -- </Dropdown.Item>
-                                        {['ALB', 'BDN', 'CGY', 'GMU', 'MAN', 'MRU', 'SSK', 'TRU', 'TWU', 'UBC', 'UBCO', 'UFV', 'WIN'].map(teamName => (
-                                            <Dropdown.Item onClick={() => {setSelectedTeam(teamName)}}key={teamName}>{teamName}</Dropdown.Item>
-                                        ))}
-                                    </Dropdown.Menu>
-                                </Dropdown>
+                                <PlayerTeamSelectionDropdown selectedTeam={selectedTeam} setSelectedTeam={setSelectedTeam}/>
                             </Col>
                         </Row>
                     </Container>
