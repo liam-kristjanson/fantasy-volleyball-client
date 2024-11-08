@@ -18,10 +18,14 @@ module.exports.calculateAllWeekScores = async () => {
 
     for (let leagueId of leagueIds) {
         console.log("Calculating scores for leagueId " + leagueId);
+        
         let matchupDocument = await this.get(leagueId.toString(), weekNum);
-        matchupDocument = await this.calculateScores(matchupDocument);
-        console.log("Calculated scores for leagueId " + leagueId + " and weekNum " + weekNum);
-        let result = await this.writeResults(matchupDocument);
+
+        if (matchupDocument) {
+            matchupDocument = await this.calculateScores(matchupDocument);
+            console.log("Calculated scores for leagueId " + leagueId + " and weekNum " + weekNum);
+            let result = await this.writeResults(matchupDocument);
+        }
     }
 }
 

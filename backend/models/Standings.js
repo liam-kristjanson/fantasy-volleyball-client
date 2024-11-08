@@ -19,47 +19,51 @@ module.exports.refresh = async () => {
     for (let weekNum = 1; weekNum < settings.currentWeekNum; weekNum++) {
         for (let leagueId of leagueIds) {
 
-            const matchupPromise = Matchup.get(leagueId.toString(), weekNum)
-            .then(matchupDocument => {
-                console.log("Found matchup document: ", matchupDocument)
-                console.log("Calculating scores...");
-                return Matchup.calculateScores(matchupDocument)
-            })
-            .then(calculatedMatchupDocument => {
-                console.log("Updating records...")
-                let recordUpdatePromises = []
+            const matchupDocument = await Matchup.get(leagueId.toString(), weekNum)
 
-                for (let i = 0; i<calculatedMatchupDocument.matchupScores.length; i++) {
-                    const homeTeamId = calculatedMatchupDocument.matchupScores[i].homeTeam.rosterId;
-                    const awayTeamId = calculatedMatchupDocument.matchupScores[i].awayTeam.rosterId;
+            if (matchupDocument) {
+                const matchupPromise = Matchup.get(leagueId.toString(), weekNum)
+                .then(matchupDocument => {
+                    console.log("Found matchup document: ", matchupDocument)
+                    console.log("Calculating scores...");
+                    return Matchup.calculateScores(matchupDocument)
+                })
+                .then(calculatedMatchupDocument => {
+                    console.log("Updating records...")
+                    let recordUpdatePromises = []
 
-                    const homeScore = calculatedMatchupDocument.matchupScores[i].homeTeam.totalScore;
-                    const awayScore = calculatedMatchupDocument.matchupScores[i].awayTeam.totalScore;
+                    for (let i = 0; i<calculatedMatchupDocument.matchupScores.length; i++) {
+                        const homeTeamId = calculatedMatchupDocument.matchupScores[i].homeTeam.rosterId;
+                        const awayTeamId = calculatedMatchupDocument.matchupScores[i].awayTeam.rosterId;
 
-                    if (awayScore != homeScore) {
-                        let winningId, losingId
-                        if (awayScore > homeScore) {
-                            winningId = awayTeamId;
-                            losingId = homeTeamId;
-                        } else {
-                            winningId = homeTeamId;
-                            losingId = awayTeamId;
+                        const homeScore = calculatedMatchupDocument.matchupScores[i].homeTeam.totalScore;
+                        const awayScore = calculatedMatchupDocument.matchupScores[i].awayTeam.totalScore;
+
+                        if (awayScore != homeScore) {
+                            let winningId, losingId
+                            if (awayScore > homeScore) {
+                                winningId = awayTeamId;
+                                losingId = homeTeamId;
+                            } else {
+                                winningId = homeTeamId;
+                                losingId = awayTeamId;
+                            }
+
+
+
+                            let winnerUpdatePromise = dbretriever.updateOne('rosters', {_id: new ObjectId(losingId)}, {$inc: {losses: 1}});
+                            let loserUpdatePromise = dbretriever.updateOne('rosters', {_id: new ObjectId(winningId)}, {$inc: {wins: 1}});
+
+                            recordUpdatePromises.push(winnerUpdatePromise);
+                            recordUpdatePromises.push(loserUpdatePromise);
                         }
-
-
-
-                        let winnerUpdatePromise = dbretriever.updateOne('rosters', {_id: new ObjectId(losingId)}, {$inc: {losses: 1}});
-                        let loserUpdatePromise = dbretriever.updateOne('rosters', {_id: new ObjectId(winningId)}, {$inc: {wins: 1}});
-
-                        recordUpdatePromises.push(winnerUpdatePromise);
-                        recordUpdatePromises.push(loserUpdatePromise);
                     }
-                }
 
-                return Promise.all(recordUpdatePromises);
-            })
+                    return Promise.all(recordUpdatePromises);
+                })
 
-            matchupPromises.push(matchupPromise);
+                matchupPromises.push(matchupPromise);
+            }
         }
     }
 
