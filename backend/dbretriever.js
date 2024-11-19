@@ -101,6 +101,12 @@ async function deleteMany(collectionName, criteriaObj) {
   return await collection.deleteMany(criteriaObj);
 }
 
+async function deleteOne(collectionName, criteriaObj) {
+  const collection = database.collection(collectionName);
+
+  return await collection.deleteOne(criteriaObj);
+}
+
 
 module.exports.fetchDocuments = fetchDocuments;
 module.exports.fetchOneDocument = fetchOneDocument;
@@ -112,3 +118,4 @@ module.exports.deleteDocumentById = deleteDocumentById;
 module.exports.aggregateDocuments = aggregateDocuments;
 module.exports.updateMany = updateMany;
 module.exports.deleteMany = deleteMany;
+module.exports.deleteOne = deleteOne;

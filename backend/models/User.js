@@ -45,3 +45,14 @@ module.exports.updatePassword = async (userId, newPassword) => {
 
     return passwordUpdateResult.acknowledged && passwordUpdateResult.modifiedCount == 1;
 }
+
+//cascading delete of user account and all associated rosters, lineups, etc.
+module.exports.delete = async (userId) => {
+    const lineupDeletePromise = Lineup.deleteByUserId(userId);
+    const rosterDeletePromise = Roster.deleteByUserId(userId);
+    const userDeletePromise = dbretriever.deleteDocumentById('users', userId);
+
+    const [lineupDeleteSuccess, rosterDeleteSucess, userDeleteSuccess] = await Promise.all([lineupDeletePromise, rosterDeletePromise, userDeletePromise]);
+
+    return lineupDeleteSuccess && rosterDeleteSucess && userDeleteSuccess;
+}

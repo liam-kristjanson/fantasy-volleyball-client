@@ -134,3 +134,9 @@ module.exports.createInitialLineups = async (userId, leagueId, season, currentWe
 
     return lineupCreationSuccess;
 }
+
+module.exports.deleteByUserId = async (userId) => {
+    const result = await dbretriever.deleteMany('lineups', {userId});
+
+    return result.acknowledged;
+}

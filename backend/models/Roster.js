@@ -32,3 +32,9 @@ module.exports.create = async (userId, leagueId, username) => {
 
     return rosterCreationSuccess
 }
+
+module.exports.deleteByUserId = async (userId) => {
+    const result = await dbretriever.deleteOne('rosters', {userId});
+
+    return result.acknowledged;
+}

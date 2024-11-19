@@ -256,3 +256,31 @@ module.exports.updatePlayer = async (req, res, next) => {
         return res.status(500).json({error: "Failed to update player"});
     }
 }
+
+module.exports.deleteUser = async (req, res, next) => {
+    if (!req.query.id) {
+        return res.status(400).json({error: "id Must be specified in querystring"})
+    }
+
+    if (!ObjectId.isValid(req.query.id)) {
+        return res.status(400).json({error: "Invalid id"});
+    }
+
+    const matchedUser = await dbretriever.fetchDocumentById('users', req.query.id);
+
+    if (!matchedUser) {
+        return res.status(404).json({error: "User not found with given id"});
+    }
+
+    if (matchedUser.role != "user") {
+        return res.status(403).json({error: "Only accounts with 'user' role can be deleted through this interface."});
+    }
+
+    const userDeleteSuccess = await User.delete(req.query.id);
+
+    if (userDeleteSuccess) {
+        return res.status(200).json({message: "User deleted successfuly"});
+    } else {
+        return res.status(500).json({error: "500: Failed to delete user"});
+    }
+}
