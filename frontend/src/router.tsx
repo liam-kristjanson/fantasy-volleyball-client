@@ -17,6 +17,7 @@ import CreateLeague from "./routes/admin/CreateLeague";
 import AdminPlayers from "./routes/admin/AdminPlayers";
 import ManagePlayer from "./routes/admin/ManagePlayer";
 import ChangePassword from "./routes/ChangePassword";
+import MatchInfo from "./routes/MatchInfo";
 
 export const router = createBrowserRouter([
     {
@@ -86,5 +87,9 @@ export const router = createBrowserRouter([
     {
         path: "/change-password",
         element: <ProtectedRoute validRoles={['admin', 'user']}> <ChangePassword /> </ProtectedRoute>
+    },
+    {
+        path:"/match-info",
+        element: <ProtectedRoute validRoles={['user']}> <MatchInfo/> </ProtectedRoute>
     }
 ])

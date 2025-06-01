@@ -3,6 +3,7 @@ import { Player, PlayerMatch } from "../types";
 import { useEffect, useState } from "react";
 import useServerMessage from "../hooks/useServerMessage";
 import ServerMessageContainer from "./ServerMessageContainer";
+import { Link } from "react-router-dom";
 
 interface PlayerMatchesTableProps {
     player: Player;
@@ -110,7 +111,9 @@ export default function PlayerMatchesTable({player} : PlayerMatchesTableProps) {
                                 </td>
 
                                 <td>
-                                    {titleDisplayFormat(match.gameTitle)}
+                                    <Link to="/match-info" state={{match}} className="text-dark">
+                                        {titleDisplayFormat(match.gameTitle)}
+                                    </Link>
                                 </td>
 
                                 <td className="d-none d-lg-table-cell">

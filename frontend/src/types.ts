@@ -132,3 +132,10 @@ export interface LeagueDocument {
     name: string;
     adminId: string;
 }
+
+export interface MatchDocument {
+    _id: string;
+    gameTitle: string;
+    season: string;
+    stats: any;
+}

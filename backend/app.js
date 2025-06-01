@@ -14,6 +14,7 @@ const settingsController = require('./controllers/SettingsController');
 const matchupController = require('./controllers/MatchupController')
 const adminController = require('./controllers/AdminController')
 const standingsController = require('./controllers/StandingsController')
+const matchController = require('./controllers/MatchController');
 
 const PORT = process.env.PORT || 8080;
 const corsOptions = {
@@ -64,6 +65,8 @@ app.get("/free-agents", rosterController.getFreeAgents);
 app.post("/free-agents/sign", rosterController.signFreeAgent);
 
 app.get("/matchup/scores", matchupController.getMatchupScores);
+
+app.get("/match", matchController.getMatch);
 
 app.post("/admin/create-next-week-lineups", adminController.createNextWeekLineups);
 app.post("/admin/start-next-week", adminController.startNextWeek);

@@ -3,6 +3,12 @@ const {ObjectId} = require('mongodb')
 const FantasyUtilities = require("../FantasyUtilities");
 const Player = require("./Player")
 
+module.exports.get = async (matchId) => {
+    const matchDocument = await dbretriever.fetchDocumentById('matches', matchId);
+
+    return matchDocument;
+}
+ 
 module.exports.unlinkAll = async () => {
     const result = await dbretriever.updateMany('players', {}, {$set: {matches: []}});
 
