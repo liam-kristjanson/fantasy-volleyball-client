@@ -48,6 +48,12 @@ export default function ControlPanel() {
         })
     }
 
+    function confirmResetAll() {
+        if (confirm("Are you sure you want to reset ALL leagues to week 1?")) {
+            makeRequest("/admin/reset-all");
+        }
+    }
+
     if (isLoading) {
         return (
             <>
@@ -94,7 +100,7 @@ export default function ControlPanel() {
                 </Col>
 
                 <Col xs={4}>
-                    <Button className="btn-warning w-100 fw-bold" onClick={() => {makeRequest("/admin/reset-all")}}>Reset to Week 1</Button>
+                    <Button className="btn-warning w-100 fw-bold" onClick={() => {confirmResetAll()}}>Reset to Week 1</Button>
                 </Col>
             </Row>
         </>

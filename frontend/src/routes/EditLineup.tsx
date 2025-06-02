@@ -197,7 +197,7 @@ export default function EditLineup() {
             <Container>
                 <Row className="pt-5">
                     <Col>
-                        <a className="text-decoration-none hover-pointer text-primary hover-underline mb-3" onClick={() => {navigate('/my-account')}}>{'\u2190'} Back to accout dashboard</a>
+                        <a className="text-decoration-none hover-pointer text-primary hover-underline mb-3" onClick={() => {navigate('/my-account')}}>{'\u2190'} Back to account dashboard</a>
                     </Col>
                 </Row>
                 <Row>

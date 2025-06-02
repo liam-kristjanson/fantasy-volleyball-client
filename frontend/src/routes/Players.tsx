@@ -6,6 +6,8 @@ import PlayerRankingsTable from "../components/PlayerRankingsTable";
 import ServerMessageContainer from "../components/ServerMessageContainer";
 import PositionSelectionDropdown from "../components/PositionSelectionDropdown";
 import PlayerTeamSelectionDropdown from "../components/PlayerTeamSelectionDropdown";
+import { useAuthContext } from "../hooks/useAuthContext";
+import { Link } from "react-router-dom";
 
 export default function Players() {
 
@@ -15,6 +17,7 @@ export default function Players() {
     const [players, setPlayers] = useState<Player[]>([]);
     const [selectedPosition, setSelectedPosition] = useState<string | undefined>(undefined);
     const [selectedTeam, setSelectedTeam] = useState<string | undefined>(undefined);
+    const { user } = useAuthContext().state;
 
     const filteredPlayers = players.filter(player => {
         return (player.position.includes(selectedPosition ?? "") && (player.team ?? "").includes(selectedTeam ?? ""));
@@ -54,6 +57,14 @@ export default function Players() {
             <Navbar />
 
             <Container className="pt-5">
+
+                {user && (
+                    <Row>
+                        <Col>
+                            <Link to="/my-account" className="text-primary">{'\u2190'} Back to account dashboard</Link>
+                        </Col>
+                    </Row>
+                )}
                 <Row>
                     <Col>
                         <h1>Players</h1>

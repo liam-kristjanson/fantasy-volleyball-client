@@ -3,7 +3,6 @@ import { Button, Col, Container, Row, Spinner, Table } from "react-bootstrap";
 import { Player, ServerMessageType } from "../types";
 import { useAuthContext } from "../hooks/useAuthContext";
 import ServerMessageContainer from "./ServerMessageContainer";
-import { useNavigate } from "react-router-dom";
 import { useSettingsContext } from "../hooks/useSettingsContext";
 import PositionSelectionDropdown from "./PositionSelectionDropdown";
 import PlayerTeamSelectionDropdown from "./PlayerTeamSelectionDropdown";
@@ -12,7 +11,6 @@ export default function FreeAgentsTable() {
 
     const user = useAuthContext().state.user;
     const {settings} = useSettingsContext();
-    const navigate = useNavigate();
 
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [players, setPlayers] = useState<Player[]>([]);
@@ -23,6 +21,8 @@ export default function FreeAgentsTable() {
     const [selectedPosition, setSelectedPosition] = useState<string | undefined>(undefined);
     const [selectedTeam, setSelectedTeam] = useState<string | undefined>(undefined);
 
+    const [freeAgentsSigned, setFreeAgentsSigned] = useState<number>(0);
+
     const filteredPlayers = players.filter(player => {
         return player.position.includes(selectedPosition ?? "") && player.team?.includes(selectedTeam ?? "")
     })
@@ -31,8 +31,6 @@ export default function FreeAgentsTable() {
         const QUERY_PARAMS = new URLSearchParams({leagueId: user?.leagueId ?? ""})
 
         setIsLoading(true);
-        setServerMessage("");
-        setServerMessageType("info");
 
         fetch(import.meta.env.VITE_SERVER + "/free-agents?" + QUERY_PARAMS.toString())
         .then(response => {
@@ -59,7 +57,7 @@ export default function FreeAgentsTable() {
             setServerMessageType("danger");
             setServerMessage("An unexpected error occured (see console)");
         })
-    }, [user?.leagueId])
+    }, [user?.leagueId, freeAgentsSigned])
 
     const signFreeAgent = (playerId : string) => {
         setIsLoading(true);
@@ -77,9 +75,7 @@ export default function FreeAgentsTable() {
                     setIsLoading(false);
                     setServerMessage(responseJson.message ?? "Success");
                     setServerMessageType("success");
-                    alert(responseJson.message ?? "Success")
-
-                    navigate('/my-account');
+                    setFreeAgentsSigned(freeAgentsSigned + 1);
                 })
             } else {
                 response.json()

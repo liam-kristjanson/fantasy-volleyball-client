@@ -2,7 +2,7 @@ import { Carousel, Col, Container, Dropdown, Row, Spinner } from "react-bootstra
 import Navbar from "../components/Navbar";
 import { useEffect, useState } from "react";
 import { useAuthContext } from "../hooks/useAuthContext";
-import { Navigate, useNavigate } from "react-router-dom";
+import { Link, Navigate, useNavigate } from "react-router-dom";
 import ServerMessageContainer from "../components/ServerMessageContainer";
 import useServerMessage from "../hooks/useServerMessage";
 import {MatchupsObject } from "../types";
@@ -78,6 +78,12 @@ export default function Matchups() {
             <Navbar />
 
             <Container>
+
+                <Row className="pt-5">
+                    <Col>
+                        <Link to="/my-account" className="text-primary">{'\u2190'} Back to account dashboard</Link>
+                    </Col>
+                </Row>
                 <Row className="pt-5 mb-4 justify-content-center">
                     <Col xs={12}>
                         <h1 className="text-center">Matchups: Week {weekNum}</h1>

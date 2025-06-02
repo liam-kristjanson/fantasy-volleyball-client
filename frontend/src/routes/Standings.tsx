@@ -2,7 +2,7 @@ import { Col, Container, Row, Spinner } from "react-bootstrap";
 import Navbar from "../components/Navbar";
 import { useEffect, useState } from "react";
 import { useAuthContext } from "../hooks/useAuthContext";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import useServerMessage from "../hooks/useServerMessage";
 import ServerMessageContainer from "../components/ServerMessageContainer";
 import StandingsTable from "../components/StandingsTable";
@@ -60,8 +60,14 @@ export default function Standings() {
 
             <Container>
                 <Row>
+                    <Col className="pt-4">
+                        <Link className="text-primary" to="/my-account">{'\u2190'} Back to account dashboard</Link>
+                    </Col>
+                </Row>
+                
+                <Row>
                     <Col>
-                        <h1 className="pt-5">Standings</h1>
+                        <h1>Standings</h1>
                     </Col>
                 </Row>
 
