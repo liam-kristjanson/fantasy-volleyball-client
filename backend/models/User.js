@@ -56,3 +56,9 @@ module.exports.delete = async (userId) => {
 
     return lineupDeleteSuccess && rosterDeleteSucess && userDeleteSuccess;
 }
+
+module.exports.updateLeagueId = async (userId, leagueId) => {
+    const result = await dbretriever.updateOne('users', {_id: userId}, {$set: {leagueId: new ObjectId(leagueId)}});
+
+    return result.acknowledged && result.modifiedCount == 1;
+}

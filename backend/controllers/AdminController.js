@@ -284,3 +284,41 @@ module.exports.deleteUser = async (req, res, next) => {
         return res.status(500).json({error: "500: Failed to delete user"});
     }
 }
+
+module.exports.updateUserLeagueId = async (req, res, next) => {
+    try {
+
+        if (!ObjectId.isValid(req.query.userId)) {
+            return res.status(400).json({error: "invalid userId"});
+        }
+
+        if (!ObjectId.isValid(req.query.leagueId)) {
+            return res.status(400).json({error: "invalid leagueId"});
+        }
+
+        const matchedUser = await User.get(req.query.userId);
+
+        if (!matchedUser) {
+            return res.status(400).json({error: "User with requested ID not found"});
+        }
+
+        const matchedLeague = await League.get(req.query.leagueId);
+
+        if (!matchedLeague) {
+            return res.status(400).json({error: "League with requested id not found"});
+        }
+
+        if (await Matchup.get(matchedLeague._id, 1)) {
+            return res.status(401).json({error: "League with requested ID already has matchups created and cannot allow new users"})
+        }
+
+        if  (User.updateLeagueId(matchedUser._id, matchedLeague._id)) {
+            return res.status(200).json({message: "Successfuly moved player to league " + matchedLeague.name});
+        } else {
+            return res.status(500).json({error: "An error occured while updating leagueId"})
+        }
+
+    } catch (err) {
+        next(err);
+    }
+}

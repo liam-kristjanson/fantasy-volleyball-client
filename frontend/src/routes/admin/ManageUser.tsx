@@ -1,7 +1,7 @@
 import { useLocation, useNavigate } from "react-router-dom";
 import { User } from "../../types";
 import AdminNavbar from "../../components/admin/AdminNavbar";
-import { Button, Col, Container, Row, Spinner } from "react-bootstrap";
+import { Button, Col, Container, Form, Row, Spinner } from "react-bootstrap";
 import { useAuthContext } from "../../hooks/useAuthContext";
 import ServerMessageContainer from "../../components/ServerMessageContainer";
 import useServerMessage from "../../hooks/useServerMessage";
@@ -17,6 +17,7 @@ export default function ManageUser() {
     const {serverMessage, setServerMessage, serverMessageType, setServerMessageType} = useServerMessage();
     const navigate = useNavigate();
     const [isLoading, setIsLoading] = useState<boolean>(false);
+    const [leagueId, setLeagueId] = useState<string>(selectedUser.leagueId);
 
     function handleDeleteAccount() {
         const deleteConfirmed = confirm("Are you sure you want to delete the account for user " + selectedUser.username + "?");
@@ -55,6 +56,38 @@ export default function ManageUser() {
         }
     }
 
+    function handleUpdateLeagueId() {
+
+        setIsLoading(true);
+        const QUERY_PARAMS = new URLSearchParams({userId: selectedUser._id ?? "", leagueId: leagueId});
+
+        fetch(import.meta.env.VITE_SERVER + "/admin/user/leagueid?" +QUERY_PARAMS.toString(), {
+            method: "POST",
+            headers: {
+                authorization: user?.authToken ?? ""
+            }
+        })
+        .then(response => {
+            response.json().then(responseJson => {
+                setIsLoading(false);
+
+                if (response.ok) {
+                    alert(responseJson.message ?? "Success");
+                    navigate('/admin/dashboard')
+                } else {
+                    setServerMessageType('danger');
+                    setServerMessage(responseJson.error ?? "An unexpected error occured while updating leagueId");
+                    console.error(responseJson);
+                }
+            })
+        })
+        .catch(err => {
+            console.error(err);
+            setIsLoading(false);
+            setServerMessage("An unexpected error occured while updating leagueID (see console)");
+        })
+    }
+
     return (
         <>
             <AdminNavbar />
@@ -64,6 +97,17 @@ export default function ManageUser() {
                     <Col>
                         <h1>Manage User: {selectedUser.username}</h1>
                     </Col>
+                </Row>
+
+                <Row>
+                    <Form>
+                        <Form.Group className="mb-3">
+                            <Form.Label>League ID:</Form.Label>
+                            <Form.Control value={leagueId} type="text" onChange={(e) => {setLeagueId(e.target.value)}}/>
+                        </Form.Group>
+
+                        <Button className="mb-3" variant="primary" disabled={isLoading} onClick={() => handleUpdateLeagueId()}>Update</Button>
+                    </Form>
                 </Row>
 
                 

@@ -81,6 +81,7 @@ app.post("/admin/unlock-lineups", adminController.unlockLineups);
 app.post("/admin/match-data", adminController.uploadMatchData);
 app.post("/admin/create-league", adminController.createLeague);
 app.post("/admin/update-player", adminController.updatePlayer);
+app.post("/admin/user/leagueId", adminController.updateUserLeagueId);
 app.delete("/admin/user", adminController.deleteUser);
 
 //default error handler
