@@ -64,11 +64,11 @@ module.exports.updateLeagueId = async (userId, leagueId) => {
 
     //need to change related lineup and roster documents as well
     console.log("Updating league id for roster document associated with user " + userId);
-    const rosterUpdateResult = await dbretriever.updateOne('rosters', {userId: userId}, {$set: {leagueId: leagueId.toString()}})
+    const rosterUpdateResult = await dbretriever.updateOne('rosters', {userId: userId.toString()}, {$set: {leagueId: leagueId.toString()}})
     console.log("Updated " + rosterUpdateResult.modifiedCount + " roster documents");
 
     console.log("Updating league id for lineup documents associated with user " + userId);
-    const lineupUpdateResult = await dbretriever.updateMany('lineups', {userId: userId}, {$set: {leagueId: leagueId.toString()}})
+    const lineupUpdateResult = await dbretriever.updateMany('lineups', {userId: userId.toString()}, {$set: {leagueId: leagueId.toString()}})
     console.log("Updated " + lineupUpdateResult.modifiedCount + " lineup documents");
 
     return {usersModified: userUpdateResult.modifiedCount, rostersModified: rosterUpdateResult.modifiedCount, lineupsModified: lineupUpdateResult.modifiedCount}
