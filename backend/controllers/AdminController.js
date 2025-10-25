@@ -312,11 +312,8 @@ module.exports.updateUserLeagueId = async (req, res, next) => {
             return res.status(401).json({error: "League with requested ID already has matchups created and cannot allow new users"})
         }
 
-        if  (User.updateLeagueId(matchedUser._id, matchedLeague._id)) {
-            return res.status(200).json({message: "Successfuly moved player to league " + matchedLeague.name});
-        } else {
-            return res.status(500).json({error: "An error occured while updating leagueId"})
-        }
+        const updateLeagueResult = await User.updateLeagueId(matchedUser._id, matchedLeague._id)
+        return res.status(200).json({message: "Modified " + updateLeagueResult.usersModified + " user documents, " + updateLeagueResult.rostersModified + " roster documents, and " + updateLeagueResult.lineupsModified + " lineup documents."});
 
     } catch (err) {
         next(err);
