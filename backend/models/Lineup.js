@@ -14,6 +14,7 @@ const EMPTY_LINEUP = {
 }
 
 module.exports.get = (leagueId, userId, weekNum) => {
+    console.log("Fetching lineup with leagueId " + leagueId + " userId " + userId + " weekNum " + weekNum);
 
     return dbretriever.fetchOneDocument('lineups', {leagueId, userId, weekNum: parseInt(weekNum)}, {matches: 0});
 }
