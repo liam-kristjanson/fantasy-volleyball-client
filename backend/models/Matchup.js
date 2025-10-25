@@ -37,8 +37,11 @@ module.exports.calculateScores = async (matchupDocument) => {
         matchups[i] = {};
         //calculate score for home team
         console.log("Fetching home lineup for matchup " + (i + 1));
+
         matchups[i].homeTeam = Lineup.get(matchupDocument.leagueId, matchupDocument.matchupIds[i].homeId, matchupDocument.weekNum)
         .then(fetchedLineup => {
+            console.log("Fetched home lineup for matchup " + (i + 1));
+            console.log(fetchedLineup)
             return Lineup.populate(fetchedLineup);
         })
         .then(populatedLineup => {
@@ -50,6 +53,8 @@ module.exports.calculateScores = async (matchupDocument) => {
         console.log("Fetching away lineup for matchup " + (i + 1));
         matchups[i].awayTeam = Lineup.get(matchupDocument.leagueId, matchupDocument.matchupIds[i].awayId, matchupDocument.weekNum)
         .then(fetchedLineup => {
+            console.log("Fetched away lineup for matchup " + (i + 1));
+            console.log(fetchedLineup);
             return Lineup.populate(fetchedLineup);
         })
         .then(populatedLineup => {
